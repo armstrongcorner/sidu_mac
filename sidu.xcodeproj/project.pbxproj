@@ -10,6 +10,9 @@
 		2214C8FA2C840B2D008D1FAE /* AppSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2214C8F92C840B2D008D1FAE /* AppSize.swift */; };
 		2214C9002C856EA5008D1FAE /* LiveChatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2214C8FF2C856EA5008D1FAE /* LiveChatScreen.swift */; };
 		2214C9042C85723C008D1FAE /* ChatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2214C9032C85723C008D1FAE /* ChatScreen.swift */; };
+		227AFC052C85CD6E006A0AFC /* SelectedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227AFC042C85CD6E006A0AFC /* SelectedImageView.swift */; };
+		227AFC072C85D212006A0AFC /* UserInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227AFC062C85D212006A0AFC /* UserInputView.swift */; };
+		227AFC092C85D50B006A0AFC /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227AFC082C85D50B006A0AFC /* ChatView.swift */; };
 		22D26E792C81C2DE00C4D4FD /* LoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D26E782C81C2DE00C4D4FD /* LoginService.swift */; };
 		22D26E7B2C81C53A00C4D4FD /* BaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D26E7A2C81C53A00C4D4FD /* BaseResponse.swift */; };
 		22D26E7D2C81C60400C4D4FD /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D26E7C2C81C60400C4D4FD /* AuthModel.swift */; };
@@ -33,6 +36,9 @@
 		2214C8F92C840B2D008D1FAE /* AppSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSize.swift; sourceTree = "<group>"; };
 		2214C8FF2C856EA5008D1FAE /* LiveChatScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChatScreen.swift; sourceTree = "<group>"; };
 		2214C9032C85723C008D1FAE /* ChatScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatScreen.swift; sourceTree = "<group>"; };
+		227AFC042C85CD6E006A0AFC /* SelectedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedImageView.swift; sourceTree = "<group>"; };
+		227AFC062C85D212006A0AFC /* UserInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputView.swift; sourceTree = "<group>"; };
+		227AFC082C85D50B006A0AFC /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		22D26E782C81C2DE00C4D4FD /* LoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginService.swift; sourceTree = "<group>"; };
 		22D26E7A2C81C53A00C4D4FD /* BaseResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseResponse.swift; sourceTree = "<group>"; };
 		22D26E7C2C81C60400C4D4FD /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
@@ -65,6 +71,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		227AFC032C85CD37006A0AFC /* widget */ = {
+			isa = PBXGroup;
+			children = (
+				227AFC042C85CD6E006A0AFC /* SelectedImageView.swift */,
+				227AFC062C85D212006A0AFC /* UserInputView.swift */,
+				227AFC082C85D50B006A0AFC /* ChatView.swift */,
+			);
+			path = widget;
+			sourceTree = "<group>";
+		};
 		22D26E802C82CE3B00C4D4FD /* modifier+extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -136,6 +152,7 @@
 		22FE37D82C7F347D00F9B992 /* v */ = {
 			isa = PBXGroup;
 			children = (
+				227AFC032C85CD37006A0AFC /* widget */,
 				22D26E802C82CE3B00C4D4FD /* modifier+extension */,
 				22FE37DA2C7F3FA800F9B992 /* SplashScreen.swift */,
 				22EF507B2C03F8FD00B2CED9 /* LoginScreen.swift */,
@@ -245,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				227AFC072C85D212006A0AFC /* UserInputView.swift in Sources */,
 				22FE37DB2C7F3FA800F9B992 /* SplashScreen.swift in Sources */,
 				22FE37DD2C7F3FF600F9B992 /* EmailRegisterScreen.swift in Sources */,
 				22EF507C2C03F8FD00B2CED9 /* LoginScreen.swift in Sources */,
@@ -252,9 +270,11 @@
 				22D26E792C81C2DE00C4D4FD /* LoginService.swift in Sources */,
 				2214C8FA2C840B2D008D1FAE /* AppSize.swift in Sources */,
 				22D26E842C83001900C4D4FD /* ToastViewModifier.swift in Sources */,
+				227AFC052C85CD6E006A0AFC /* SelectedImageView.swift in Sources */,
 				22D26E822C82CE7100C4D4FD /* ShadowAndRoundedCornerModifier.swift in Sources */,
 				22D26E7B2C81C53A00C4D4FD /* BaseResponse.swift in Sources */,
 				22FE37E12C7F408A00F9B992 /* Route.swift in Sources */,
+				227AFC092C85D50B006A0AFC /* ChatView.swift in Sources */,
 				22FE37DF2C7F400B00F9B992 /* CompleteRegisterScreen.swift in Sources */,
 				22EF507A2C03F8FD00B2CED9 /* siduApp.swift in Sources */,
 				22FE37E32C7F40A400F9B992 /* LoginViewModel.swift in Sources */,
