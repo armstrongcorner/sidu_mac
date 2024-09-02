@@ -1,0 +1,255 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "(%lld) retry" : {
+
+    },
+    "Chat" : {
+
+    },
+    "Chat message %lld" : {
+
+    },
+    "Complete Register" : {
+      "comment" : "complete register btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Complete Register"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成注册"
+          }
+        }
+      }
+    },
+    "Email for username to login" : {
+      "comment" : "register username hint",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email for username to login"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "邮箱将作为用户名用来登录"
+          }
+        }
+      }
+    },
+    "Hello, World!" : {
+
+    },
+    "Input again to confirm password" : {
+      "comment" : "confirm password hint",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Input again to confirm password"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再次输入密码以确认"
+          }
+        }
+      }
+    },
+    "Live Chat" : {
+
+    },
+    "Login" : {
+      "comment" : "login btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Login"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录"
+          }
+        }
+      }
+    },
+    "No account? Go to sign up" : {
+      "comment" : "go to register page btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No account? Go to sign up"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有账号？去注册一个吧"
+          }
+        }
+      }
+    },
+    "Password" : {
+      "comment" : "password field hint text",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "密码"
+          }
+        }
+      }
+    },
+    "Please go to your email box to get the verification code and fill the code form, then click 'Verify' button" : {
+      "comment" : "verify code desc text",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please go to your email box to get the verification code and fill the code form, then click 'Verify' button"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请去邮箱查看6位数字验证码，并填写到下面的验证码框后点击“去验证”按钮"
+          }
+        }
+      }
+    },
+    "Registration 1/2" : {
+      "comment" : "registration step 1 screen title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registration 1/2"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户注册 1/2"
+          }
+        }
+      }
+    },
+    "Registration 2/2" : {
+      "comment" : "registration step 2 screen title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registration 2/2"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户注册 2/2"
+          }
+        }
+      }
+    },
+    "send code" : {
+      "comment" : "request sending vericode to the email address btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "send code"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送验证码"
+          }
+        }
+      }
+    },
+    "Username/Email/Mobile" : {
+      "comment" : "username field hint text",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Username/Email/Mobile"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用户名/邮件/手机号"
+          }
+        }
+      }
+    },
+    "Verification Code" : {
+      "comment" : "verification code hint",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verification Code"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "验证码"
+          }
+        }
+      }
+    },
+    "Verify" : {
+      "comment" : "verify btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verify"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "去验证"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
