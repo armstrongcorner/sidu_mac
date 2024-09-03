@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct UserInputView: View {
-    @Binding var userMessage: String
+    @Binding var chatContexts: [ChatMessageModel]
+    
+    @State private var userMessage: String = ""
     
     var body: some View {
         HStack(alignment: .bottom) {
@@ -38,7 +40,7 @@ struct UserInputView: View {
             }
             // Send message
             Button {
-                print("aaa")
+                sendChat()
             } label: {
                 Image(systemName: "paperplane.fill")
                     .resizable()
@@ -49,8 +51,24 @@ struct UserInputView: View {
             .buttonStyle(PlainButtonStyle())
         }
     }
+    
+    func sendChat() {
+        if !userMessage.isEmpty && !userMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            let chatContext = ChatMessageModel(
+                id: UUID().uuidString,
+                role: "user",
+                content: userMessage,
+                type: "text",
+                createAt: Int(Date().timeIntervalSince1970),
+                status: .sending,
+                isCompleteChatFlag: false
+            )
+            chatContexts.append(chatContext)
+            userMessage = ""
+        }
+    }
 }
 
 #Preview {
-    UserInputView(userMessage: .constant("hello"))
+    UserInputView(chatContexts: .constant([]))
 }

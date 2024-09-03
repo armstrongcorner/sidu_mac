@@ -11,8 +11,11 @@ import SwiftUI
 struct siduApp: App {
     var body: some Scene {
         WindowGroup {
-            LoginScreen()
-                .environment(ToastViewObserver())
+            GeometryReader { geometry in
+                LoginScreen()
+                    .environment(ToastViewObserver())
+                    .environment(AppSize(geometry.size))
+            }
         }
     }
 }

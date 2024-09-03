@@ -11,7 +11,7 @@ import Foundation
 class AppSize {
     var appSize: CGSize = .zero
     
-    init(size: CGSize) {
+    init(_ size: CGSize) {
         self.appSize = size
     }
     
