@@ -15,6 +15,8 @@
 		227AFC092C85D50B006A0AFC /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227AFC082C85D50B006A0AFC /* ChatView.swift */; };
 		227AFC0B2C867E18006A0AFC /* ChatMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227AFC0A2C867E18006A0AFC /* ChatMessageModel.swift */; };
 		227F18262C872940006E2FD5 /* ChatRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227F18252C872940006E2FD5 /* ChatRow.swift */; };
+		22BC45102C881BF7001FF0A3 /* DateUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BC450F2C881BF7001FF0A3 /* DateUtil.swift */; };
+		22BC45122C885F45001FF0A3 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BC45112C885F45001FF0A3 /* ChatViewModel.swift */; };
 		22D26E792C81C2DE00C4D4FD /* LoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D26E782C81C2DE00C4D4FD /* LoginService.swift */; };
 		22D26E7B2C81C53A00C4D4FD /* BaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D26E7A2C81C53A00C4D4FD /* BaseResponse.swift */; };
 		22D26E7D2C81C60400C4D4FD /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D26E7C2C81C60400C4D4FD /* AuthModel.swift */; };
@@ -43,6 +45,8 @@
 		227AFC082C85D50B006A0AFC /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		227AFC0A2C867E18006A0AFC /* ChatMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageModel.swift; sourceTree = "<group>"; };
 		227F18252C872940006E2FD5 /* ChatRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRow.swift; sourceTree = "<group>"; };
+		22BC450F2C881BF7001FF0A3 /* DateUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtil.swift; sourceTree = "<group>"; };
+		22BC45112C885F45001FF0A3 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		22D26E782C81C2DE00C4D4FD /* LoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginService.swift; sourceTree = "<group>"; };
 		22D26E7A2C81C53A00C4D4FD /* BaseResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseResponse.swift; sourceTree = "<group>"; };
 		22D26E7C2C81C60400C4D4FD /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
@@ -123,10 +127,10 @@
 		22EF50782C03F8FD00B2CED9 /* sidu */ = {
 			isa = PBXGroup;
 			children = (
+				22FE37D92C7F3F7300F9B992 /* core */,
 				22D3DF072C4865450073FB96 /* m */,
 				22FE37D72C7F346B00F9B992 /* vm */,
 				22FE37D82C7F347D00F9B992 /* v */,
-				22FE37D92C7F3F7300F9B992 /* c */,
 				22EF50792C03F8FD00B2CED9 /* siduApp.swift */,
 				2214C8F92C840B2D008D1FAE /* AppSize.swift */,
 				22FE37D52C7F0E0900F9B992 /* Localizable.xcstrings */,
@@ -150,6 +154,7 @@
 			children = (
 				22FE37E22C7F40A400F9B992 /* LoginViewModel.swift */,
 				22FE37E42C7F40B300F9B992 /* RegisterViewModel.swift */,
+				22BC45112C885F45001FF0A3 /* ChatViewModel.swift */,
 			);
 			path = vm;
 			sourceTree = "<group>";
@@ -169,12 +174,13 @@
 			path = v;
 			sourceTree = "<group>";
 		};
-		22FE37D92C7F3F7300F9B992 /* c */ = {
+		22FE37D92C7F3F7300F9B992 /* core */ = {
 			isa = PBXGroup;
 			children = (
 				22FE37E02C7F408A00F9B992 /* Route.swift */,
+				22BC450F2C881BF7001FF0A3 /* DateUtil.swift */,
 			);
-			path = c;
+			path = core;
 			sourceTree = "<group>";
 		};
 		22FE37E62C7F40D400F9B992 /* model */ = {
@@ -278,6 +284,7 @@
 				2214C8FA2C840B2D008D1FAE /* AppSize.swift in Sources */,
 				22D26E842C83001900C4D4FD /* ToastViewModifier.swift in Sources */,
 				227AFC0B2C867E18006A0AFC /* ChatMessageModel.swift in Sources */,
+				22BC45122C885F45001FF0A3 /* ChatViewModel.swift in Sources */,
 				227AFC052C85CD6E006A0AFC /* SelectedImageView.swift in Sources */,
 				22D26E822C82CE7100C4D4FD /* ShadowAndRoundedCornerModifier.swift in Sources */,
 				22D26E7B2C81C53A00C4D4FD /* BaseResponse.swift in Sources */,
@@ -290,6 +297,7 @@
 				2214C9042C85723C008D1FAE /* ChatScreen.swift in Sources */,
 				22D26E7F2C81C75D00C4D4FD /* Endpoint.swift in Sources */,
 				22D26E7D2C81C60400C4D4FD /* AuthModel.swift in Sources */,
+				22BC45102C881BF7001FF0A3 /* DateUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,6 +7,16 @@
 
 import Foundation
 
+enum ChatRole: Codable {
+    case user
+    case assistant
+}
+
+enum ChatContentType: Codable {
+    case text
+    case image
+}
+
 enum ChatStatus: Codable {
     case sending // Sending the chat context, binary files already uploaded and returned access url
     case waiting // Waiting for GPT response, normally used to display the waiting UI widget
@@ -17,9 +27,9 @@ enum ChatStatus: Codable {
 
 struct ChatMessageModel: Codable, Hashable, Identifiable {
     var id: String?
-    var role: String?
+    var role: ChatRole?
     var content: String?
-    var type: String?
+    var type: ChatContentType?
     var fileAccessUrl: String?
     var sentSize: Int?
     var receivedSize: Int?

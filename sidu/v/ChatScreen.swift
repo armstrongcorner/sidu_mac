@@ -10,7 +10,7 @@ import SwiftUI
 struct ChatScreen: View {
     @Environment(\.myRoute) var path
     
-    @State var chatContexts: [ChatMessageModel] = []
+    @State var chatVM: ChatViewModel = ChatViewModel()
     
     var body: some View {
         NavigationSplitView {
@@ -22,9 +22,9 @@ struct ChatScreen: View {
         } detail: {
             VStack {
                 // Chat area
-                ChatView(chatContexts: $chatContexts)
+                ChatView(chatVM: $chatVM)
                 // User input area
-                UserInputView(chatContexts: $chatContexts)
+                UserInputView(chatVM: $chatVM)
             }
         }
         .navigationTitle("Chat")

@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct UserInputView: View {
-    @Binding var chatContexts: [ChatMessageModel]
-    
-    @State private var userMessage: String = ""
+    @Binding var chatVM: ChatViewModel
     
     var body: some View {
         HStack(alignment: .bottom) {
@@ -30,7 +28,7 @@ struct UserInputView: View {
                 // User picked image
                 
                 // User text input
-                TextEditor(text: $userMessage)
+                TextEditor(text: $chatVM.userMessage)
                     .font(.body)
                     .scrollIndicators(.never)
                     .frame(minHeight: 30, maxHeight: 100)
@@ -40,7 +38,7 @@ struct UserInputView: View {
             }
             // Send message
             Button {
-                sendChat()
+                chatVM.sendChat()
             } label: {
                 Image(systemName: "paperplane.fill")
                     .resizable()
@@ -51,24 +49,9 @@ struct UserInputView: View {
             .buttonStyle(PlainButtonStyle())
         }
     }
-    
-    func sendChat() {
-        if !userMessage.isEmpty && !userMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            let chatContext = ChatMessageModel(
-                id: UUID().uuidString,
-                role: "user",
-                content: userMessage,
-                type: "text",
-                createAt: Int(Date().timeIntervalSince1970),
-                status: .sending,
-                isCompleteChatFlag: false
-            )
-            chatContexts.append(chatContext)
-            userMessage = ""
-        }
-    }
 }
 
 #Preview {
-    UserInputView(chatContexts: .constant([]))
+    var mockChatVM = ChatViewModel()
+    return UserInputView(chatVM: Binding.constant(mockChatVM))
 }
