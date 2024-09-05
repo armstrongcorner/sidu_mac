@@ -2,7 +2,7 @@
 //  siduApp.swift
 //  sidu
 //
-//  Created by Armstrong Liu on 27/05/2024.
+//  Created by Armstrong Liu on 27/08/2024.
 //
 
 import SwiftUI

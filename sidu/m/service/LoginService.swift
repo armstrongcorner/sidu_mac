@@ -7,23 +7,20 @@
 
 import Foundation
 
+struct LoginRequest: Codable {
+    let username: String
+    let password: String
+}
+
 protocol LoginServiceProtocol {
     func login(username: String, password: String) async throws -> AuthResponse?
 }
 
 class LoginService: LoginServiceProtocol {
     func login(username: String, password: String) async throws -> AuthResponse? {
-        var request = URLRequest(url: Endpoint.login.url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(["username": username, "password": password])
+        let httpBody = try JSONEncoder().encode(LoginRequest(username: username, password: password))
+        let authResponse = try await ApiClient.shared.post(url: Endpoint.login.url, body: httpBody, responseType: AuthResponse.self)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            throw URLError(.badServerResponse)
-        }
-        
-        let authResponse = try? JSONDecoder().decode(AuthResponse.self, from: data)
         return authResponse
     }
 }

@@ -38,7 +38,9 @@ struct UserInputView: View {
             }
             // Send message
             Button {
-                chatVM.sendChat()
+                Task {
+                    await chatVM.sendChat()
+                }
             } label: {
                 Image(systemName: "paperplane.fill")
                     .resizable()
@@ -52,6 +54,5 @@ struct UserInputView: View {
 }
 
 #Preview {
-    var mockChatVM = ChatViewModel()
-    return UserInputView(chatVM: Binding.constant(mockChatVM))
+    UserInputView(chatVM: Binding.constant(ChatViewModel()))
 }

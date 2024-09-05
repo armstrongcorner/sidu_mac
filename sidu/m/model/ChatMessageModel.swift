@@ -7,9 +7,9 @@
 
 import Foundation
 
-enum ChatRole: Codable {
-    case user
-    case assistant
+enum ChatRole: String, Codable {
+    case user = "user"
+    case assistant = "assistant"
 }
 
 enum ChatContentType: Codable {

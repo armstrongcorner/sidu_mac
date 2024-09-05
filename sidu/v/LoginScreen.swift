@@ -2,7 +2,7 @@
 //  LoginScreen.swift
 //  sidu
 //
-//  Created by Armstrong Liu on 27/05/2024.
+//  Created by Armstrong Liu on 27/08/2024.
 //
 
 import SwiftUI
@@ -99,9 +99,10 @@ struct LoginScreen: View {
 
 #Preview {
     return Group {
-//        LoginScreen().environment(\.locale, .init(identifier: "en"))
         LoginScreen()
+//            .environment(\.locale, .init(identifier: "en"))
             .environment(\.locale, .init(identifier: "zh-Hans"))
             .environment(ToastViewObserver())
+            .environment(AppSize(CGSize(width: 1024, height: 768)))
     }
 }

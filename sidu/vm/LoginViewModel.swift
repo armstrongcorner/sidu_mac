@@ -37,7 +37,7 @@ class LoginViewModel {
             }
             
             // Cache the auth info for future use
-            cacheAuthInfo(authInfo: authResponse.value)
+            CacheUtil.shared.cacheAuthInfo(authInfo: authResponse.value)
             
             self.isLoading = false
             if authResponse.isSuccess ?? false {
@@ -59,20 +59,5 @@ class LoginViewModel {
         isLoggedIn = .none
         errMsg = nil
         isLoading = false
-    }
-    
-    private func cacheAuthInfo(authInfo: AuthModel?) {
-        // cache authInfo
-        if authInfo != nil, let encodedAuthInfo = try? JSONEncoder().encode(authInfo) {
-            UserDefaults.standard.setValue(encodedAuthInfo, forKey: "authInfo")
-        }
-    }
-    
-    func getAuthInfo() -> AuthModel? {
-        if let encodedAuthInfo = UserDefaults.standard.data(forKey: "authInfo") {
-            return try? JSONDecoder().decode(AuthModel.self, from: encodedAuthInfo)
-        }
-        
-        return nil
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ChatScreen: View {
     @Environment(\.myRoute) var path
+    @Environment(ToastViewObserver.self) var toastViewObserver
     
     @State var chatVM: ChatViewModel = ChatViewModel()
     
@@ -40,10 +41,12 @@ struct ChatScreen: View {
                 .padding(.horizontal, 6)
             }
         }
+        .toastView(toastViewObserver: toastViewObserver)
     }
 }
 
 #Preview {
     ChatScreen()
         .environment(AppSize(CGSize(width: 1024, height: 768)))
+        .environment(ToastViewObserver())
 }

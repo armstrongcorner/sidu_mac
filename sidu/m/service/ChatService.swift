@@ -7,19 +7,26 @@
 
 import Foundation
 
-class ChatService {
-    func chat(message: String) async throws -> ChatResponse? {
-        var request = URLRequest(url: Endpoint.chat.url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(["message": message])
+struct ChatRequest: Codable {
+    let model: String
+    let max_tokens: Int
+    let messages: [ChatMessage]
+}
+
+struct ChatMessage: Codable {
+    let role: String
+    let content: String
+}
+
+protocol ChatServiceProtocol {
+    func sendChat(_ message: String) async throws -> ChatResponse?
+}
+
+class ChatService: ChatServiceProtocol {
+    func sendChat(_ message: String) async throws -> ChatResponse? {
+        let httpBody = try JSONEncoder().encode(ChatRequest(model: "gpt-4o", max_tokens:4096, messages: [ChatMessage(role: ChatRole.user.rawValue, content: message)]))
+        let chatResponse = try await ApiClient.shared.post(url: Endpoint.chat.url, body: httpBody, responseType: ChatResponse.self)
         
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            throw URLError(.badServerResponse)
-        }
-        
-        let chatResponse = try? JSONDecoder().decode(ChatResponse.self, from: data)
         return chatResponse
     }
 }
