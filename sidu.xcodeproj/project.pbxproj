@@ -10,6 +10,7 @@
 		2214C8FA2C840B2D008D1FAE /* AppSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2214C8F92C840B2D008D1FAE /* AppSize.swift */; };
 		2214C9002C856EA5008D1FAE /* LiveChatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2214C8FF2C856EA5008D1FAE /* LiveChatScreen.swift */; };
 		2214C9042C85723C008D1FAE /* ChatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2214C9032C85723C008D1FAE /* ChatScreen.swift */; };
+		225B17092C8AC98400DE3AEE /* Interceptors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225B17082C8AC98400DE3AEE /* Interceptors.swift */; };
 		227AFC052C85CD6E006A0AFC /* SelectedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227AFC042C85CD6E006A0AFC /* SelectedImageView.swift */; };
 		227AFC072C85D212006A0AFC /* UserInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227AFC062C85D212006A0AFC /* UserInputView.swift */; };
 		227AFC092C85D50B006A0AFC /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227AFC082C85D50B006A0AFC /* ChatView.swift */; };
@@ -44,6 +45,7 @@
 		2214C8F92C840B2D008D1FAE /* AppSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSize.swift; sourceTree = "<group>"; };
 		2214C8FF2C856EA5008D1FAE /* LiveChatScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChatScreen.swift; sourceTree = "<group>"; };
 		2214C9032C85723C008D1FAE /* ChatScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatScreen.swift; sourceTree = "<group>"; };
+		225B17082C8AC98400DE3AEE /* Interceptors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interceptors.swift; sourceTree = "<group>"; };
 		227AFC042C85CD6E006A0AFC /* SelectedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedImageView.swift; sourceTree = "<group>"; };
 		227AFC062C85D212006A0AFC /* UserInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInputView.swift; sourceTree = "<group>"; };
 		227AFC082C85D50B006A0AFC /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
@@ -87,15 +89,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		227AFC032C85CD37006A0AFC /* widget */ = {
+		225B17072C8AC95000DE3AEE /* network */ = {
+			isa = PBXGroup;
+			children = (
+				22C3A8F82C899C6D0030A2F8 /* ApiClient.swift */,
+				225B17082C8AC98400DE3AEE /* Interceptors.swift */,
+			);
+			path = network;
+			sourceTree = "<group>";
+		};
+		225B170A2C8B0DC900DE3AEE /* c */ = {
+			isa = PBXGroup;
+			children = (
+				22FE37E02C7F408A00F9B992 /* Route.swift */,
+			);
+			path = c;
+			sourceTree = "<group>";
+		};
+		227AFC032C85CD37006A0AFC /* chat */ = {
 			isa = PBXGroup;
 			children = (
 				227AFC042C85CD6E006A0AFC /* SelectedImageView.swift */,
 				227AFC062C85D212006A0AFC /* UserInputView.swift */,
+				2214C9032C85723C008D1FAE /* ChatScreen.swift */,
 				227AFC082C85D50B006A0AFC /* ChatView.swift */,
 				227F18252C872940006E2FD5 /* ChatRow.swift */,
 			);
-			path = widget;
+			path = chat;
 			sourceTree = "<group>";
 		};
 		22D26E802C82CE3B00C4D4FD /* modifier+extension */ = {
@@ -135,10 +155,11 @@
 		22EF50782C03F8FD00B2CED9 /* sidu */ = {
 			isa = PBXGroup;
 			children = (
-				22FE37D92C7F3F7300F9B992 /* core */,
+				22FE37D92C7F3F7300F9B992 /* utils */,
 				22D3DF072C4865450073FB96 /* m */,
 				22FE37D72C7F346B00F9B992 /* vm */,
 				22FE37D82C7F347D00F9B992 /* v */,
+				225B170A2C8B0DC900DE3AEE /* c */,
 				22EF50792C03F8FD00B2CED9 /* siduApp.swift */,
 				2214C8F92C840B2D008D1FAE /* AppSize.swift */,
 				22FE37D52C7F0E0900F9B992 /* Localizable.xcstrings */,
@@ -170,26 +191,24 @@
 		22FE37D82C7F347D00F9B992 /* v */ = {
 			isa = PBXGroup;
 			children = (
-				227AFC032C85CD37006A0AFC /* widget */,
+				227AFC032C85CD37006A0AFC /* chat */,
 				22D26E802C82CE3B00C4D4FD /* modifier+extension */,
 				22FE37DA2C7F3FA800F9B992 /* SplashScreen.swift */,
 				22EF507B2C03F8FD00B2CED9 /* LoginScreen.swift */,
 				22FE37DC2C7F3FF600F9B992 /* EmailRegisterScreen.swift */,
 				22FE37DE2C7F400B00F9B992 /* CompleteRegisterScreen.swift */,
-				2214C9032C85723C008D1FAE /* ChatScreen.swift */,
 				2214C8FF2C856EA5008D1FAE /* LiveChatScreen.swift */,
 			);
 			path = v;
 			sourceTree = "<group>";
 		};
-		22FE37D92C7F3F7300F9B992 /* core */ = {
+		22FE37D92C7F3F7300F9B992 /* utils */ = {
 			isa = PBXGroup;
 			children = (
-				22FE37E02C7F408A00F9B992 /* Route.swift */,
 				22BC450F2C881BF7001FF0A3 /* DateUtil.swift */,
 				22C3A8FA2C89ACF20030A2F8 /* CacheUtil.swift */,
 			);
-			path = core;
+			path = utils;
 			sourceTree = "<group>";
 		};
 		22FE37E62C7F40D400F9B992 /* model */ = {
@@ -206,10 +225,10 @@
 		22FE37E72C7F40E600F9B992 /* service */ = {
 			isa = PBXGroup;
 			children = (
+				225B17072C8AC95000DE3AEE /* network */,
 				22D26E7E2C81C75D00C4D4FD /* Endpoint.swift */,
 				22D26E782C81C2DE00C4D4FD /* LoginService.swift */,
 				22BC45132C88747E001FF0A3 /* ChatService.swift */,
-				22C3A8F82C899C6D0030A2F8 /* ApiClient.swift */,
 			);
 			path = service;
 			sourceTree = "<group>";
@@ -291,6 +310,7 @@
 				227AFC072C85D212006A0AFC /* UserInputView.swift in Sources */,
 				22FE37DB2C7F3FA800F9B992 /* SplashScreen.swift in Sources */,
 				22FE37DD2C7F3FF600F9B992 /* EmailRegisterScreen.swift in Sources */,
+				225B17092C8AC98400DE3AEE /* Interceptors.swift in Sources */,
 				22EF507C2C03F8FD00B2CED9 /* LoginScreen.swift in Sources */,
 				22FE37E52C7F40B300F9B992 /* RegisterViewModel.swift in Sources */,
 				22D26E792C81C2DE00C4D4FD /* LoginService.swift in Sources */,
