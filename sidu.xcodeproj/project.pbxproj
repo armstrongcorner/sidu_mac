@@ -30,6 +30,7 @@
 		22D26E7F2C81C75D00C4D4FD /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D26E7E2C81C75D00C4D4FD /* Endpoint.swift */; };
 		22D26E822C82CE7100C4D4FD /* ShadowAndRoundedCornerModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D26E812C82CE7100C4D4FD /* ShadowAndRoundedCornerModifier.swift */; };
 		22D26E842C83001900C4D4FD /* ToastViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D26E832C83001900C4D4FD /* ToastViewModifier.swift */; };
+		22E796172C8C5EDA00A9623A /* constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E796162C8C5EDA00A9623A /* constant.swift */; };
 		22EF507A2C03F8FD00B2CED9 /* siduApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EF50792C03F8FD00B2CED9 /* siduApp.swift */; };
 		22EF507C2C03F8FD00B2CED9 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EF507B2C03F8FD00B2CED9 /* LoginScreen.swift */; };
 		22EF507E2C03F8FE00B2CED9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22EF507D2C03F8FE00B2CED9 /* Assets.xcassets */; };
@@ -67,6 +68,7 @@
 		22D26E7E2C81C75D00C4D4FD /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		22D26E812C82CE7100C4D4FD /* ShadowAndRoundedCornerModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowAndRoundedCornerModifier.swift; sourceTree = "<group>"; };
 		22D26E832C83001900C4D4FD /* ToastViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModifier.swift; sourceTree = "<group>"; };
+		22E796162C8C5EDA00A9623A /* constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constant.swift; sourceTree = "<group>"; };
 		22EF50762C03F8FD00B2CED9 /* sidu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sidu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22EF50792C03F8FD00B2CED9 /* siduApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = siduApp.swift; sourceTree = "<group>"; };
 		22EF507B2C03F8FD00B2CED9 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
@@ -141,6 +143,15 @@
 			path = m;
 			sourceTree = "<group>";
 		};
+		22E796152C8C5EBB00A9623A /* core */ = {
+			isa = PBXGroup;
+			children = (
+				22FE37D92C7F3F7300F9B992 /* utils */,
+				22E796162C8C5EDA00A9623A /* constant.swift */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
 		22EF506D2C03F8FD00B2CED9 = {
 			isa = PBXGroup;
 			children = (
@@ -160,7 +171,7 @@
 		22EF50782C03F8FD00B2CED9 /* sidu */ = {
 			isa = PBXGroup;
 			children = (
-				22FE37D92C7F3F7300F9B992 /* utils */,
+				22E796152C8C5EBB00A9623A /* core */,
 				22D3DF072C4865450073FB96 /* m */,
 				22FE37D72C7F346B00F9B992 /* vm */,
 				22FE37D82C7F347D00F9B992 /* v */,
@@ -188,8 +199,8 @@
 			children = (
 				22FE37E22C7F40A400F9B992 /* LoginViewModel.swift */,
 				22FE37E42C7F40B300F9B992 /* RegisterViewModel.swift */,
-				22BC45112C885F45001FF0A3 /* ChatViewModel.swift */,
 				225B170F2C8C394700DE3AEE /* UserViewModel.swift */,
+				22BC45112C885F45001FF0A3 /* ChatViewModel.swift */,
 			);
 			path = vm;
 			sourceTree = "<group>";
@@ -330,6 +341,7 @@
 				227AFC052C85CD6E006A0AFC /* SelectedImageView.swift in Sources */,
 				22D26E822C82CE7100C4D4FD /* ShadowAndRoundedCornerModifier.swift in Sources */,
 				22D26E7B2C81C53A00C4D4FD /* BaseResponse.swift in Sources */,
+				22E796172C8C5EDA00A9623A /* constant.swift in Sources */,
 				22FE37E12C7F408A00F9B992 /* Route.swift in Sources */,
 				227AFC092C85D50B006A0AFC /* ChatView.swift in Sources */,
 				22FE37DF2C7F400B00F9B992 /* CompleteRegisterScreen.swift in Sources */,

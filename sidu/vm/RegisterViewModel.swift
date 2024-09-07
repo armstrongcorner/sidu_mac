@@ -13,7 +13,7 @@ class RegisterViewModel {
     private var countDownTimer: Timer?
     
     func startCountDown() {
-        resendCountDown = 60
+        resendCountDown = RESEND_VERI_CODE_COUNTDOWN_IN_SEC
         countDownTimer?.invalidate()
         countDownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
             guard let self = self else { return }

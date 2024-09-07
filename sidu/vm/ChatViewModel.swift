@@ -15,8 +15,9 @@ class ChatViewModel {
     
     private let chatService: ChatServiceProtocol
     
-    init(chatService: ChatServiceProtocol = ChatService()) {
+    init(chatService: ChatServiceProtocol = ChatService(), chatContexts: [ChatMessageModel] = []) {
         self.chatService = chatService
+        self.chatContexts = chatContexts
     }
 
     func sendChat() async {
@@ -41,12 +42,21 @@ class ChatViewModel {
                 status: .waiting,
                 isCompleteChatFlag: false
             )
-            chatContexts.append(contentsOf: [chatContext, waitForResponseContext])
+            DispatchQueue.main.async {
+                self.chatContexts.append(contentsOf: [chatContext, waitForResponseContext])
+            }
+            
+            let aaa = chatContexts.map { $0.content }
+            
             do {
-                userMessage = ""
-                guard let chatResponse = try await chatService.sendChat(tmpCacheUserMessage) else {
-                    self.errMsg = "Sending chat message failed with unknown reason"
-                    userMessage = tmpCacheUserMessage
+                DispatchQueue.main.async {
+                    self.userMessage = ""
+                }
+                guard let chatResponse = try await chatService.sendChat(chatContexts.dropLast()) else {
+                    DispatchQueue.main.async {
+                        self.errMsg = "Sending chat message failed with unknown reason"
+                        self.userMessage = tmpCacheUserMessage
+                    }
                     return
                 }
                 

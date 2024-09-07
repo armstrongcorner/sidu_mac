@@ -19,14 +19,24 @@ struct ChatMessage: Codable {
 }
 
 protocol ChatServiceProtocol {
-    func sendChat(_ message: String) async throws -> ChatResponse?
+    func sendChat(_ messageList: [ChatMessageModel]) async throws -> ChatResponse?
 }
 
 class ChatService: ChatServiceProtocol {
-    func sendChat(_ message: String) async throws -> ChatResponse? {
-        let httpBody = try JSONEncoder().encode(ChatRequest(model: "gpt-4o", max_tokens:4096, messages: [ChatMessage(role: ChatRole.user.rawValue, content: message)]))
+    func sendChat(_ messageList: [ChatMessageModel]) async throws -> ChatResponse? {
+        let httpBody = try JSONEncoder().encode(ChatRequest(
+            model: DEFAULT_AI_MODEL,
+            max_tokens:DEFAULT_MAX_TOKENS,
+            messages: buildUplinkMessage(messageList)
+        ))
         let chatResponse = try await ApiClient.shared.post(url: Endpoint.chat.url, body: httpBody, responseType: ChatResponse.self)
         
         return chatResponse
+    }
+    
+    func buildUplinkMessage(_ messageList: [ChatMessageModel]) -> [ChatMessage] {
+        return messageList.map {
+            ChatMessage(role: $0.role?.rawValue ?? ChatRole.user.rawValue, content: $0.content ?? "")
+        }
     }
 }
