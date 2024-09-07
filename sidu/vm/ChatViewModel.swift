@@ -42,17 +42,26 @@ class ChatViewModel {
                 status: .waiting,
                 isCompleteChatFlag: false
             )
-            DispatchQueue.main.async {
-                self.chatContexts.append(contentsOf: [chatContext, waitForResponseContext])
-            }
+            self.chatContexts.append(contentsOf: [chatContext, waitForResponseContext])
             
-            let aaa = chatContexts.map { $0.content }
+            // Reverse loop the chatContexts with max chat depth, until the complete chat flag is true
+            var count = 0
+            var newChatContexts: [ChatMessageModel] = []
+            for item in chatContexts.filter({ $0.status != .waiting }).reversed() {
+                if item.isCompleteChatFlag ?? false || count >= MAX_CHAT_DEPTH {
+                    break
+                }
+                
+                newChatContexts.append(item)
+                count += 1
+            }
             
             do {
                 DispatchQueue.main.async {
                     self.userMessage = ""
                 }
-                guard let chatResponse = try await chatService.sendChat(chatContexts.dropLast()) else {
+                // Reverse back the newChatContexts to positive order, then send chat message
+                guard let chatResponse = try await chatService.sendChat(newChatContexts.reversed()) else {
                     DispatchQueue.main.async {
                         self.errMsg = "Sending chat message failed with unknown reason"
                         self.userMessage = tmpCacheUserMessage
@@ -74,14 +83,20 @@ class ChatViewModel {
                         isCompleteChatFlag: false
                     )
                     // 2) Replace 'waiting' message with chatMessage
-                    chatContexts.replace([waitForResponseContext], with: [chatMessage])
+                    DispatchQueue.main.async {
+                        self.chatContexts.replace([waitForResponseContext], with: [chatMessage])
+                    }
                 } else {
-                    self.errMsg = chatResponse.failureReason
-                    userMessage = tmpCacheUserMessage
+                    DispatchQueue.main.async {
+                        self.errMsg = chatResponse.failureReason
+                        self.userMessage = tmpCacheUserMessage
+                    }
                 }
             } catch {
-                self.errMsg = error.localizedDescription
-                userMessage = tmpCacheUserMessage
+                DispatchQueue.main.async {
+                    self.errMsg = error.localizedDescription
+                    self.userMessage = tmpCacheUserMessage
+                }
             }
             
         }
