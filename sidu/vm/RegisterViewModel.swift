@@ -29,4 +29,8 @@ class RegisterViewModel {
         countDownTimer = nil
         resendCountDown = 0
     }
+    
+    deinit {
+        countDownTimer?.invalidate()
+    }
 }

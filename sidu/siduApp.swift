@@ -12,9 +12,10 @@ struct siduApp: App {
     var body: some Scene {
         WindowGroup {
             GeometryReader { geometry in
-                LoginScreen()
+                SplashScreen()
                     .environment(ToastViewObserver())
                     .environment(AppSize(geometry.size))
+                    .environment(\.locale, .init(identifier: "zh-Hans"))
             }
         }
     }

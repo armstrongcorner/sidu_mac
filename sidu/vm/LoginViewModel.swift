@@ -29,35 +29,45 @@ class LoginViewModel {
     
     func login() async {
         do {
-            isLoading = true
+            DispatchQueue.main.async {
+                self.isLoading = true
+            }
             guard let authResponse = try await loginService.login(username: username, password: password) else {
-                self.isLoading = false
-                self.errMsg = "Login failed with unknown reason"
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.errMsg = "Login failed with unknown reason"
+                }
                 return
             }
             
             // Cache the auth info for future use
             CacheUtil.shared.cacheAuthInfo(authInfo: authResponse.value)
             
-            self.isLoading = false
-            if authResponse.isSuccess ?? false {
-                self.isLoggedIn = .success
-            } else {
-                self.isLoggedIn = .failed
-                self.errMsg = authResponse.failureReason
+            DispatchQueue.main.async {
+                self.isLoading = false
+                if authResponse.isSuccess ?? false {
+                    self.isLoggedIn = .success
+                } else {
+                    self.isLoggedIn = .failed
+                    self.errMsg = authResponse.failureReason
+                }
             }
         } catch {
-            self.isLoading = false
-            self.isLoggedIn = .failed
-            self.errMsg = error.localizedDescription
+            DispatchQueue.main.async {
+                self.isLoading = false
+                self.isLoggedIn = .failed
+                self.errMsg = error.localizedDescription
+            }
         }
     }
     
     func clearCredentials() {
-        username = ""
-        password = ""
-        isLoggedIn = .none
-        errMsg = nil
-        isLoading = false
+        DispatchQueue.main.async {
+            self.username = ""
+            self.password = ""
+            self.isLoggedIn = .none
+            self.errMsg = nil
+            self.isLoading = false
+        }
     }
 }

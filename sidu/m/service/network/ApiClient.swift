@@ -15,15 +15,18 @@ class ApiClient {
     // Get default headers
     func getHeaders() -> [String: String] {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        let token = CacheUtil.shared.getAuthInfo()?.token ?? ""
         
-        return [
+        var headers = [
             "Content-Type": "application/json",
             "Accept": "application/json",
             "x-app-os": "macos",
             "x-app-version": appVersion,
-            "Authorization": "Bearer \(token)"
         ]
+        if let token = CacheUtil.shared.getAuthInfo()?.token {
+            headers["Authorization"] = "Bearer \(token)"
+        }
+        
+        return headers
     }
     
     // Common http request method

@@ -9,22 +9,36 @@ import SwiftUI
 
 struct SplashScreen: View {
     @State private var path: [Route] = []
+    @State private var userVM = UserViewModel()
     
     var body: some View {
-        VStack {
-            Spacer(minLength: 50)
-            HStack {
+        NavigationStack(path: $path) {
+            VStack {
                 Spacer(minLength: 50)
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
+                HStack {
+                    Spacer(minLength: 50)
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                    Spacer(minLength: 50)
+                }
                 Spacer(minLength: 50)
             }
-            Spacer(minLength: 50)
+            .navigationDestination(for: Route.self) { value in
+                getViewByRoute(value)
+            }
         }
-        .navigationBarBackButtonHidden(true)
+        .onAppear() {
+            if userVM.isLoggedIn {
+                path.append(.chatScreen)
+            } else {
+                path.append(.loginScreen)
+            }
+        }
+        .environment(\.myRoute, $path)
     }
 }
 
 #Preview {
     SplashScreen()
+        .environment(ToastViewObserver())
 }
