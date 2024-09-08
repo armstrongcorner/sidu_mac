@@ -58,6 +58,25 @@ struct ChatRow: View {
                     Spacer(minLength: appSize.getScreenWidth() * 0.1)
                 }
                 .id(chatContext.id)
+                
+                // Show manually end chat button, align left
+                if !(chatContext.isCompleteChatFlag ?? false) && chatContext.status != .waiting {
+                    HStack {
+                        Button {
+                            print("End chat button clicked")
+                        } label: {
+                            Text("Click to end chat")
+                                .font(.subheadline)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 3)
+                                .shadowAndRoundedCorner(color: .userMsgBg, radius: 5, shadowRadius: 1)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .padding(.leading, 30)
+                        
+                        Spacer()
+                    }
+                }
             }
         }
     }
