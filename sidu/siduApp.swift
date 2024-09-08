@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct siduApp: App {
@@ -18,5 +19,6 @@ struct siduApp: App {
                     .environment(\.locale, .init(identifier: "zh-Hans"))
             }
         }
+        .modelContainer(for: [User.self, Topic.self, Chat.self])
     }
 }

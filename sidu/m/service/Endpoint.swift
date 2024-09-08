@@ -18,7 +18,7 @@ enum Endpoint {
     case sendVerificationEmail
     case verifyRegistration
     case completeRegistration
-    case useInfo
+    case userInfo
     case chat
     
     var url: URL {
@@ -33,8 +33,8 @@ enum Endpoint {
             return URL(string: "\(Endpoint.userURL)/identity/user/authenticate")!
         case .completeRegistration:
             return URL(string: "\(Endpoint.userURL)/identity/user/password")!
-        case .useInfo:
-            return URL(string: "\(Endpoint.userURL)/identity/user")!
+        case .userInfo:
+            return URL(string: "\(Endpoint.userURL)/identity/user?username=")!
         case .chat:
             return URL(string: "\(Endpoint.chatURL)/chat/balance/complete")!
         }

@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SwiftUI
+import SwiftData
 
 enum LoginResult: Equatable {
     case none
@@ -21,10 +23,14 @@ class LoginViewModel {
     var errMsg: String?
     var isLoading: Bool = false
     
-    private let loginService: LoginServiceProtocol
+    var modelContext: ModelContext?
     
-    init(loginService: LoginServiceProtocol = LoginService()) {
+    private let loginService: LoginServiceProtocol
+    private let userServic: UserServiceProtocol
+    
+    init(loginService: LoginServiceProtocol = LoginService(), userService: UserServiceProtocol = UserService()) {
         self.loginService = loginService
+        self.userServic = userService
     }
     
     func login() async {
@@ -32,6 +38,7 @@ class LoginViewModel {
             DispatchQueue.main.async {
                 self.isLoading = true
             }
+            // Login
             guard let authResponse = try await loginService.login(username: username, password: password) else {
                 DispatchQueue.main.async {
                     self.isLoading = false
@@ -42,7 +49,25 @@ class LoginViewModel {
             
             // Cache the auth info for future use
             CacheUtil.shared.cacheAuthInfo(authInfo: authResponse.value)
+            // Cache the username for future use
+            UserDefaults.standard.setValue(username, forKey: CacheKey.username.rawValue)
+
+            // Get user info
+            guard let userInfoResponse = try await userServic.getUserInfo(username: username) else {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.errMsg = "Get user info failed with unknown reason"
+                }
+                return
+            }
             
+            // Cache the user info for future use
+            let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
+            modelContext?.insert(user)
+            if modelContext?.hasChanges ?? false {
+                try modelContext?.save()
+            }
+
             DispatchQueue.main.async {
                 self.isLoading = false
                 if authResponse.isSuccess ?? false {

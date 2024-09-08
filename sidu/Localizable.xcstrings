@@ -13,6 +13,9 @@
     "Chat message %lld" : {
 
     },
+    "Click to end chat" : {
+
+    },
     "Complete Register" : {
       "comment" : "complete register btn title",
       "extractionState" : "manual",

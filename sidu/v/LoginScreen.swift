@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LoginScreen: View {
     @Environment(\.myRoute) private var path
     @Environment(ToastViewObserver.self) var toastViewObserver
+    @Environment(\.modelContext) private var modelContext
     
     @State private var loginVM = LoginViewModel()
     
@@ -75,6 +77,9 @@ struct LoginScreen: View {
             //                })
         }
         .padding()
+        .onAppear() {
+            self.loginVM.modelContext = modelContext
+        }
         .onDisappear() {
             loginVM.clearCredentials()
         }

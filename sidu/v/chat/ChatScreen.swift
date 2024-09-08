@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ChatScreen: View {
+    @Environment(\.modelContext) var modelContext
     @Environment(\.myRoute) var path
     @Environment(ToastViewObserver.self) var toastViewObserver
     

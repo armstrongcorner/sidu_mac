@@ -9,6 +9,7 @@ import Foundation
 
 enum CacheKey: String {
     case authInfo = "authInfo"
+    case username = "username"
 }
 
 class CacheUtil {
