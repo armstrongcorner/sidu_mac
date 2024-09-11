@@ -17,7 +17,7 @@ struct ChatView: View {
             ScrollView {
                 LazyVStack {
                     ForEach(0..<chatVM.chatContexts.count, id: \.self) { i in
-                        ChatRow(chatVM.chatContexts[i], lastChatContext: i > 0 ? chatVM.chatContexts[i - 1] : nil)
+                        ChatRow(chatVM.chatContexts[i], lastChatContext: i > 0 ? chatVM.chatContexts[i - 1] : nil, chatVM: $chatVM)
                     }
                 }
             }

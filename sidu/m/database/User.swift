@@ -9,8 +9,8 @@ import SwiftData
 import SwiftUI
 
 @Model
-class User {
-    var id: Int?
+final class User {
+    @Attribute(.unique) var id: Int?
     var userName: String?
     var password: String?
     var photo: String?
@@ -61,7 +61,14 @@ class User {
         self.updatedBy = row["updatedBy"] as? String
     }
     
-    static func fetchUser(byUsername username: String, context: ModelContext) throws -> User? {
+    static func addUser(user: User, context: ModelContext?) throws {
+        context?.insert(user)
+        if context?.hasChanges ?? false {
+            try context?.save()
+        }
+    }
+    
+    static func fetchUser(byUsername username: String?, context: ModelContext) throws -> User? {
         let fetchDescriptor = FetchDescriptor<User>(predicate: #Predicate { $0.userName == username })
         let users = try? context.fetch(fetchDescriptor)
         return users?.first

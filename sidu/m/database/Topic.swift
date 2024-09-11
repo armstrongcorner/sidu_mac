@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @Model
-class Topic {
+final class Topic {
     @Attribute(.unique) var id: String = UUID().uuidString
     var title: String?
     var createTime: Int?
@@ -25,9 +25,22 @@ class Topic {
         self.user = user
     }
     
+    static func addTopic(topic: Topic, context: ModelContext?) throws {
+        context?.insert(topic)
+        if context?.hasChanges ?? false {
+            try context?.save()
+        }
+    }
+    
     static func fetchTopic(for user: User, context: ModelContext) throws -> [Topic]? {
         // Using user id to fetch the topic
-        let predicate = #Predicate<Topic> { $0.user?.id == user.id }
+        /**
+         We have to make this constant or variable to use for the predicate, otherwise it will crash
+         See this thread: https://stackoverflow.com/questions/77039981/swiftdata-query-with-predicate-on-relationship-model
+         it seems that the predicate is not able to capture the user.id directly or #Predicate will not let you use another @Model in the code block.
+         */
+        let userId = user.id
+        let predicate = #Predicate<Topic> { $0.user?.id == userId }
         // Lastest topic first
         let sortDescriptor = SortDescriptor(\Topic.createTime, order: .reverse)
         

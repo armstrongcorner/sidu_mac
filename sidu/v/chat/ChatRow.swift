@@ -10,12 +10,15 @@ import SwiftUI
 struct ChatRow: View {
     @Environment(AppSize.self) var appSize
     
+    @Binding var chatVM: ChatViewModel
+    
     var chatContext: ChatMessageModel
     var lastChatContext: ChatMessageModel?
     
-    init(_ chatContext: ChatMessageModel, lastChatContext: ChatMessageModel? = nil) {
+    init(_ chatContext: ChatMessageModel, lastChatContext: ChatMessageModel? = nil, chatVM: Binding<ChatViewModel>) {
         self.chatContext = chatContext
         self.lastChatContext = lastChatContext
+        self._chatVM = chatVM
     }
     
     var body: some View {
@@ -60,7 +63,7 @@ struct ChatRow: View {
                 .id(chatContext.id)
                 
                 // Show manually end chat button, align left
-                if !(chatContext.isCompleteChatFlag ?? false) && chatContext.status != .waiting {
+                if !(chatContext.isCompleteChatFlag ?? false) && chatContext.status != .waiting && chatVM.chatContexts.last?.id == chatContext.id {
                     HStack {
                         Button {
                             print("End chat button clicked")
@@ -82,45 +85,47 @@ struct ChatRow: View {
     }
 }
 
-#Preview {
-    let chatContext = ChatMessageModel(
-        id: UUID().uuidString,
-        role: .user,
-        content: "Test preview message",
-        type: .text,
-        createAt: Int(Date().timeIntervalSince1970),
-        status: .sending,
-        isCompleteChatFlag: false
-    )
-    let waitForResponseContext = ChatMessageModel(
-        id: UUID().uuidString,
-        role: .assistant,
-        content: "...",
-        type: .text,
-        createAt: Int(Date().timeIntervalSince1970),
-        status: .waiting,
-        isCompleteChatFlag: false
-    )
-    let gptResponseContext = ChatMessageModel(
-        id: UUID().uuidString,
-        role: .assistant,
-        content: "你说的对，使用 .padding(.top, -40) 这样的负值时，会改变视图的布局方式，从而可能导致点击事件不起作用。具体来说，负的 padding 会将视图向相反的方向移动，但它并不会扩展视图的点击区域，反而可能会导致视图的点击区域缩小甚至消失。",
-        type: .text,
-        createAt: Int(Date().timeIntervalSince1970),
-        status: .done,
-        isCompleteChatFlag: false
-    )
-    
-    return Group {
-        ChatRow(chatContext)
-            .environment(AppSize(CGSize(width: 1024, height: 768)))
-        ChatRow(chatContext)
-            .environment(AppSize(CGSize(width: 1024, height: 768)))
-        ChatRow(waitForResponseContext)
-            .environment(AppSize(CGSize(width: 1024, height: 768)))
-        ChatRow(chatContext)
-            .environment(AppSize(CGSize(width: 1024, height: 768)))
-        ChatRow(gptResponseContext)
-            .environment(AppSize(CGSize(width: 1024, height: 768)))
-    }
-}
+//#Preview {
+//    let chatContext = ChatMessageModel(
+//        id: UUID().uuidString,
+//        role: .user,
+//        content: "Test preview message",
+//        type: .text,
+//        createAt: Int(Date().timeIntervalSince1970),
+//        status: .sending,
+//        isCompleteChatFlag: false
+//    )
+//    let waitForResponseContext = ChatMessageModel(
+//        id: UUID().uuidString,
+//        role: .assistant,
+//        content: "...",
+//        type: .text,
+//        createAt: Int(Date().timeIntervalSince1970),
+//        status: .waiting,
+//        isCompleteChatFlag: false
+//    )
+//    let gptResponseContext = ChatMessageModel(
+//        id: UUID().uuidString,
+//        role: .assistant,
+//        content: "你说的对，使用 .padding(.top, -40) 这样的负值时，会改变视图的布局方式，从而可能导致点击事件不起作用。具体来说，负的 padding 会将视图向相反的方向移动，但它并不会扩展视图的点击区域，反而可能会导致视图的点击区域缩小甚至消失。",
+//        type: .text,
+//        createAt: Int(Date().timeIntervalSince1970),
+//        status: .done,
+//        isCompleteChatFlag: false
+//    )
+//    
+//    let mockChatVM = ChatViewModel()
+//    
+//    return Group {
+//        ChatRow(chatContext, chatVM: Binding.constant(mockChatVM))
+//            .environment(AppSize(CGSize(width: 1024, height: 768)))
+//        ChatRow(chatContext)
+//            .environment(AppSize(CGSize(width: 1024, height: 768)))
+//        ChatRow(waitForResponseContext)
+//            .environment(AppSize(CGSize(width: 1024, height: 768)))
+//        ChatRow(chatContext)
+//            .environment(AppSize(CGSize(width: 1024, height: 768)))
+//        ChatRow(gptResponseContext)
+//            .environment(AppSize(CGSize(width: 1024, height: 768)))
+//    }
+//}

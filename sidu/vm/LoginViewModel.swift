@@ -63,10 +63,7 @@ class LoginViewModel {
             
             // Cache the user info for future use
             let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
-            modelContext?.insert(user)
-            if modelContext?.hasChanges ?? false {
-                try modelContext?.save()
-            }
+            try User.addUser(user: user, context: modelContext)
 
             DispatchQueue.main.async {
                 self.isLoading = false

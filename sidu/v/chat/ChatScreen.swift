@@ -18,8 +18,17 @@ struct ChatScreen: View {
     var body: some View {
         NavigationSplitView {
             List {
-                ForEach(0..<10) { index in
-                    Text("Chat message \(index)")
+                ForEach(chatVM.topicList) { topic in
+                    NavigationLink {
+                        VStack {
+                            // Chat area
+                            ChatView(chatVM: $chatVM)
+                            // User input area
+                            UserInputView(chatVM: $chatVM)
+                        }
+                    } label: {
+                        Text(topic.title ?? "")
+                    }
                 }
             }
         } detail: {
@@ -28,6 +37,12 @@ struct ChatScreen: View {
                 ChatView(chatVM: $chatVM)
                 // User input area
                 UserInputView(chatVM: $chatVM)
+            }
+        }
+        .onAppear() {
+            Task {
+                self.chatVM.modelContext = modelContext
+                await self.chatVM.getTopicList()
             }
         }
         .navigationTitle("Chat")
@@ -51,4 +66,5 @@ struct ChatScreen: View {
     ChatScreen()
         .environment(AppSize(CGSize(width: 1024, height: 768)))
         .environment(ToastViewObserver())
+        .modelContainer(for: [User.self, Topic.self, Chat.self])
 }
