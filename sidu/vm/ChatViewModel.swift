@@ -52,7 +52,9 @@ class ChatViewModel {
         do {
             // Get current user's topics
             let currentUser = try getCurrentUser()
-            self.topicList = currentUser?.topics ?? []
+            self.topicList = (currentUser?.topics ?? []).sorted(by: { topic1, topic2 in
+                topic1.createTime ?? 0 > topic2.createTime ?? 0
+            })
             print("topicList count: \(topicList.count)");
             print("chat count: \(currentUser?.topics.first?.chats.count ?? 0)")
         } catch {
