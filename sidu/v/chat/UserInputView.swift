@@ -29,12 +29,18 @@ struct UserInputView: View {
                 
                 // User text input
                 TextEditor(text: $chatVM.userMessage)
+//                    .onChange(of: chatVM.userMessage) { oldValue, newValue in
+//                        print("oldValue: \(oldValue), newValue: \(newValue)")
+//                        if newValue.contains("\n") {
+//                            print("return pressed")
+//                        }
+//                    }
                     .font(.body)
                     .scrollIndicators(.never)
                     .frame(minHeight: 30, maxHeight: 100)
                     .fixedSize(horizontal: false, vertical: true)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
-                .padding(.bottom, 8)
+                    .padding(.bottom, 8)
             }
             // Send message
             Button {

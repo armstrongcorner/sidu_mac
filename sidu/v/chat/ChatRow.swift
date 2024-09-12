@@ -13,18 +13,18 @@ struct ChatRow: View {
     @Binding var chatVM: ChatViewModel
     
     var chatContext: ChatMessageModel
-    var lastChatContext: ChatMessageModel?
+    var beforeChatContext: ChatMessageModel?
     
     init(_ chatContext: ChatMessageModel, lastChatContext: ChatMessageModel? = nil, chatVM: Binding<ChatViewModel>) {
         self.chatContext = chatContext
-        self.lastChatContext = lastChatContext
+        self.beforeChatContext = lastChatContext
         self._chatVM = chatVM
     }
     
     var body: some View {
         VStack {
             // Chat time label (only shown when the time difference between two chat messages is more than 5 minutes)
-            if DateUtil.shared.compareTimeDifference(startTimeStamp: lastChatContext?.createAt ?? 0, endTimeStamp: chatContext.createAt ?? 0, inUnit: .minute) > 5 {
+            if DateUtil.shared.compareTimeDifference(startTimeStamp: beforeChatContext?.createAt ?? 0, endTimeStamp: chatContext.createAt ?? 0, inUnit: .minute) > 5 {
                 Text(DateUtil.shared.decideToShowDateTime(chatContext.createAt ?? 0))
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -67,6 +67,7 @@ struct ChatRow: View {
                     HStack {
                         Button {
                             print("End chat button clicked")
+                            chatVM.endChat()
                         } label: {
                             Text("Click to end chat")
                                 .font(.subheadline)

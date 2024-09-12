@@ -17,8 +17,11 @@ class ChatViewModel {
     var currentTopic: Topic?
     {
         didSet {
-            self.chatContexts = currentTopic?.chats.map({ chat in
-                ChatMessageModel(
+            self.chatContexts = currentTopic?.chats.sorted(by: { chat1, chat2 in
+                chat1.createAt ?? 0 < chat2.createAt ?? 0
+            }).map({ chat in
+                print("content: \(chat.content)")
+                return ChatMessageModel(
                     id: chat.id,
                     role: chat.role,
                     content: chat.content,
@@ -127,17 +130,17 @@ class ChatViewModel {
                         let currentUser = try getCurrentUser()
                         let topic = Topic(title: tmpCacheUserMessage, createTime: Int(Date().timeIntervalSince1970), isComplete: false, user: currentUser)
                         self.currentTopic = topic
-                        try? Topic.addTopic(topic: topic, context: modelContext)
+                        try Topic.addTopic(topic: topic, context: modelContext)
                     }
                     // 2-2) Save chat message to database
                     // Save user sent message first
                     let userChat = Chat(fromContextModel: userChatContext)
                     userChat.topic = currentTopic
-                    try? Chat.addChat(chat: userChat, context: modelContext)
+                    try Chat.addChat(chat: userChat, context: modelContext)
                     // Save assistant response message
                     let assistantChat = Chat(fromContextModel: assistantChatMessage)
                     assistantChat.topic = currentTopic
-                    try? Chat.addChat(chat: assistantChat, context: modelContext)
+                    try Chat.addChat(chat: assistantChat, context: modelContext)
                     // 3) Replace 'waiting' message with chatMessage
                     DispatchQueue.main.async {
                         self.chatContexts.replace([waitForResponseContext], with: [assistantChatMessage])
@@ -155,6 +158,24 @@ class ChatViewModel {
                 }
             }
             
+        }
+    }
+    
+    func endChat() {
+        do {
+            // 1) Update the last chat context UI
+            var lastChatContext = chatContexts.last!
+            lastChatContext.isCompleteChatFlag = true
+            chatContexts[chatContexts.count - 1] = lastChatContext
+            // 2) Update database (topic and chat)
+            // Update the current topic to complete
+            currentTopic?.isComplete = true
+            try Topic.updateTopic(topic: currentTopic!, context: modelContext)
+            // Update the last chat to complete
+            let lastChat = Chat(fromContextModel: lastChatContext)
+            try Chat.updateChat(chat: lastChat, context: modelContext)
+        } catch {
+            self.errMsg = error.localizedDescription
         }
     }
 }

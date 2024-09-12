@@ -48,4 +48,19 @@ final class Topic {
         
         return try? context.fetch(fetchDescriptor)
     }
+    
+    static func updateTopic(topic: Topic, context: ModelContext?) throws {
+        // Fetch the topic by id
+        let topicId = topic.id
+        let fetchDescriptor = FetchDescriptor<Topic>(predicate: #Predicate<Topic> { $0.id == topicId })
+        // Update the topic
+        if let topicToUpdate = try context?.fetch(fetchDescriptor) {
+            topicToUpdate.first?.title = topic.title
+            topicToUpdate.first?.createTime = topic.createTime
+            topicToUpdate.first?.isComplete = topic.isComplete
+            if context?.hasChanges ?? false {
+                try context?.save()
+            }
+        }
+    }
 }

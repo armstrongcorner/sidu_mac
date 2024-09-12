@@ -62,4 +62,23 @@ final class Chat {
         
         return try? context.fetch(fetchDescriptor)
     }
+    
+    static func updateChat(chat: Chat, context: ModelContext?) throws {
+        // Fetch the chat by id
+        let chatId = chat.id
+        let fetchDescriptor = FetchDescriptor<Chat>(predicate: #Predicate<Chat> { $0.id == chatId })
+        // Update the chat
+        if let chatToUpdate = try context?.fetch(fetchDescriptor) {
+            chatToUpdate.first?.role = chat.role
+            chatToUpdate.first?.content = chat.content
+            chatToUpdate.first?.type = chat.type
+            chatToUpdate.first?.fileAccessUrl = chat.fileAccessUrl
+            chatToUpdate.first?.createAt = chat.createAt
+            chatToUpdate.first?.status = chat.status
+            chatToUpdate.first?.isCompleteChatFlag = chat.isCompleteChatFlag
+            if context?.hasChanges ?? false {
+                try context?.save()
+            }
+        }
+    }
 }
