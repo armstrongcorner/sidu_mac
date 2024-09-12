@@ -15,6 +15,21 @@ class ChatViewModel {
     var errMsg: String?
     var topicList: [Topic] = []
     var currentTopic: Topic?
+    {
+        didSet {
+            self.chatContexts = currentTopic?.chats.map({ chat in
+                ChatMessageModel(
+                    id: chat.id,
+                    role: chat.role,
+                    content: chat.content,
+                    type: .text,
+                    createAt: chat.createAt,
+                    status: chat.status,
+                    isCompleteChatFlag: chat.isCompleteChatFlag
+                )
+            }) ?? []
+        }
+    }
     
     var modelContext: ModelContext?
     
@@ -35,11 +50,13 @@ class ChatViewModel {
             // Get current user's topics
             let currentUser = try getCurrentUser()
             self.topicList = currentUser?.topics ?? []
+            print("topicList count: \(topicList.count)");
+            print("chat count: \(currentUser?.topics.first?.chats.count ?? 0)")
         } catch {
             self.errMsg = error.localizedDescription
         }
     }
-
+    
     func sendChat() async {
         let tmpCacheUserMessage: String = userMessage
         let isFirstChat = chatContexts.isEmpty

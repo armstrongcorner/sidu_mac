@@ -19,16 +19,14 @@ struct ChatScreen: View {
         NavigationSplitView {
             List {
                 ForEach(chatVM.topicList) { topic in
-                    NavigationLink {
-                        VStack {
-                            // Chat area
-                            ChatView(chatVM: $chatVM)
-                            // User input area
-                            UserInputView(chatVM: $chatVM)
+                    Button {
+                        Task {
+                            chatVM.currentTopic = topic
                         }
                     } label: {
                         Text(topic.title ?? "")
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
         } detail: {
