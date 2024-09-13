@@ -14,7 +14,7 @@ struct ChatScreen: View {
     @Environment(ToastViewObserver.self) var toastViewObserver
     
     @State var chatVM: ChatViewModel = ChatViewModel()
-    @State var selectedTopicIndex: Int?
+//    @State var selectedTopicIndex: Int?
     
     var body: some View {
         NavigationSplitView {
@@ -22,7 +22,7 @@ struct ChatScreen: View {
                 ForEach(0..<chatVM.topicList.count, id: \.self) { i in
                     let topic = chatVM.topicList[i]
                     Button {
-                        selectedTopicIndex = i
+                        chatVM.selectedTopicIndex = i
                         chatVM.currentTopic = topic
                     } label: {
                         HStack {
@@ -33,7 +33,7 @@ struct ChatScreen: View {
                         }
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
-                        .background(selectedTopicIndex == i ? .gray.opacity(0.5) : .clear)
+                        .background(chatVM.selectedTopicIndex == i ? .gray.opacity(0.5) : .clear)
                         .cornerRadius(8)
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -54,7 +54,7 @@ struct ChatScreen: View {
                 // Select the first topic by default if topic list is not empty
                 if let firstTopic = chatVM.topicList.first {
                     chatVM.currentTopic = firstTopic
-                    selectedTopicIndex = 0
+                    chatVM.selectedTopicIndex = 0
                 }
             }
         }

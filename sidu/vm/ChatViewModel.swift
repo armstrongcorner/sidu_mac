@@ -13,9 +13,9 @@ class ChatViewModel {
     var chatContexts: [ChatMessageModel]
     var userMessage: String = ""
     var errMsg: String?
+    var selectedTopicIndex: Int?
     var topicList: [Topic] = []
-    var currentTopic: Topic?
-    {
+    var currentTopic: Topic? {
         didSet {
             self.chatContexts = currentTopic?.chats.sorted(by: { chat1, chat2 in
                 chat1.createAt ?? 0 < chat2.createAt ?? 0
@@ -132,11 +132,11 @@ class ChatViewModel {
                     if isFirstChat {
                         let currentUser = try getCurrentUser()
                         let topic = Topic(title: tmpCacheUserMessage, createTime: Int(Date().timeIntervalSince1970), isComplete: false, user: currentUser)
-//                        self.currentTopic = topic
                         try Topic.addTopic(topic: topic, context: modelContext)
                         // Update topic list
                         await getTopicList()
                         self.currentTopic = topic
+                        selectedTopicIndex = 0
                     }
                     // 2-2) Save chat message to database
                     // Save user sent message first
@@ -151,6 +151,8 @@ class ChatViewModel {
                     DispatchQueue.main.async {
                         self.chatContexts.replace([waitForResponseContext], with: [assistantChatMessage])
                     }
+                    // 4) Update current topic for refresh the chat list
+                    self.currentTopic = userChat.topic
                 } else {
                     DispatchQueue.main.async {
                         self.errMsg = assistantChatResponse.failureReason
