@@ -35,6 +35,7 @@ struct ChatRow: View {
                 HStack(alignment: .top) {
                     Spacer(minLength: appSize.getScreenWidth() * 0.1)
                     Text("\(chatContext.content ?? "")")
+                        .textSelection(.enabled)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
                         .shadowAndRoundedCorner(color: .userMsgBg, radius: 5, shadowRadius: 1)
@@ -55,6 +56,7 @@ struct ChatRow: View {
                         .padding(.top, 4)
                         .padding(.leading, 5)
                     Text("\(chatContext.content ?? "")")
+                        .textSelection(.enabled)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
                         .shadowAndRoundedCorner(color: .white, radius: 5, shadowRadius: 1)
@@ -62,8 +64,8 @@ struct ChatRow: View {
                 }
                 .id(chatContext.id)
                 
-                // Show manually end chat button, align left
                 if !(chatContext.isCompleteChatFlag ?? false) && chatContext.status != .waiting && chatVM.chatContexts.last?.id == chatContext.id {
+                    // Show manually end chat button, if chat is not complete
                     HStack {
                         Button {
                             print("End chat button clicked")
@@ -80,6 +82,12 @@ struct ChatRow: View {
                         
                         Spacer()
                     }
+                } else if chatVM.chatContexts.last?.id == chatContext.id && chatContext.isCompleteChatFlag ?? false {
+                    // Show chat end message
+                    Text("Chat is completed")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .padding(.top, 5)
                 }
             }
         }

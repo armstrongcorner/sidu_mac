@@ -24,7 +24,11 @@ struct ChatScreen: View {
                             chatVM.currentTopic = topic
                         }
                     } label: {
-                        Text(topic.title ?? "")
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(topic.isComplete ?? false ? .gpt : .gray)
+                            Text(topic.title ?? "")
+                        }
                     }
                     .buttonStyle(PlainButtonStyle())
                 }

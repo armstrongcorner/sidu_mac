@@ -64,7 +64,8 @@ class ChatViewModel {
     
     func sendChat() async {
         let tmpCacheUserMessage: String = userMessage
-        let isFirstChat = chatContexts.isEmpty
+        // No chat history, or the topic is completed, then it's the first chat in the topic
+        let isFirstChat = chatContexts.isEmpty || self.currentTopic?.isComplete ?? false
         
         if !userMessage.isEmpty && !userMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             var userChatContext = ChatMessageModel(
@@ -131,8 +132,11 @@ class ChatViewModel {
                     if isFirstChat {
                         let currentUser = try getCurrentUser()
                         let topic = Topic(title: tmpCacheUserMessage, createTime: Int(Date().timeIntervalSince1970), isComplete: false, user: currentUser)
-                        self.currentTopic = topic
+//                        self.currentTopic = topic
                         try Topic.addTopic(topic: topic, context: modelContext)
+                        // Update topic list
+                        await getTopicList()
+                        self.currentTopic = topic
                     }
                     // 2-2) Save chat message to database
                     // Save user sent message first
