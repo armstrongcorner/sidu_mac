@@ -186,4 +186,34 @@ class ChatViewModel {
             self.errMsg = error.localizedDescription
         }
     }
+    
+    func markTopicAsCompleted(topic: Topic) async {
+        do {
+            // Mark the last chat as complete first
+            if let lastChat = topic.chats.last {
+                lastChat.isCompleteChatFlag = true
+                try Chat.updateChat(chat: lastChat, context: modelContext)
+            }
+            // Mark the topic as complete
+            topic.isComplete = true
+            try Topic.updateTopic(topic: topic, context: modelContext)
+            await getTopicList()
+        } catch {
+            self.errMsg = error.localizedDescription
+        }
+    }
+    
+    func deleteTopic(topic: Topic) async {
+        do {
+            // Delete topic related chats first
+            for chat in topic.chats {
+                try Chat.deleteChat(chat: chat, context: modelContext)
+            }
+            // Then delete the topic
+            try Topic.deleteTopic(topic: topic, context: modelContext)
+            await getTopicList()
+        } catch {
+            self.errMsg = error.localizedDescription
+        }
+    }
 }

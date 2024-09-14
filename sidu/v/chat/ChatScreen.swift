@@ -37,6 +37,28 @@ struct ChatScreen: View {
                         .cornerRadius(8)
                     }
                     .buttonStyle(PlainButtonStyle())
+                    .contextMenu(ContextMenu(menuItems: {
+                        // Mark the topic as completed
+                        Button {
+                            Task {
+                                await chatVM.markTopicAsCompleted(topic: topic)
+                                await chatVM.getTopicList()
+                            }
+                        } label: {
+                            Text("Mark as Completed")
+                        }
+                        .disabled(topic.isComplete ?? false)
+                        
+                        // Delete the topic
+                        Button {
+                            Task {
+                                await chatVM.deleteTopic(topic: topic)
+                                await chatVM.getTopicList()
+                            }
+                        } label: {
+                            Text("Delete")
+                        }
+                    }))
                 }
             }
         } detail: {

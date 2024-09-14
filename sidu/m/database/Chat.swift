@@ -81,4 +81,13 @@ final class Chat {
             }
         }
     }
+    
+    static func deleteChat(chat: Chat, context: ModelContext?) throws {
+        let chatId = chat.id
+        // Delete the chat
+        try context?.delete(model: Chat.self, where: #Predicate<Chat> { $0.id == chatId })
+        if context?.hasChanges ?? false {
+            try context?.save()
+        }
+    }
 }

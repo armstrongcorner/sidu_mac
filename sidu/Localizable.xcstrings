@@ -34,6 +34,9 @@
         }
       }
     },
+    "Delete" : {
+
+    },
     "Email for username to login" : {
       "comment" : "register username hint",
       "extractionState" : "manual",
@@ -93,6 +96,9 @@
           }
         }
       }
+    },
+    "Mark as Completed" : {
+
     },
     "No account? Go to sign up" : {
       "comment" : "go to register page btn title",
