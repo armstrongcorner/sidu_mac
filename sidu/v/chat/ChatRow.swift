@@ -12,12 +12,12 @@ struct ChatRow: View {
     
     @Binding var chatVM: ChatViewModel
     
-    var chatContext: ChatMessageModel
-    var beforeChatContext: ChatMessageModel?
+    var chatContext: ChatMessage
+    var beforeChatContext: ChatMessage?
     
-    init(_ chatContext: ChatMessageModel, lastChatContext: ChatMessageModel? = nil, chatVM: Binding<ChatViewModel>) {
+    init(_ chatContext: ChatMessage, beforeChatContext: ChatMessage? = nil, chatVM: Binding<ChatViewModel>) {
         self.chatContext = chatContext
-        self.beforeChatContext = lastChatContext
+        self.beforeChatContext = beforeChatContext
         self._chatVM = chatVM
     }
     
@@ -64,12 +64,14 @@ struct ChatRow: View {
                 }
                 .id(chatContext.id)
                 
-                if !(chatContext.isCompleteChatFlag ?? false) && chatContext.status != .waiting && chatVM.chatContexts.last?.id == chatContext.id {
+                if chatContext.status != .waiting && chatVM.chatContexts.last?.id == chatContext.id {
                     // Show manually end chat button, if chat is not complete
                     HStack {
                         Button {
                             print("End chat button clicked")
-                            chatVM.endChat()
+                            Task {
+                                await chatVM.markTopicAsCompleted(topic: chatVM.currentTopic!)
+                            }
                         } label: {
                             Text("Click to end chat")
                                 .font(.subheadline)
@@ -82,7 +84,7 @@ struct ChatRow: View {
                         
                         Spacer()
                     }
-                } else if chatVM.chatContexts.last?.id == chatContext.id && chatContext.isCompleteChatFlag ?? false {
+                } else if chatVM.chatContexts.last?.id == chatContext.id {
                     // Show chat end message
                     Text("Chat is completed")
                         .font(.subheadline)

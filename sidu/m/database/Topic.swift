@@ -16,13 +16,15 @@ final class Topic {
     var isComplete: Bool?
     
     var user: User?
-    var chats: [Chat] = []
+    @Relationship(deleteRule: .cascade) var chats: [Chat]
     
-    init(title: String?, createTime: Int?, isComplete: Bool?, user: User?) {
+    init(title: String?, createTime: Int?, isComplete: Bool?, user: User, chats: [Chat] = []) {
         self.title = title
         self.createTime = createTime
         self.isComplete = isComplete
+        
         self.user = user
+        self.chats = chats
     }
     
     static func addTopic(topic: Topic, context: ModelContext?) throws {
@@ -32,7 +34,7 @@ final class Topic {
         }
     }
     
-    static func fetchTopic(for user: User, context: ModelContext) throws -> [Topic]? {
+    static func fetchTopic(for user: User, context: ModelContext?) throws -> [Topic]? {
         // Using user id to fetch the topic
         /**
          We have to make this constant or variable to use for the predicate, otherwise it will crash
@@ -43,10 +45,15 @@ final class Topic {
         let predicate = #Predicate<Topic> { $0.user?.id == userId }
         // Lastest topic first
         let sortDescriptor = SortDescriptor(\Topic.createTime, order: .reverse)
-        
+
         let fetchDescriptor = FetchDescriptor<Topic>(predicate: predicate, sortBy: [sortDescriptor])
         
-        return try? context.fetch(fetchDescriptor)
+        return try? context?.fetch(fetchDescriptor)
+    }
+    
+    static func fetchTopicById(topicId: String, context: ModelContext?) throws -> Topic? {
+        let fetchDescriptor = FetchDescriptor<Topic>(predicate: #Predicate<Topic> { $0.id == topicId })
+        return try? context?.fetch(fetchDescriptor).first
     }
     
     static func updateTopic(topic: Topic, context: ModelContext?) throws {

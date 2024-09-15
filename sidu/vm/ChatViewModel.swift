@@ -10,25 +10,25 @@ import SwiftData
 
 @Observable
 class ChatViewModel {
-    var chatContexts: [ChatMessageModel]
     var userMessage: String = ""
     var errMsg: String?
+    
     var selectedTopicIndex: Int?
-    var topicList: [Topic] = []
+    var topicList: [TopicMessage] = []
+    var chatContexts: [ChatMessage]
     var currentTopic: Topic? {
         didSet {
             self.chatContexts = currentTopic?.chats.sorted(by: { chat1, chat2 in
                 chat1.createAt ?? 0 < chat2.createAt ?? 0
             }).map({ chat in
                 print("content: \(chat.content)")
-                return ChatMessageModel(
+                return ChatMessage(
                     id: chat.id,
                     role: chat.role,
                     content: chat.content,
                     type: .text,
                     createAt: chat.createAt,
-                    status: chat.status,
-                    isCompleteChatFlag: chat.isCompleteChatFlag
+                    status: chat.status
                 )
             }) ?? []
         }
@@ -38,25 +38,29 @@ class ChatViewModel {
     
     private let chatService: ChatServiceProtocol
     
-    init(chatService: ChatServiceProtocol = ChatService(), chatContexts: [ChatMessageModel] = []) {
+    init(chatService: ChatServiceProtocol = ChatService(), chatContexts: [ChatMessage] = []) {
         self.chatService = chatService
         self.chatContexts = chatContexts
     }
     
     func getCurrentUser() throws -> User? {
         let username = UserDefaults.standard.string(forKey: CacheKey.username.rawValue)
-        return try User.fetchUser(byUsername: username, context: modelContext!)
+        return try User.fetchUser(byUsername: username, context: modelContext)
     }
     
     func getTopicList() async {
         do {
             // Get current user's topics
             let currentUser = try getCurrentUser()
-            self.topicList = (currentUser?.topics ?? []).sorted(by: { topic1, topic2 in
-                topic1.createTime ?? 0 > topic2.createTime ?? 0
-            })
-            print("topicList count: \(topicList.count)");
-            print("chat count: \(currentUser?.topics.first?.chats.count ?? 0)")
+            DispatchQueue.main.async {
+                self.topicList = (currentUser?.topics ?? []).sorted(by: { topic1, topic2 in
+                    topic1.createTime ?? 0 > topic2.createTime ?? 0
+                })
+                print("topicList count: \(self.topicList.count)");
+                for i in 0..<self.topicList.count {
+                    print("topic \(i) chats count: \(self.topicList[i].chats.count)");
+                }
+            }
         } catch {
             self.errMsg = error.localizedDescription
         }
@@ -68,31 +72,34 @@ class ChatViewModel {
         let isFirstChat = chatContexts.isEmpty || self.currentTopic?.isComplete ?? false
         
         if !userMessage.isEmpty && !userMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            var userChatContext = ChatMessageModel(
+            var userChatContext = ChatMessage(
                 id: UUID().uuidString,
                 role: .user,
                 content: userMessage,
                 type: .text,
                 createAt: Int(Date().timeIntervalSince1970),
-                status: .sending,
-                isCompleteChatFlag: false
+                status: .sending
             )
-            let waitForResponseContext = ChatMessageModel(
+            let waitForResponseContext = ChatMessage(
                 id: UUID().uuidString,
                 role: .assistant,
                 content: "...",
                 type: .text,
                 createAt: Int(Date().timeIntervalSince1970),
-                status: .waiting,
-                isCompleteChatFlag: false
+                status: .waiting
             )
-            self.chatContexts.append(contentsOf: [userChatContext, waitForResponseContext])
+            
+            if isFirstChat {
+                self.chatContexts = [userChatContext, waitForResponseContext]
+            } else {
+                self.chatContexts.append(contentsOf: [userChatContext, waitForResponseContext])
+            }
             
             // Reverse loop the chatContexts with max chat depth, until the complete chat flag is true
             var count = 0
-            var newChatContexts: [ChatMessageModel] = []
+            var newChatContexts: [ChatMessage] = []
             for item in chatContexts.filter({ $0.status != .waiting }).reversed() {
-                if item.isCompleteChatFlag ?? false || count >= MAX_CHAT_DEPTH {
+                if count >= MAX_CHAT_DEPTH {
                     break
                 }
                 
@@ -118,19 +125,24 @@ class ChatViewModel {
                     userChatContext.status = .done
                     // 1) Build chat message model from response
                     let assistantChatModel = assistantChatResponse.value
-                    let assistantChatMessage = ChatMessageModel(
+                    let assistantChatMessage = ChatMessage(
                         id: assistantChatModel?.id,
                         role: .assistant,
                         content: assistantChatModel?.choices?.first?.message?.content,
                         type: .text,
                         createAt: Int(assistantChatModel?.created ?? ""),
-                        status: .done,
-                        isCompleteChatFlag: false
+                        status: .done
                     )
                     // 2) Save chat message to database
                     // 2-1) If first chat in the topic, we need to add an initial topic in database. The topic subject is the first user message
                     if isFirstChat {
-                        let currentUser = try getCurrentUser()
+                        guard let currentUser = try getCurrentUser() else {
+                            DispatchQueue.main.async {
+                                self.errMsg = "Current user not found"
+                                self.userMessage = tmpCacheUserMessage
+                            }
+                            return
+                        }
                         let topic = Topic(title: tmpCacheUserMessage, createTime: Int(Date().timeIntervalSince1970), isComplete: false, user: currentUser)
                         try Topic.addTopic(topic: topic, context: modelContext)
                         // Update topic list
@@ -140,19 +152,17 @@ class ChatViewModel {
                     }
                     // 2-2) Save chat message to database
                     // Save user sent message first
-                    let userChat = Chat(fromContextModel: userChatContext)
-                    userChat.topic = currentTopic
+                    let userChat = Chat(fromContextModel: userChatContext, topic: currentTopic)
                     try Chat.addChat(chat: userChat, context: modelContext)
                     // Save assistant response message
-                    let assistantChat = Chat(fromContextModel: assistantChatMessage)
-                    assistantChat.topic = currentTopic
+                    let assistantChat = Chat(fromContextModel: assistantChatMessage, topic: currentTopic)
                     try Chat.addChat(chat: assistantChat, context: modelContext)
                     // 3) Replace 'waiting' message with chatMessage
                     DispatchQueue.main.async {
                         self.chatContexts.replace([waitForResponseContext], with: [assistantChatMessage])
                     }
                     // 4) Update current topic for refresh the chat list
-                    self.currentTopic = userChat.topic
+                    self.currentTopic = try Topic.fetchTopicById(topicId: currentTopic?.id ?? "", context: modelContext)
                 } else {
                     DispatchQueue.main.async {
                         self.errMsg = assistantChatResponse.failureReason
@@ -165,38 +175,15 @@ class ChatViewModel {
                     self.userMessage = tmpCacheUserMessage
                 }
             }
-            
-        }
-    }
-    
-    func endChat() {
-        do {
-            // 1) Update the last chat context UI
-            var lastChatContext = chatContexts.last!
-            lastChatContext.isCompleteChatFlag = true
-            chatContexts[chatContexts.count - 1] = lastChatContext
-            // 2) Update database (topic and chat)
-            // Update the current topic to complete
-            currentTopic?.isComplete = true
-            try Topic.updateTopic(topic: currentTopic!, context: modelContext)
-            // Update the last chat to complete
-            let lastChat = Chat(fromContextModel: lastChatContext)
-            try Chat.updateChat(chat: lastChat, context: modelContext)
-        } catch {
-            self.errMsg = error.localizedDescription
         }
     }
     
     func markTopicAsCompleted(topic: Topic) async {
         do {
-            // Mark the last chat as complete first
-            if let lastChat = topic.chats.last {
-                lastChat.isCompleteChatFlag = true
-                try Chat.updateChat(chat: lastChat, context: modelContext)
-            }
             // Mark the topic as complete
             topic.isComplete = true
             try Topic.updateTopic(topic: topic, context: modelContext)
+            
             await getTopicList()
         } catch {
             self.errMsg = error.localizedDescription
@@ -205,13 +192,63 @@ class ChatViewModel {
     
     func deleteTopic(topic: Topic) async {
         do {
-            // Delete topic related chats first
-            for chat in topic.chats {
-                try Chat.deleteChat(chat: chat, context: modelContext)
+            let indexToDelete = topicList.firstIndex(where: { $0.id == topic.id }) ?? 0
+            
+//            print("\n\n\nselected topic title: \(topicList[indexToDelete].title ?? "")\n")
+//            for i in 0..<chatContexts.count {
+//                print("topic \(i) title: \(topicList[i].title ?? "")")
+//            }
+            
+            guard let currentUser = try getCurrentUser() else {
+                DispatchQueue.main.async {
+                    self.errMsg = "Current user not found"
+                }
+                return
             }
-            // Then delete the topic
-            try Topic.deleteTopic(topic: topic, context: modelContext)
-            await getTopicList()
+            
+            // Decide which topic should be selected after delete
+            if topicList.count > 1 {
+                // More than one topic before delete
+                if indexToDelete <= selectedTopicIndex ?? 0 {
+                    // When to-be-deleted topic is before selected topic
+//                    currentUser.topics.remove(at: indexToDelete)
+                    let newIndex = (selectedTopicIndex ?? 0) - 1
+                    selectedTopicIndex = newIndex >= 0 ? newIndex : 0
+                }
+            } else {
+                // Only one topic, then no one should be selected after delete
+                selectedTopicIndex = nil
+                currentTopic = nil
+                chatContexts = []
+            }
+            
+            // Delete the topic
+            currentUser.topics.remove(at: indexToDelete)
+//            topicList.remove(at: indexToDelete)
+            DispatchQueue.main.async {
+                Task {
+                    await self.getTopicList()
+                }
+            }
+            if selectedTopicIndex != nil {
+                currentTopic = topicList[selectedTopicIndex ?? 0]
+            }
+            print("aaa: \(currentUser.topics.count)")
+            print("bbb: \(topicList.count)")
+            
+//            currentUser.topics.remove(at: indexToDelete)
+////            try Topic.deleteTopic(topic: topic, context: modelContext)
+//            await getTopicList()
+//            if selectedTopicIndex ?? 0 >= indexToDelete {
+//                let newIndex = (selectedTopicIndex ?? 0) - 1
+//                selectedTopicIndex = newIndex >= 0 ? newIndex : 0
+//            }
+//            if topicList.count > 0 {
+//                currentTopic = topicList[selectedTopicIndex ?? 0]
+//            } else {
+//                currentTopic = nil
+//            }
+            
         } catch {
             self.errMsg = error.localizedDescription
         }

@@ -14,7 +14,6 @@ struct ChatScreen: View {
     @Environment(ToastViewObserver.self) var toastViewObserver
     
     @State var chatVM: ChatViewModel = ChatViewModel()
-//    @State var selectedTopicIndex: Int?
     
     var body: some View {
         NavigationSplitView {
@@ -53,7 +52,7 @@ struct ChatScreen: View {
                         Button {
                             Task {
                                 await chatVM.deleteTopic(topic: topic)
-                                await chatVM.getTopicList()
+//                                await chatVM.getTopicList()
                             }
                         } label: {
                             Text("Delete")

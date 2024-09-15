@@ -1,5 +1,5 @@
 //
-//  ChatContextModel.swift
+//  ChatContext.swift
 //  sidu
 //
 //  Created by Armstrong Liu on 03/09/2024.
@@ -25,7 +25,7 @@ enum ChatStatus: Codable {
     case failure // Something wrong with send or get response, mark the context as failure and show
 }
 
-struct ChatMessageModel: Codable, Hashable, Identifiable {
+struct ChatMessage: Codable, Hashable, Identifiable {
     var id: String?
     var role: ChatRole?
     var content: String?
@@ -36,5 +36,4 @@ struct ChatMessageModel: Codable, Hashable, Identifiable {
     var totalSize: Int?
     var createAt: Int?
     var status: ChatStatus?
-    var isCompleteChatFlag: Bool?
 }
