@@ -16,14 +16,14 @@ struct ChatView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack {
-                    ForEach(0..<chatVM.chatContexts.count, id: \.self) { i in
-                        ChatRow(chatVM.chatContexts[i], beforeChatContext: i > 0 ? chatVM.chatContexts[i - 1] : nil, chatVM: $chatVM)
+                    ForEach(0..<chatVM.chatList.count, id: \.self) { i in
+                        ChatRow(chatVM.chatList[i], beforeChatMessage: i > 0 ? chatVM.chatList[i - 1] : nil, chatVM: $chatVM)
                     }
                 }
             }
-            .onReceive(Just(chatVM.chatContexts)) { _ in
+            .onReceive(Just(chatVM.chatList)) { _ in
                 withAnimation {
-                    proxy.scrollTo(chatVM.chatContexts.last?.id, anchor: .bottom)
+                    proxy.scrollTo(chatVM.chatList.last?.id, anchor: .bottom)
                 }
             }
         }
@@ -36,7 +36,7 @@ struct ChatView: View {
         role: .user,
         content: "Test preview message",
         type: .text,
-        createAt: Int(Date().timeIntervalSince1970),
+        createAt: Date().timeIntervalSince1970,
         status: .sending
     )
     let chatContext2 = ChatMessage(
@@ -44,7 +44,7 @@ struct ChatView: View {
         role: .user,
         content: "Another test preview message",
         type: .text,
-        createAt: Int(Date().timeIntervalSince1970),
+        createAt: Date().timeIntervalSince1970,
         status: .sending
     )
     let chatContext3 = ChatMessage(
@@ -52,7 +52,7 @@ struct ChatView: View {
         role: .user,
         content: "111",
         type: .text,
-        createAt: Int(Date().timeIntervalSince1970),
+        createAt: Date().timeIntervalSince1970,
         status: .sending
     )
     let chatContext4 = ChatMessage(
@@ -60,12 +60,12 @@ struct ChatView: View {
         role: .assistant,
         content: "在 Swift 中，你可以定义一个通用的数据类型来表示可能具有不同类型值的字段。在你的例子中，我们希望定义一个名为 ChatMessageModel 的结构体，其中 content 字段的类型不确定，可能是 String，Image，或 Data。",
         type: .text,
-        createAt: Int(Date().timeIntervalSince1970),
+        createAt: Date().timeIntervalSince1970,
         status: .sending
     )
     
     let mockChatVM = ChatViewModel()
-    mockChatVM.chatContexts = [chatContext1, chatContext2, chatContext3, chatContext4]
+    mockChatVM.chatList = [chatContext1, chatContext2, chatContext3, chatContext4]
     
     return ChatView(chatVM: Binding.constant(mockChatVM))
         .environment(AppSize(CGSize(width: 1024, height: 768)))

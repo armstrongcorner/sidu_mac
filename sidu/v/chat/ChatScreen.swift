@@ -22,7 +22,6 @@ struct ChatScreen: View {
                     let topic = chatVM.topicList[i]
                     Button {
                         chatVM.selectedTopicIndex = i
-                        chatVM.currentTopic = topic
                     } label: {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
@@ -40,8 +39,8 @@ struct ChatScreen: View {
                         // Mark the topic as completed
                         Button {
                             Task {
-                                await chatVM.markTopicAsCompleted(topic: topic)
-                                await chatVM.getTopicList()
+//                                await chatVM.markTopicAsCompleted(topic: topic)
+//                                await chatVM.getTopicList()
                             }
                         } label: {
                             Text("Mark as Completed")
@@ -51,7 +50,7 @@ struct ChatScreen: View {
                         // Delete the topic
                         Button {
                             Task {
-                                await chatVM.deleteTopic(topic: topic)
+//                                await chatVM.deleteTopic(topic: topic)
 //                                await chatVM.getTopicList()
                             }
                         } label: {
@@ -71,10 +70,9 @@ struct ChatScreen: View {
         .onAppear() {
             Task {
                 self.chatVM.modelContext = modelContext
-                await self.chatVM.getTopicList()
+                self.chatVM.getTopicAndChat()
                 // Select the first topic by default if topic list is not empty
-                if let firstTopic = chatVM.topicList.first {
-                    chatVM.currentTopic = firstTopic
+                if chatVM.topicList.count > 0 {
                     chatVM.selectedTopicIndex = 0
                 }
             }
