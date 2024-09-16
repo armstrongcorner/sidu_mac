@@ -15,12 +15,12 @@ final class Chat {
     var content: String?
     var type: ChatContentType?
     var fileAccessUrl: String?
-    var createAt: Int?
+    var createAt: TimeInterval?
     var status: ChatStatus?
     
     var topic: Topic?
     
-    init(id: String?, role: ChatRole?, content: String?, type: ChatContentType?, fileAccessUrl: String?, createAt: Int?, status: ChatStatus?, topic: Topic?) {
+    init(id: String?, role: ChatRole?, content: String?, type: ChatContentType?, fileAccessUrl: String?, createAt: TimeInterval?, status: ChatStatus?, topic: Topic? = nil) {
         self.id = id
         self.role = role
         self.content = content
@@ -32,7 +32,7 @@ final class Chat {
         self.topic = topic
     }
     
-    init(fromContextModel chatMessageModel: ChatMessage, topic: Topic?) {
+    init(fromContextModel chatMessageModel: ChatMessage, topic: Topic? = nil) {
         self.id = chatMessageModel.id
         self.role = chatMessageModel.role
         self.content = chatMessageModel.content

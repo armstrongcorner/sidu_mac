@@ -10,19 +10,30 @@ import SwiftData
 
 @Model
 final class Topic {
-    @Attribute(.unique) var id: String = UUID().uuidString
+    @Attribute(.unique) var id: String?
     var title: String?
-    var createTime: Int?
+    var createTime: TimeInterval?
     var isComplete: Bool?
     
     var user: User?
     @Relationship(deleteRule: .cascade) var chats: [Chat]
     
-    init(title: String?, createTime: Int?, isComplete: Bool?, user: User, chats: [Chat] = []) {
+    init(id: String?, title: String?, createTime: TimeInterval?, isComplete: Bool?, user: User? = nil, chats: [Chat] = []) {
+        self.id = id
         self.title = title
         self.createTime = createTime
         self.isComplete = isComplete
         
+        self.user = user
+        self.chats = chats
+    }
+    
+    init(fromContextModel topicMessageModel: TopicMessage, user: User? = nil, chats: [Chat] = []) {
+        self.id = topicMessageModel.id
+        self.title = topicMessageModel.title
+        self.createTime = topicMessageModel.createTime
+        self.isComplete = topicMessageModel.isComplete
+
         self.user = user
         self.chats = chats
     }

@@ -12,22 +12,22 @@ class DateUtil {
     
     private init() {}
     
-    func standardDateFormat(_ timeStampSince1970: Int) -> String {
-        let date = Date(timeIntervalSince1970: TimeInterval(timeStampSince1970))
+    func standardDateFormat(_ timeStampSince1970: TimeInterval) -> String {
+        let date = Date(timeIntervalSince1970: timeStampSince1970)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
         return dateFormatter.string(from: date)
     }
     
-    func customDateFormat(_ timeStampSince1970: Int, format: String) -> String {
-        let date = Date(timeIntervalSince1970: TimeInterval(timeStampSince1970))
+    func customDateFormat(_ timeStampSince1970: TimeInterval, format: String) -> String {
+        let date = Date(timeIntervalSince1970: timeStampSince1970)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         return dateFormatter.string(from: date)
     }
     
-    func decideToShowDateTime(_ timeStampSince1970: Int) -> String {
-        let date = Date(timeIntervalSince1970: TimeInterval(timeStampSince1970))
+    func decideToShowDateTime(_ timeStampSince1970: TimeInterval) -> String {
+        let date = Date(timeIntervalSince1970: timeStampSince1970)
         let calendar = Calendar.current
         
         let dateFormatter = DateFormatter()
@@ -43,9 +43,9 @@ class DateUtil {
         }
     }
     
-    func compareTimeDifference(startTimeStamp: Int, endTimeStamp: Int, inUnit: Calendar.Component) -> Int {
-        let startDate = Date(timeIntervalSince1970: TimeInterval(startTimeStamp))
-        let endDate = Date(timeIntervalSince1970: TimeInterval(endTimeStamp))
+    func compareTimeDifference(startTimeStamp: TimeInterval, endTimeStamp: TimeInterval, inUnit: Calendar.Component) -> Int {
+        let startDate = Date(timeIntervalSince1970: startTimeStamp)
+        let endDate = Date(timeIntervalSince1970: endTimeStamp)
         let calendar = Calendar.current
         let dateComponents = calendar.dateComponents([inUnit], from: startDate, to: endDate)
         return dateComponents.value(for: inUnit) ?? 0
