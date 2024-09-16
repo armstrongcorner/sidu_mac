@@ -19,14 +19,14 @@ struct ChatScreen: View {
         NavigationSplitView {
             List {
                 ForEach(0..<chatVM.topicList.count, id: \.self) { i in
-                    let topic = chatVM.topicList[i]
+                    let topicMessage = chatVM.topicList[i]
                     Button {
                         chatVM.selectedTopicIndex = i
                     } label: {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(topic.isComplete ?? false ? .gpt : .gray)
-                            Text(topic.title ?? "")
+                                .foregroundColor(topicMessage.isComplete ?? false ? .gpt : .gray)
+                            Text(topicMessage.title ?? "")
                             Spacer()
                         }
                         .padding(.horizontal, 10)
@@ -38,14 +38,11 @@ struct ChatScreen: View {
                     .contextMenu(ContextMenu(menuItems: {
                         // Mark the topic as completed
                         Button {
-                            Task {
-//                                await chatVM.markTopicAsCompleted(topic: topic)
-//                                await chatVM.getTopicList()
-                            }
+                            chatVM.markTopicAsCompleted(topicId: topicMessage.id ?? "")
                         } label: {
                             Text("Mark as Completed")
                         }
-                        .disabled(topic.isComplete ?? false)
+                        .disabled(topicMessage.isComplete ?? false)
                         
                         // Delete the topic
                         Button {
