@@ -10,9 +10,6 @@ import SwiftUI
 struct EmailRegisterScreen: View {
     @Environment(\.myRoute) private var path
     
-    @State private var email: String = ""
-    @State private var vericode: String = ""
-    
     @State private var registerVM = RegisterViewModel()
     
     var body: some View {
@@ -26,12 +23,15 @@ struct EmailRegisterScreen: View {
             HStack {
                 Spacer(minLength: 100)
                 Image(systemName: "envelope.fill")
-                TextField("Email for username to login", text: $email)
+                TextField("Email for username to login", text: $registerVM.email)
                     .textFieldStyle(PlainTextFieldStyle())
                 // Send veri code button
                 Button {
-                    print("Login button clicked")
+                    print("Send verification email button clicked")
                     registerVM.startCountDown()
+                    Task {
+                        await registerVM.requestVerificationEmail()
+                    }
                 } label: {
                     Text(registerVM.resendCountDown > 0 ? "(\(registerVM.resendCountDown)) retry" : "send code")
                         .frame(width: 80, height: 30)
@@ -61,12 +61,12 @@ struct EmailRegisterScreen: View {
             HStack {
                 Spacer(minLength: 100)
                 Image(systemName: "checkmark.shield.fill")
-                TextField("Verification Code", text: $vericode)
-                    .onChange(of: vericode, { oldValue, newValue in
+                TextField("Verification Code", text: $registerVM.vericode)
+                    .onChange(of: registerVM.vericode, { oldValue, newValue in
                         if newValue.count > 6 {
-                            vericode = String(newValue.prefix(6))
+                            registerVM.vericode = String(newValue.prefix(6))
                         }
-                        vericode = vericode.filter({ $0.isNumber })
+                        registerVM.vericode = registerVM.vericode.filter({ $0.isNumber })
                     })
                     .cornerRadius(5)
                     .overlay {
@@ -78,7 +78,12 @@ struct EmailRegisterScreen: View {
             .padding(.bottom, 50.0)
             
             Button {
-                path.wrappedValue.append(.completeRegisterScreen)
+                Task {
+                    let isSuccess = await registerVM.goVerifyRegistration()
+                    if isSuccess {
+                        path.wrappedValue.append(.completeRegisterScreen)
+                    }
+                }
             } label: {
                 Text("Verify")
                     .frame(width: 260, height: 30)
