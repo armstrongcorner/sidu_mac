@@ -249,67 +249,31 @@ class ChatViewModel {
         }
     }
     
-    func deleteTopic(topic: Topic) async {
-//        do {
-//            let indexToDelete = topicList.firstIndex(where: { $0.id == topic.id }) ?? 0
-//            
-////            print("\n\n\nselected topic title: \(topicList[indexToDelete].title ?? "")\n")
-////            for i in 0..<chatContexts.count {
-////                print("topic \(i) title: \(topicList[i].title ?? "")")
-////            }
-//            
-//            guard let currentUser = try getCurrentUser() else {
-//                DispatchQueue.main.async {
-//                    self.errMsg = "Current user not found"
-//                }
-//                return
-//            }
-//            
-//            // Decide which topic should be selected after delete
-//            if topicList.count > 1 {
-//                // More than one topic before delete
-//                if indexToDelete <= selectedTopicIndex ?? 0 {
-//                    // When to-be-deleted topic is before selected topic
-////                    currentUser.topics.remove(at: indexToDelete)
-//                    let newIndex = (selectedTopicIndex ?? 0) - 1
-//                    selectedTopicIndex = newIndex >= 0 ? newIndex : 0
-//                }
-//            } else {
-//                // Only one topic, then no one should be selected after delete
-//                selectedTopicIndex = nil
-//                currentTopic = nil
-//                chatContexts = []
-//            }
-//            
-//            // Delete the topic
-//            currentUser.topics.remove(at: indexToDelete)
-////            topicList.remove(at: indexToDelete)
-//            DispatchQueue.main.async {
-//                Task {
-//                    await self.getTopicList()
-//                }
-//            }
-//            if selectedTopicIndex != nil {
-//                currentTopic = topicList[selectedTopicIndex ?? 0]
-//            }
-//            print("aaa: \(currentUser.topics.count)")
-//            print("bbb: \(topicList.count)")
-//            
-////            currentUser.topics.remove(at: indexToDelete)
-//////            try Topic.deleteTopic(topic: topic, context: modelContext)
-////            await getTopicList()
-////            if selectedTopicIndex ?? 0 >= indexToDelete {
-////                let newIndex = (selectedTopicIndex ?? 0) - 1
-////                selectedTopicIndex = newIndex >= 0 ? newIndex : 0
-////            }
-////            if topicList.count > 0 {
-////                currentTopic = topicList[selectedTopicIndex ?? 0]
-////            } else {
-////                currentTopic = nil
-////            }
-//            
-//        } catch {
-//            self.errMsg = error.localizedDescription
-//        }
+    func deleteTopic(topicId: String) {
+        do {
+            // Delete the topic from database
+            guard let currentUser = try getCurrentUser() else {
+                DispatchQueue.main.async {
+                    self.errMsg = "Current user not found"
+                }
+                return
+            }
+            currentUser.topics.removeAll(where: { $0.id == topicId })
+            
+            // Delete the topic in UI
+            // Decide which topic to select after deletion
+            let toDeleteIndex = topicList.firstIndex(where: { $0.id == topicId }) ?? 0
+            self.topicList.removeAll(where: { $0.id == topicId })
+            if toDeleteIndex <= selectedTopicIndex ?? 0 {
+                if topicList.count > 0 {
+                    let newIndex = (selectedTopicIndex ?? 0) - 1
+                    selectedTopicIndex = newIndex >= 0 ? newIndex : 0
+                } else {
+                    selectedTopicIndex = nil
+                }
+            }
+        } catch {
+            self.errMsg = error.localizedDescription
+        }
     }
 }
