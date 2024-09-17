@@ -2,19 +2,79 @@
   "sourceLanguage" : "en",
   "strings" : {
     "(%lld) retry" : {
-
+      "comment" : "after x seconds retry",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld) retry"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld) 重试"
+          }
+        }
+      }
     },
     "%@" : {
 
     },
     "Chat" : {
-
+      "comment" : "chat screen title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chat"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "对话"
+          }
+        }
+      }
     },
     "Chat is completed" : {
-
+      "comment" : "chat completed label",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chat is completed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "对话已结束"
+          }
+        }
+      }
     },
     "Click to end chat" : {
-
+      "comment" : "end topic action btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click to end chat"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击结束当前会话"
+          }
+        }
+      }
     },
     "Complete Register" : {
       "comment" : "complete register btn title",
@@ -35,7 +95,22 @@
       }
     },
     "Delete" : {
-
+      "comment" : "delete topic context menu item title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
+        }
+      }
     },
     "Email for username to login" : {
       "comment" : "register username hint",
@@ -77,7 +152,22 @@
       }
     },
     "Live Chat" : {
-
+      "comment" : "live chat enter btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live Chat"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "实时对话"
+          }
+        }
+      }
     },
     "Login" : {
       "comment" : "login btn title",
@@ -98,7 +188,22 @@
       }
     },
     "Mark as Completed" : {
-
+      "comment" : "mark topic completed context menu item title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark as Completed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "结束该会话"
+          }
+        }
+      }
     },
     "No account? Go to sign up" : {
       "comment" : "go to register page btn title",
