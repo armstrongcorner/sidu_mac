@@ -10,20 +10,20 @@ import Foundation
 struct ChatRequest: Codable {
     let model: String
     let max_tokens: Int
-    let messages: [ChatMessage]
+    let messages: [ChatRequestMessage]
 }
 
-struct ChatMessage: Codable {
+struct ChatRequestMessage: Codable {
     let role: String
     let content: String
 }
 
 protocol ChatServiceProtocol {
-    func sendChat(_ messageList: [ChatMessageModel]) async throws -> ChatResponse?
+    func sendChat(_ messageList: [ChatMessage]) async throws -> ChatResponse?
 }
 
 class ChatService: ChatServiceProtocol {
-    func sendChat(_ messageList: [ChatMessageModel]) async throws -> ChatResponse? {
+    func sendChat(_ messageList: [ChatMessage]) async throws -> ChatResponse? {
         let httpBody = try JSONEncoder().encode(ChatRequest(
             model: DEFAULT_AI_MODEL,
             max_tokens:DEFAULT_MAX_TOKENS,
@@ -34,9 +34,9 @@ class ChatService: ChatServiceProtocol {
         return chatResponse
     }
     
-    func buildUplinkMessage(_ messageList: [ChatMessageModel]) -> [ChatMessage] {
+    func buildUplinkMessage(_ messageList: [ChatMessage]) -> [ChatRequestMessage] {
         return messageList.map {
-            ChatMessage(role: $0.role?.rawValue ?? ChatRole.user.rawValue, content: $0.content ?? "")
+            ChatRequestMessage(role: $0.role?.rawValue ?? ChatRole.user.rawValue, content: $0.content ?? "")
         }
     }
 }

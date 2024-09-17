@@ -14,52 +14,42 @@ struct ChatScreen: View {
     @Environment(ToastViewObserver.self) var toastViewObserver
     
     @State var chatVM: ChatViewModel = ChatViewModel()
-//    @State var selectedTopicIndex: Int?
     
     var body: some View {
         NavigationSplitView {
-            List {
-                ForEach(0..<chatVM.topicList.count, id: \.self) { i in
-                    let topic = chatVM.topicList[i]
-                    Button {
-                        chatVM.selectedTopicIndex = i
-                        chatVM.currentTopic = topic
-                    } label: {
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(topic.isComplete ?? false ? .gpt : .gray)
-                            Text(topic.title ?? "")
-                            Spacer()
-                        }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(chatVM.selectedTopicIndex == i ? .gray.opacity(0.5) : .clear)
-                        .cornerRadius(8)
+            // Topic list
+            List(chatVM.topicList, id: \.id) { topicMessage in
+                Button {
+                    chatVM.selectedTopicIndex = chatVM.topicList.firstIndex(where: { $0.id == topicMessage.id }) ?? 0
+                } label: {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(topicMessage.isComplete ?? false ? .gpt : .gray)
+                        Text(topicMessage.title ?? "")
+                        Spacer()
                     }
-                    .buttonStyle(PlainButtonStyle())
-                    .contextMenu(ContextMenu(menuItems: {
-                        // Mark the topic as completed
-                        Button {
-                            Task {
-                                await chatVM.markTopicAsCompleted(topic: topic)
-                                await chatVM.getTopicList()
-                            }
-                        } label: {
-                            Text("Mark as Completed")
-                        }
-                        .disabled(topic.isComplete ?? false)
-                        
-                        // Delete the topic
-                        Button {
-                            Task {
-                                await chatVM.deleteTopic(topic: topic)
-                                await chatVM.getTopicList()
-                            }
-                        } label: {
-                            Text("Delete")
-                        }
-                    }))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(chatVM.selectedTopicIndex == chatVM.topicList.firstIndex(where: { $0.id == topicMessage.id }) ?? 0 ? .gray.opacity(0.5) : .clear)
+                    .cornerRadius(8)
                 }
+                .buttonStyle(PlainButtonStyle())
+                .contextMenu(ContextMenu(menuItems: {
+                    // Mark the topic as completed
+                    Button {
+                        chatVM.markTopicAsCompleted(topicId: topicMessage.id ?? "")
+                    } label: {
+                        Text("Mark as Completed")
+                    }
+                    .disabled(topicMessage.isComplete ?? false)
+                    
+                    // Delete the topic
+                    Button {
+                        chatVM.deleteTopic(topicId: topicMessage.id ?? "")
+                    } label: {
+                        Text("Delete")
+                    }
+                }))
             }
         } detail: {
             VStack {
@@ -72,10 +62,9 @@ struct ChatScreen: View {
         .onAppear() {
             Task {
                 self.chatVM.modelContext = modelContext
-                await self.chatVM.getTopicList()
+                self.chatVM.getTopicAndChat()
                 // Select the first topic by default if topic list is not empty
-                if let firstTopic = chatVM.topicList.first {
-                    chatVM.currentTopic = firstTopic
+                if chatVM.topicList.count > 0 {
                     chatVM.selectedTopicIndex = 0
                 }
             }

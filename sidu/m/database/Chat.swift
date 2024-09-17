@@ -15,13 +15,12 @@ final class Chat {
     var content: String?
     var type: ChatContentType?
     var fileAccessUrl: String?
-    var createAt: Int?
+    var createAt: TimeInterval?
     var status: ChatStatus?
-    var isCompleteChatFlag: Bool?
     
     var topic: Topic?
     
-    init(id: String?, role: ChatRole?, content: String?, type: ChatContentType?, fileAccessUrl: String?, createAt: Int?, status: ChatStatus?, isCompleteChatFlag: Bool?, topic: Topic?) {
+    init(id: String?, role: ChatRole?, content: String?, type: ChatContentType?, fileAccessUrl: String?, createAt: TimeInterval?, status: ChatStatus?, topic: Topic? = nil) {
         self.id = id
         self.role = role
         self.content = content
@@ -29,11 +28,11 @@ final class Chat {
         self.fileAccessUrl = fileAccessUrl
         self.createAt = createAt
         self.status = status
-        self.isCompleteChatFlag = isCompleteChatFlag
+        
         self.topic = topic
     }
     
-    init(fromContextModel chatMessageModel: ChatMessageModel) {
+    init(fromContextModel chatMessageModel: ChatMessage, topic: Topic? = nil) {
         self.id = chatMessageModel.id
         self.role = chatMessageModel.role
         self.content = chatMessageModel.content
@@ -41,7 +40,8 @@ final class Chat {
         self.fileAccessUrl = chatMessageModel.fileAccessUrl
         self.createAt = chatMessageModel.createAt
         self.status = chatMessageModel.status
-        self.isCompleteChatFlag = chatMessageModel.isCompleteChatFlag
+        
+        self.topic = topic
     }
     
     static func addChat(chat: Chat, context: ModelContext?) throws {
@@ -51,7 +51,7 @@ final class Chat {
         }
     }
     
-    static func fetchChat(for topic: Topic, context: ModelContext) throws -> [Chat]? {
+    static func fetchChat(for topic: Topic, context: ModelContext?) throws -> [Chat]? {
         // Using topic id to fetch the chat
         let topicId = topic.id
         let predicate = #Predicate<Chat> { $0.topic?.id == topicId }
@@ -60,7 +60,7 @@ final class Chat {
         
         let fetchDescriptor = FetchDescriptor<Chat>(predicate: predicate, sortBy: [sortDescriptor])
         
-        return try? context.fetch(fetchDescriptor)
+        return try? context?.fetch(fetchDescriptor)
     }
     
     static func updateChat(chat: Chat, context: ModelContext?) throws {
@@ -75,7 +75,6 @@ final class Chat {
             chatToUpdate.first?.fileAccessUrl = chat.fileAccessUrl
             chatToUpdate.first?.createAt = chat.createAt
             chatToUpdate.first?.status = chat.status
-            chatToUpdate.first?.isCompleteChatFlag = chat.isCompleteChatFlag
             if context?.hasChanges ?? false {
                 try context?.save()
             }

@@ -25,9 +25,9 @@ final class User {
     var createdBy: String?
     var updatedBy: String?
     
-    var topics: [Topic] = []
+    @Relationship(deleteRule: .cascade) var topics: [Topic]
     
-    init(id: Int?, userName: String?, password: String?, photo: String?, role: String?, mobile: String?, email: String?, serviceLevel: Int?, tokenDurationInMin: Int?, isActive: Bool?, createdDateTime: String?, updatedDateTime: String?, createdBy: String?, updatedBy: String?) {
+    init(id: Int?, userName: String?, password: String?, photo: String?, role: String?, mobile: String?, email: String?, serviceLevel: Int?, tokenDurationInMin: Int?, isActive: Bool?, createdDateTime: String?, updatedDateTime: String?, createdBy: String?, updatedBy: String?, topics: [Topic] = []) {
         self.id = id
         self.userName = userName
         self.password = password
@@ -42,9 +42,11 @@ final class User {
         self.updatedDateTime = updatedDateTime
         self.createdBy = createdBy
         self.updatedBy = updatedBy
+        
+        self.topics = topics
     }
     
-    init(row: [String: Any?]) {
+    init(row: [String: Any?], topics: [Topic] = []) {
         self.id = row["id"] as? Int
         self.userName = row["userName"] as? String
         self.password = row["password"] as? String
@@ -59,6 +61,8 @@ final class User {
         self.updatedDateTime = row["updatedDateTime"] as? String
         self.createdBy = row["createdBy"] as? String
         self.updatedBy = row["updatedBy"] as? String
+        
+        self.topics = topics
     }
     
     static func addUser(user: User, context: ModelContext?) throws {
@@ -68,9 +72,9 @@ final class User {
         }
     }
     
-    static func fetchUser(byUsername username: String?, context: ModelContext) throws -> User? {
+    static func fetchUser(byUsername username: String?, context: ModelContext?) throws -> User? {
         let fetchDescriptor = FetchDescriptor<User>(predicate: #Predicate { $0.userName == username })
-        let users = try? context.fetch(fetchDescriptor)
+        let users = try? context?.fetch(fetchDescriptor)
         return users?.first
     }
 }

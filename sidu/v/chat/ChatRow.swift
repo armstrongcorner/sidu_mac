@@ -12,29 +12,29 @@ struct ChatRow: View {
     
     @Binding var chatVM: ChatViewModel
     
-    var chatContext: ChatMessageModel
-    var beforeChatContext: ChatMessageModel?
+    var chatMessage: ChatMessage
+    var beforeChatMessage: ChatMessage?
     
-    init(_ chatContext: ChatMessageModel, lastChatContext: ChatMessageModel? = nil, chatVM: Binding<ChatViewModel>) {
-        self.chatContext = chatContext
-        self.beforeChatContext = lastChatContext
+    init(_ chatMessage: ChatMessage, beforeChatMessage: ChatMessage? = nil, chatVM: Binding<ChatViewModel>) {
+        self.chatMessage = chatMessage
+        self.beforeChatMessage = beforeChatMessage
         self._chatVM = chatVM
     }
     
     var body: some View {
         VStack {
             // Chat time label (only shown when the time difference between two chat messages is more than 5 minutes)
-            if DateUtil.shared.compareTimeDifference(startTimeStamp: beforeChatContext?.createAt ?? 0, endTimeStamp: chatContext.createAt ?? 0, inUnit: .minute) > 5 {
-                Text(DateUtil.shared.decideToShowDateTime(chatContext.createAt ?? 0))
+            if DateUtil.shared.compareTimeDifference(startTimeStamp: beforeChatMessage?.createAt ?? 0, endTimeStamp: chatMessage.createAt ?? 0, inUnit: .minute) > 5 {
+                Text(DateUtil.shared.decideToShowDateTime(chatMessage.createAt ?? 0))
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .padding(.top, 5)
             }
             // Chat content
-            if chatContext.role == .user {
+            if chatMessage.role == .user {
                 HStack(alignment: .top) {
                     Spacer(minLength: appSize.getScreenWidth() * 0.1)
-                    Text("\(chatContext.content ?? "")")
+                    Text("\(chatMessage.content ?? "")")
                         .textSelection(.enabled)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
@@ -46,8 +46,8 @@ struct ChatRow: View {
                         .padding(.top, 4)
                         .padding(.trailing, 5)
                 }
-                .id(chatContext.id)
-            } else if chatContext.role == .assistant {
+                .id(chatMessage.id)
+            } else if chatMessage.role == .assistant {
                 HStack(alignment: .top) {
                     Image("gpt_icon")
                         .resizable()
@@ -55,39 +55,41 @@ struct ChatRow: View {
                         .aspectRatio(contentMode: .fit)
                         .padding(.top, 4)
                         .padding(.leading, 5)
-                    Text("\(chatContext.content ?? "")")
+                    Text("\(chatMessage.content ?? "")")
                         .textSelection(.enabled)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
                         .shadowAndRoundedCorner(color: .white, radius: 5, shadowRadius: 1)
                     Spacer(minLength: appSize.getScreenWidth() * 0.1)
                 }
-                .id(chatContext.id)
+                .id(chatMessage.id)
                 
-                if !(chatContext.isCompleteChatFlag ?? false) && chatContext.status != .waiting && chatVM.chatContexts.last?.id == chatContext.id {
-                    // Show manually end chat button, if chat is not complete
-                    HStack {
-                        Button {
-                            print("End chat button clicked")
-                            chatVM.endChat()
-                        } label: {
-                            Text("Click to end chat")
-                                .font(.subheadline)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 3)
-                                .shadowAndRoundedCorner(color: .userMsgBg, radius: 5, shadowRadius: 1)
+                if chatMessage.status != .waiting && chatVM.chatList.last?.id == chatMessage.id {
+                    if chatVM.topicList[chatVM.selectedTopicIndex ?? 0].isComplete ?? false {
+                        // Show chat end message, if chat is complete
+                        Text("Chat is completed")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .padding(.top, 5)
+                    } else {
+                        // Show manually end chat button, if chat is not complete
+                        HStack {
+                            Button {
+                                print("End chat button clicked")
+                                chatVM.markTopicAsCompleted(topicId: chatVM.topicList[chatVM.selectedTopicIndex ?? 0].id ?? "")
+                            } label: {
+                                Text("Click to end chat")
+                                    .font(.subheadline)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 3)
+                                    .shadowAndRoundedCorner(color: .userMsgBg, radius: 5, shadowRadius: 1)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .padding(.leading, 30)
+                            
+                            Spacer()
                         }
-                        .buttonStyle(PlainButtonStyle())
-                        .padding(.leading, 30)
-                        
-                        Spacer()
                     }
-                } else if chatVM.chatContexts.last?.id == chatContext.id && chatContext.isCompleteChatFlag ?? false {
-                    // Show chat end message
-                    Text("Chat is completed")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .padding(.top, 5)
                 }
             }
         }
