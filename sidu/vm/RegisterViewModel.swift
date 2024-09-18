@@ -57,7 +57,7 @@ class RegisterViewModel {
             }
             if tempAuthResponse.isSuccess ?? false {
                 // Cache the temp token for sending verification email
-                CacheUtil.shared.cacheAuthInfo(authInfo: tempAuthResponse.value)
+                CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: tempAuthResponse.value)
                 
                 // Use the temp token to request verification email
                 guard let requestVerificationResponse = try await registerServic.requestVerificationEmail(email: email) else {
@@ -68,7 +68,7 @@ class RegisterViewModel {
                 }
                 if requestVerificationResponse.isSuccess ?? false {
                     // Request verification email success, cache the auth token for verification
-                    CacheUtil.shared.cacheAuthInfo(authInfo: requestVerificationResponse.value)
+                    CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: requestVerificationResponse.value)
                 } else {
                     DispatchQueue.main.async {
                         self.errMsg = "Request verification email failed with error: \(requestVerificationResponse.failureReason ?? "unknown reason")"

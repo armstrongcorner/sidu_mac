@@ -9,6 +9,7 @@ import Foundation
 
 enum CacheKey: String {
     case authInfo = "authInfo"
+    case registerAuthInfo = "registerAuthInfo"
     case username = "username"
 }
 
@@ -31,5 +32,19 @@ class CacheUtil {
         
         return nil
     }
-
+    
+    func cacheRegisterAuthInfo(registerAuthInfo: AuthModel?) {
+        // cache registerAuthInfo
+        if registerAuthInfo != nil, let encodedRegisterAuthInfo = try? JSONEncoder().encode(registerAuthInfo) {
+            UserDefaults.standard.setValue(encodedRegisterAuthInfo, forKey: CacheKey.registerAuthInfo.rawValue)
+        }
+    }
+    
+    func getRegisterAuthInfo() -> AuthModel? {
+        if let encodedRegisterAuthInfo = UserDefaults.standard.data(forKey: CacheKey.registerAuthInfo.rawValue) {
+            return try? JSONDecoder().decode(AuthModel.self, from: encodedRegisterAuthInfo)
+        }
+        
+        return nil
+    }
 }

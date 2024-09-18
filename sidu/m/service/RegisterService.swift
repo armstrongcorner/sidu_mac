@@ -40,14 +40,36 @@ class RegisterService: RegisterServiceProtocol {
             tokenDurationInMin: USER_DEFAULT_TOKEN_DURATION_IN_MIN,
             isActive: false
         ))
-        let requestVerificationResponse = try await ApiClient.shared.post(url: Endpoint.sendVerificationEmail.url, body: httpBody, responseType: AuthResponse.self)
+        // Use the temp token to send verification email
+        var newHeaders = [:] as [String: String]
+        if let tmpToken = CacheUtil.shared.getRegisterAuthInfo()?.token {
+            newHeaders["Authorization"] = "Bearer \(tmpToken)"
+        }
+        
+        let requestVerificationResponse = try await ApiClient.shared.post(
+            url: Endpoint.sendVerificationEmail.url,
+            headers: newHeaders,
+            body: httpBody,
+            responseType: AuthResponse.self
+        )
         
         return requestVerificationResponse
     }
     
     func goVerifyRegistration(vericode: String) async throws -> UserInfoResponse? {
         let httpBody = try JSONEncoder().encode(["authenticationCode": vericode])
-        let verifyRegistrationResponse = try await ApiClient.shared.post(url: Endpoint.verifyRegistration.url, body: httpBody, responseType: UserInfoResponse.self)
+        // Use the temp token to send verification email
+        var newHeaders = [:] as [String: String]
+        if let tmpToken = CacheUtil.shared.getRegisterAuthInfo()?.token {
+            newHeaders["Authorization"] = "Bearer \(tmpToken)"
+        }
+        
+        let verifyRegistrationResponse = try await ApiClient.shared.post(
+            url: Endpoint.verifyRegistration.url,
+            headers: newHeaders,
+            body: httpBody,
+            responseType: UserInfoResponse.self
+        )
         
         return verifyRegistrationResponse
     }
@@ -58,7 +80,18 @@ class RegisterService: RegisterServiceProtocol {
             password: password,
             activateUser: true
         ))
-        let completeRegistrationResponse = try await ApiClient.shared.post(url: Endpoint.completeRegistration.url, body: httpBody, responseType: AuthResponse.self)
+        // Use the temp token to send verification email
+        var newHeaders = [:] as [String: String]
+        if let tmpToken = CacheUtil.shared.getRegisterAuthInfo()?.token {
+            newHeaders["Authorization"] = "Bearer \(tmpToken)"
+        }
+        
+        let completeRegistrationResponse = try await ApiClient.shared.post(
+            url: Endpoint.completeRegistration.url,
+            headers: newHeaders,
+            body: httpBody,
+            responseType: AuthResponse.self
+        )
         
         return completeRegistrationResponse
     }
