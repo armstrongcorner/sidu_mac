@@ -9,19 +9,12 @@ import Foundation
 import SwiftUI
 import SwiftData
 
-enum LoginResult: Equatable {
-    case none
-    case success
-    case failed
-}
-
 @Observable
 class LoginViewModel {
     var username: String = "armstrong.liu@matrixthoughts.com.au"
     var password: String = "1"
-    var isLoggedIn: LoginResult = .none
+    var isLoggedIn: CommonResult = .none
     var errMsg: String?
-    var isLoading: Bool = false
     
     var modelContext: ModelContext?
     
@@ -35,13 +28,10 @@ class LoginViewModel {
     
     func login() async {
         do {
-            DispatchQueue.main.async {
-                self.isLoading = true
-            }
             // Login
             guard let authResponse = try await loginService.login(username: username, password: password) else {
                 DispatchQueue.main.async {
-                    self.isLoading = false
+                    self.isLoggedIn = .failed
                     self.errMsg = "Login failed with unknown reason"
                 }
                 return
@@ -55,7 +45,7 @@ class LoginViewModel {
             // Get user info
             guard let userInfoResponse = try await userServic.getUserInfo(username: username) else {
                 DispatchQueue.main.async {
-                    self.isLoading = false
+                    self.isLoggedIn = .failed
                     self.errMsg = "Get user info failed with unknown reason"
                 }
                 return
@@ -66,7 +56,6 @@ class LoginViewModel {
             try User.addUser(user: user, context: modelContext)
 
             DispatchQueue.main.async {
-                self.isLoading = false
                 if authResponse.isSuccess ?? false {
                     self.isLoggedIn = .success
                 } else {
@@ -76,7 +65,6 @@ class LoginViewModel {
             }
         } catch {
             DispatchQueue.main.async {
-                self.isLoading = false
                 self.isLoggedIn = .failed
                 self.errMsg = error.localizedDescription
             }
@@ -89,7 +77,6 @@ class LoginViewModel {
             self.password = ""
             self.isLoggedIn = .none
             self.errMsg = nil
-            self.isLoading = false
         }
     }
 }

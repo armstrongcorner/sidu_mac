@@ -1,11 +1,17 @@
 //
-//  constant.swift
+//  Constant.swift
 //  sidu
 //
 //  Created by Armstrong Liu on 07/09/2024.
 //
 
 import Foundation
+
+enum CommonResult: Equatable {
+    case none
+    case success
+    case failed
+}
 
 let RESEND_VERI_CODE_COUNTDOWN_IN_SEC: Int = 60
 let USER_DEFAULT_TOKEN_DURATION_IN_MIN: Int = 60 * 24 * 10

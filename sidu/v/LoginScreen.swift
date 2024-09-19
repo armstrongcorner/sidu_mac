@@ -93,9 +93,6 @@ struct LoginScreen: View {
             loginVM.isLoggedIn = .none
         })
         .navigationBarBackButtonHidden()
-        .navigationDestination(for: Route.self) { value in
-            getViewByRoute(value)
-        }
         .toastView(toastViewObserver: toastViewObserver)
     }
 }

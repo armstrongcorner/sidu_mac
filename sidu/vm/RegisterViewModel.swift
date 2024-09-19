@@ -11,6 +11,7 @@ import Foundation
 class RegisterViewModel {
     var email: String = ""
     var vericode: String = ""
+    var isVerified: CommonResult = .none
     var errMsg: String?
     
     var resendCountDown: Int = 0    // in seconds
@@ -51,6 +52,7 @@ class RegisterViewModel {
             // Request temp token (by super admin) for request verification email
             guard let tempAuthResponse = try await loginService.login(username: "matrixthoughtsadmin", password: "Nbq4dcz123") else {
                 DispatchQueue.main.async {
+                    self.isVerified = .failed
                     self.errMsg = "Request temp token failed with unknown reason"
                 }
                 return
@@ -62,6 +64,7 @@ class RegisterViewModel {
                 // Use the temp token to request verification email
                 guard let requestVerificationResponse = try await registerServic.requestVerificationEmail(email: email) else {
                     DispatchQueue.main.async {
+                        self.isVerified = .failed
                         self.errMsg = "Request verification email failed with unknown reason"
                     }
                     return
@@ -71,46 +74,50 @@ class RegisterViewModel {
                     CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: requestVerificationResponse.value)
                 } else {
                     DispatchQueue.main.async {
+                        self.isVerified = .failed
                         self.errMsg = "Request verification email failed with error: \(requestVerificationResponse.failureReason ?? "unknown reason")"
                     }
                 }
             } else {
                 DispatchQueue.main.async {
+                    self.isVerified = .failed
                     self.errMsg = "Request temp token failed with error: \(tempAuthResponse.failureReason ?? "unknown reason")"
                 }
                 return
             }
         } catch {
             DispatchQueue.main.async {
+                self.isVerified = .failed
                 self.errMsg = "Request verification email failed with error: \(error.localizedDescription)"
             }
         }
     }
     
-    func goVerifyRegistration() async -> Bool {
+    func goVerifyRegistration() async {
         do {
             // Verify the registration
             guard let verifyRegistrationResponse = try await registerServic.goVerifyRegistration(vericode: vericode) else {
                 DispatchQueue.main.async {
+                    self.isVerified = .failed
                     self.errMsg = "Verify registration failed with unknown reason"
                 }
-                return false
+                return
             }
             if verifyRegistrationResponse.isSuccess ?? false {
                 // Verify registration success, cache the username for complete registration
                 UserDefaults.standard.setValue(verifyRegistrationResponse.value?.userName, forKey: CacheKey.username.rawValue)
-                return true
+                self.isVerified = .success
             } else {
                 DispatchQueue.main.async {
+                    self.isVerified = .failed
                     self.errMsg = "Verify registration failed with error: \(verifyRegistrationResponse.failureReason ?? "unknown reason")"
                 }
-                return false
             }
         } catch {
             DispatchQueue.main.async {
+                self.isVerified = .failed
                 self.errMsg = "Verify registration failed with error: \(error.localizedDescription)"
             }
-            return false
         }
     }
 }

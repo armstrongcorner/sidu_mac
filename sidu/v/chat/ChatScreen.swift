@@ -70,7 +70,7 @@ struct ChatScreen: View {
             }
         }
         .navigationTitle("Chat")
-        .navigationBarBackButtonHidden(true)
+        .navigationBarBackButtonHidden()
         .toolbar {
             Button {
                 path.wrappedValue.append(.liveChatScreen)

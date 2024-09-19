@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct CompleteRegisterScreen: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.myRoute) private var path
-    
+    @Environment(ToastViewObserver.self) var toastViewObserver
+
     @State private var password: String = ""
     @State private var confirm: String = ""
     
@@ -40,7 +42,11 @@ struct CompleteRegisterScreen: View {
             .padding(.bottom, 50.0)
             
             Button {
-                path.wrappedValue.append(.splashScreen)
+                Task {
+                    toastViewObserver.showLoading()
+                    await registerVM.goVerifyRegistration()
+                    toastViewObserver.dismissLoading()
+                }
             } label: {
                 Text("Complete Register")
                     .frame(width: 260, height: 30)
@@ -51,14 +57,31 @@ struct CompleteRegisterScreen: View {
             }
             .buttonStyle(PlainButtonStyle())
         }
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 7, height: 20)
+                        .padding(.horizontal, 10)
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+        }
         .navigationTitle("Registration 2/2")
+        .toastView(toastViewObserver: toastViewObserver)
         .padding()
     }
 }
 
 #Preview {
     return Group {
-        CompleteRegisterScreen().environment(\.locale, .init(identifier: "en"))
+        CompleteRegisterScreen()
+            .environment(ToastViewObserver())
+            .environment(\.locale, .init(identifier: "en"))
 //        CompleteRegisterScreen().environment(\.locale, .init(identifier: "zh-Hans"))
     }
 }

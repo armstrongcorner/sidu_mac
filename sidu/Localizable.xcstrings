@@ -130,9 +130,6 @@
         }
       }
     },
-    "Hello, World!" : {
-
-    },
     "Input again to confirm password" : {
       "comment" : "confirm password hint",
       "extractionState" : "manual",

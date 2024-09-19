@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct EmailRegisterScreen: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.myRoute) private var path
+    @Environment(ToastViewObserver.self) var toastViewObserver
     
     @State private var registerVM = RegisterViewModel()
     
@@ -30,7 +32,9 @@ struct EmailRegisterScreen: View {
                     print("Send verification email button clicked")
                     registerVM.startCountDown()
                     Task {
+                        toastViewObserver.showLoading()
                         await registerVM.requestVerificationEmail()
+                        toastViewObserver.dismissLoading()
                     }
                 } label: {
                     Text(registerVM.resendCountDown > 0 ? "(\(registerVM.resendCountDown)) retry" : "send code")
@@ -79,10 +83,9 @@ struct EmailRegisterScreen: View {
             
             Button {
                 Task {
-                    let isSuccess = await registerVM.goVerifyRegistration()
-                    if isSuccess {
-                        path.wrappedValue.append(.completeRegisterScreen)
-                    }
+                    toastViewObserver.showLoading()
+                    await registerVM.goVerifyRegistration()
+                    toastViewObserver.dismissLoading()
                 }
             } label: {
                 Text("Verify")
@@ -94,14 +97,40 @@ struct EmailRegisterScreen: View {
             }
             .buttonStyle(PlainButtonStyle())
         }
+        .onChange(of: registerVM.isVerified, { oldValue, newValue in
+            if newValue == .success {
+                toastViewObserver.dismissLoading()
+                path.wrappedValue.append(.completeRegisterScreen)
+            } else if newValue == .failed {
+                toastViewObserver.showToast(message: registerVM.errMsg)
+            }
+            registerVM.isVerified = .none
+        })
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 7, height: 20)
+                        .padding(.horizontal, 10)
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+        }
         .navigationTitle("Registration 1/2")
+        .toastView(toastViewObserver: toastViewObserver)
         .padding()
     }
 }
 
 #Preview {
     return Group {
-        EmailRegisterScreen().environment(\.locale, .init(identifier: "en"))
+        EmailRegisterScreen()
+            .environment(ToastViewObserver())
+            .environment(\.locale, .init(identifier: "en"))
 //        EmailRegisterScreen().environment(\.locale, .init(identifier: "zh-Hans"))
     }
 }
