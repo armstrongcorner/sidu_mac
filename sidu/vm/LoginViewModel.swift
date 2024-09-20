@@ -14,6 +14,7 @@ class LoginViewModel {
     var username: String = "armstrong.liu@matrixthoughts.com.au"
     var password: String = "1"
     var isLoggedIn: CommonResult = .none
+    var isShowingConfirmLogout: Bool = false
     var errMsg: String?
     
     var modelContext: ModelContext?
@@ -71,6 +72,12 @@ class LoginViewModel {
         }
     }
     
+    func logout() {
+        UserDefaults.standard.removeObject(forKey: CacheKey.username.rawValue)
+        UserDefaults.standard.removeObject(forKey: CacheKey.authInfo.rawValue)
+        UserDefaults.standard.removeObject(forKey: CacheKey.registerAuthInfo.rawValue)
+    }
+
     func clearCredentials() {
         DispatchQueue.main.async {
             self.username = ""

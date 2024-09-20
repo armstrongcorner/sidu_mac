@@ -66,9 +66,12 @@ final class User {
     }
     
     static func addUser(user: User, context: ModelContext?) throws {
-        context?.insert(user)
-        if context?.hasChanges ?? false {
-            try context?.save()
+        let existedUser = try fetchUser(byUsername: user.userName, context: context)
+        if existedUser == nil {
+            context?.insert(user)
+            if context?.hasChanges ?? false {
+                try context?.save()
+            }
         }
     }
     

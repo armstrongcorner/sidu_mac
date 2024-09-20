@@ -14,6 +14,7 @@ enum Route: Hashable {
     case completeRegisterScreen(email: String)
     case chatScreen
     case liveChatScreen
+    case settingScreen
 }
 
 private struct MyRouteKey: EnvironmentKey {
@@ -35,12 +36,13 @@ var getViewByRoute: (Route) -> AnyView = { route in
         return AnyView(LoginScreen())
     case .emailRegisterScreen:
         return AnyView(EmailRegisterScreen())
-//    case .completeRegisterScreen:
     case .completeRegisterScreen(let email):
         return AnyView(CompleteRegisterScreen(email: email))
     case .chatScreen:
         return AnyView(ChatScreen())
     case .liveChatScreen:
         return AnyView(LiveChatScreen())
-}
+    case .settingScreen:
+        return AnyView(SettingScreen())
+    }
 }

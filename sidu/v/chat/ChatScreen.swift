@@ -9,95 +9,108 @@ import SwiftUI
 import SwiftData
 
 struct ChatScreen: View {
+    @Environment(AppSize.self) var appSize
     @Environment(\.modelContext) var modelContext
     @Environment(\.myRoute) var path
     @Environment(ToastViewObserver.self) var toastViewObserver
     
     @State var chatVM: ChatViewModel = ChatViewModel()
+    @State private var isShowingSetting = false
     
     var body: some View {
-        NavigationSplitView {
-            // Topic list
-            List(chatVM.topicList, id: \.id) { topicMessage in
-                Button {
-                    chatVM.selectedTopicIndex = chatVM.topicList.firstIndex(where: { $0.id == topicMessage.id }) ?? 0
-                } label: {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(topicMessage.isComplete ?? false ? .gpt : .gray)
-                        Text(topicMessage.title ?? "")
-                        Spacer()
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
-                    .background(chatVM.selectedTopicIndex == chatVM.topicList.firstIndex(where: { $0.id == topicMessage.id }) ?? 0 ? .gray.opacity(0.5) : .clear)
-                    .cornerRadius(8)
-                }
-                .buttonStyle(PlainButtonStyle())
-                .contextMenu(ContextMenu(menuItems: {
-                    // Mark the topic as completed
+        ZStack(alignment: .trailing) {
+            NavigationSplitView {
+                // Topic list
+                List(chatVM.topicList, id: \.id) { topicMessage in
                     Button {
-                        chatVM.markTopicAsCompleted(topicId: topicMessage.id ?? "")
+                        chatVM.selectedTopicIndex = chatVM.topicList.firstIndex(where: { $0.id == topicMessage.id }) ?? 0
                     } label: {
-                        Text("Mark as Completed")
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(topicMessage.isComplete ?? false ? .gpt : .gray)
+                            Text(topicMessage.title ?? "")
+                            Spacer()
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(chatVM.selectedTopicIndex == chatVM.topicList.firstIndex(where: { $0.id == topicMessage.id }) ?? 0 ? .gray.opacity(0.5) : .clear)
+                        .cornerRadius(8)
                     }
-                    .disabled(topicMessage.isComplete ?? false)
-                    
-                    // Delete the topic
+                    .buttonStyle(PlainButtonStyle())
+                    .contextMenu(ContextMenu(menuItems: {
+                        // Mark the topic as completed
+                        Button {
+                            chatVM.markTopicAsCompleted(topicId: topicMessage.id ?? "")
+                        } label: {
+                            Text("Mark as Completed")
+                        }
+                        .disabled(topicMessage.isComplete ?? false)
+                        
+                        // Delete the topic
+                        Button {
+                            chatVM.deleteTopic(topicId: topicMessage.id ?? "")
+                        } label: {
+                            Text("Delete")
+                        }
+                    }))
+                }
+            } detail: {
+                VStack {
+                    // Chat area
+                    ChatView(chatVM: $chatVM)
+                    // User input area
+                    UserInputView(chatVM: $chatVM)
+                }
+            }
+            .onAppear() {
+                Task {
+                    self.chatVM.modelContext = modelContext
+                    self.chatVM.getTopicAndChat()
+                    // Select the first topic by default if topic list is not empty
+                    if chatVM.topicList.count > 0 {
+                        chatVM.selectedTopicIndex = 0
+                    }
+                }
+            }
+            .navigationTitle("")
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                ToolbarItem(placement: .navigation) {
                     Button {
-                        chatVM.deleteTopic(topicId: topicMessage.id ?? "")
+                        path.wrappedValue.append(.liveChatScreen)
                     } label: {
-                        Text("Delete")
+                        HStack {
+                            Image(systemName: "headphones.circle.fill")
+                            Text("Live Chat")
+                        }
+                        .padding(.horizontal, 6)
                     }
-                }))
-            }
-        } detail: {
-            VStack {
-                // Chat area
-                ChatView(chatVM: $chatVM)
-                // User input area
-                UserInputView(chatVM: $chatVM)
-            }
-        }
-        .onAppear() {
-            Task {
-                self.chatVM.modelContext = modelContext
-                self.chatVM.getTopicAndChat()
-                // Select the first topic by default if topic list is not empty
-                if chatVM.topicList.count > 0 {
-                    chatVM.selectedTopicIndex = 0
+                }
+                
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        withAnimation {
+                            isShowingSetting.toggle()
+                        }
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 17)
+                            .padding(.horizontal, 6)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
-        }
-        .navigationTitle("")
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .navigation) {
-                Button {
-                    path.wrappedValue.append(.liveChatScreen)
-                } label: {
-                    HStack {
-                        Image(systemName: "headphones.circle.fill")
-                        Text("Live Chat")
-                    }
-                    .padding(.horizontal, 6)
-                }
-            }
+            .toastView(toastViewObserver: toastViewObserver)
             
-//            ToolbarItem(placement: .primaryAction) {
-//                Button {
-//                    path.wrappedValue.append(.liveChatScreen)
-//                } label: {
-//                    Image(systemName: "gearshape.fill")
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 17)
-//                        .padding(.horizontal, 6)
-//                }
-//                .buttonStyle(PlainButtonStyle())
-//            }
+            if isShowingSetting {
+                SettingScreen()
+                    .frame(width: 200, height: appSize.getScreenHeight())
+                    .transition(.move(edge: .trailing))
+                    .zIndex(1)
+            }
         }
-        .toastView(toastViewObserver: toastViewObserver)
     }
 }
 

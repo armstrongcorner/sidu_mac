@@ -25,6 +25,27 @@
     "%@" : {
 
     },
+    "0" : {
+
+    },
+    "Cancel" : {
+      "comment" : "cancel btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        }
+      }
+    },
     "Chat" : {
       "comment" : "chat screen title",
       "extractionState" : "manual",
@@ -57,6 +78,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "对话已结束"
+          }
+        }
+      }
+    },
+    "Check Update" : {
+      "comment" : "check update btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check Update"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "检测更新"
+          }
+        }
+      }
+    },
+    "Clear Topics" : {
+      "comment" : "clear topics btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Topics"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清空会话"
           }
         }
       }
@@ -97,6 +154,60 @@
         }
       }
     },
+    "Confirm" : {
+      "comment" : "confirm btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认"
+          }
+        }
+      }
+    },
+    "Confirm to logout?" : {
+      "comment" : "logout confirm dialog title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm to logout?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定退出登录么?"
+          }
+        }
+      }
+    },
+    "Current Language:" : {
+      "comment" : "current selected language title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current Language:"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "语言"
+          }
+        }
+      }
+    },
     "Delete" : {
       "comment" : "delete topic context menu item title",
       "extractionState" : "manual",
@@ -111,6 +222,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "删除"
+          }
+        }
+      }
+    },
+    "Delete Account" : {
+      "comment" : "delete account btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Account"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除账号"
           }
         }
       }
@@ -183,6 +312,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "登录"
+          }
+        }
+      }
+    },
+    "Logout" : {
+      "comment" : "logout btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logout"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出"
           }
         }
       }
@@ -313,6 +460,42 @@
         }
       }
     },
+    "Switch Language" : {
+      "comment" : "switch current language btn title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch Language"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切换语言"
+          }
+        }
+      }
+    },
+    "Total topics:" : {
+      "comment" : "total topics number title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total topics:"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "会话主题条目:"
+          }
+        }
+      }
+    },
     "Username/Email/Mobile" : {
       "comment" : "username field hint text",
       "extractionState" : "manual",
@@ -366,6 +549,27 @@
           }
         }
       }
+    },
+    "Version:" : {
+      "comment" : "version info include version and build number",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version:"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前版本:"
+          }
+        }
+      }
+    },
+    "中文" : {
+
     }
   },
   "version" : "1.0"
