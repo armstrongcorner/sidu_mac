@@ -75,6 +75,13 @@ final class User {
         }
     }
     
+    static func deleteUser(user: User, context: ModelContext?) throws {
+        context?.delete(user)
+        if context?.hasChanges ?? false {
+            try context?.save()
+        }
+    }
+    
     static func fetchUser(byUsername username: String?, context: ModelContext?) throws -> User? {
         let fetchDescriptor = FetchDescriptor<User>(predicate: #Predicate { $0.userName == username })
         let users = try? context?.fetch(fetchDescriptor)

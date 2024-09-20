@@ -11,6 +11,7 @@ import SwiftData
 @Observable
 class ChatViewModel {
     var userMessage: String = ""
+    var isShowingConfirmDeleteAllTopic: Bool = false
     var errMsg: String?
     
     var topicList: [TopicMessage] = []
@@ -37,11 +38,13 @@ class ChatViewModel {
         self.selectedTopicIndex = selectedTopicIndex
     }
     
+    // Get current user from database
     func getCurrentUser() throws -> User? {
         let username = UserDefaults.standard.string(forKey: CacheKey.username.rawValue)
         return try User.fetchUser(byUsername: username, context: modelContext)
     }
     
+    // Get all topic and related chats for current user
     func getTopicAndChat() {
         do {
             // Get current user's topics
@@ -88,6 +91,7 @@ class ChatViewModel {
         }
     }
     
+    // Main chat logic
     func sendChat() async {
         let tmpCacheUserMessage: String = userMessage
         // No chat history, or the topic is completed, then it's the first chat in the topic
@@ -235,6 +239,7 @@ class ChatViewModel {
         }
     }
     
+    // Mark the specific topic as completed
     func markTopicAsCompleted(topicId: String) {
         do {
             // Mark the topic as complete
@@ -249,6 +254,7 @@ class ChatViewModel {
         }
     }
     
+    // Delete specific topic from database and UI
     func deleteTopic(topicId: String) {
         do {
             // Delete the topic from database
@@ -272,6 +278,26 @@ class ChatViewModel {
                     selectedTopicIndex = nil
                 }
             }
+        } catch {
+            self.errMsg = error.localizedDescription
+        }
+    }
+    
+    // Delete all topic for current user
+    func deleteAllTopic() {
+        do {
+            // Delete all topics from database
+            guard let currentUser = try getCurrentUser() else {
+                DispatchQueue.main.async {
+                    self.errMsg = "Current user not found"
+                }
+                return
+            }
+            currentUser.topics.removeAll()
+            
+            // Delete all topics in UI
+            self.topicList.removeAll()
+            selectedTopicIndex = nil
         } catch {
             self.errMsg = error.localizedDescription
         }

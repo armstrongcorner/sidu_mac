@@ -13,6 +13,7 @@ struct SettingScreen: View {
     @Environment(ToastViewObserver.self) var toastViewObserver
     @Environment(\.modelContext) private var modelContext
     
+    @Binding var chatVM: ChatViewModel
     @State private var loginVM = LoginViewModel()
     
     var versionInfo: String {
@@ -75,14 +76,14 @@ struct SettingScreen: View {
             HStack {
                 Text("Total topics:")
                 Spacer()
-                Text("0")
+                Text("\(chatVM.topicList.count)")
             }
             .padding(.horizontal, 10)
             .padding(.top, 10)
             // Clear topic btn
             HStack {
                 Button {
-                    print("clear topic...")
+                    chatVM.isShowingConfirmDeleteAllTopic = true
                 } label: {
                     Text("Clear Topics")
                         .frame(width: 120, height: 20)
@@ -92,6 +93,18 @@ struct SettingScreen: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 .padding(.leading, 10)
+                .alert("Confirm to clear the current topic/chat history?", isPresented: Binding<Bool>(
+                    get: { chatVM.isShowingConfirmDeleteAllTopic },
+                    set: { _ in chatVM.isShowingConfirmDeleteAllTopic = false }
+                )) {
+                    Button("Cancel") {
+                        chatVM.isShowingConfirmDeleteAllTopic = false
+                    }
+                    Button("Confirm") {
+                        chatVM.isShowingConfirmDeleteAllTopic = false
+                        chatVM.deleteAllTopic()
+                    }
+                }
                 Spacer()
             }
             
@@ -99,15 +112,37 @@ struct SettingScreen: View {
             HStack {
                 Spacer()
                 Button {
-                    print("delete account...")
+                    loginVM.isShowingConfirmDeleteAccount = true
                 } label: {
                     Text("Delete Account")
                         .foregroundStyle(.red)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .padding(.top, 50)
+                .alert(
+                    "Warning",
+                    isPresented: Binding<Bool>(
+                        get: { loginVM.isShowingConfirmDeleteAccount },
+                        set: { _ in loginVM.isShowingConfirmDeleteAccount = false }
+                    )) {
+                        Button("Cancel") {
+                            loginVM.isShowingConfirmDeleteAccount = false
+                        }
+                        Button("Confirm") {
+                            loginVM.isShowingConfirmDeleteAccount = false
+                            loginVM.deleteAccount()
+                            path.wrappedValue.append(.loginScreen)
+                        }
+                    } message: {
+                        Text("After deleting your account, your data will no longer be saved in this application, and you will no longer be able to use this account to log in to this application. If you want to continue using your account after deleting it, please register again. \n\nAre you sure to delete the account?")
+                    }
+
                 Spacer()
             }
+            
+            Text("Current Locale: \(Locale.current.identifier)")
+            Text("Language Code: \(Locale.current.language.languageCode?.identifier ?? "Unknown")")
+            Text("Region Code: \(Locale.current.region?.identifier ?? "Unknown")")
             
             Spacer()
             
@@ -153,7 +188,7 @@ struct SettingScreen: View {
 
 #Preview {
     return Group {
-        SettingScreen()
+        SettingScreen(chatVM: .constant(ChatViewModel()))
             .frame(width: 200, height: 500)
             .environment(\.locale, .init(identifier: "en"))
 //            .environment(\.locale, .init(identifier: "zh-Hans"))

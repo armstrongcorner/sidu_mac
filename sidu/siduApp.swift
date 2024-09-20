@@ -17,6 +17,7 @@ struct siduApp: App {
                     .environment(ToastViewObserver())
                     .environment(AppSize(geometry.size))
                     .environment(\.locale, .init(identifier: "zh-Hans"))
+//                    .environment(\.locale, .init(identifier: "en"))
             }
         }
         .modelContainer(for: [User.self, Topic.self, Chat.self])

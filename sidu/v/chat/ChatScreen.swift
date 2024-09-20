@@ -105,7 +105,7 @@ struct ChatScreen: View {
             .toastView(toastViewObserver: toastViewObserver)
             
             if isShowingSetting {
-                SettingScreen()
+                SettingScreen(chatVM: $chatVM)
                     .frame(width: 200, height: appSize.getScreenHeight())
                     .transition(.move(edge: .trailing))
                     .zIndex(1)

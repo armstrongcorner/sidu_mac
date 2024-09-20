@@ -83,9 +83,13 @@ final class Topic {
     }
     
     static func deleteTopic(topic: Topic, context: ModelContext?) throws {
-        let topicId = topic.id
-        // Delete the topic
-        try context?.delete(model: Topic.self, where: #Predicate<Topic> { $0.id == topicId })
+//        let topicId = topic.id
+//        // Delete the topic
+//        try context?.delete(model: Topic.self, where: #Predicate<Topic> { $0.id == topicId })
+//        if context?.hasChanges ?? false {
+//            try context?.save()
+//        }
+        context?.delete(topic)
         if context?.hasChanges ?? false {
             try context?.save()
         }

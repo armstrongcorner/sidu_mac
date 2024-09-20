@@ -15,6 +15,7 @@ class LoginViewModel {
     var password: String = "1"
     var isLoggedIn: CommonResult = .none
     var isShowingConfirmLogout: Bool = false
+    var isShowingConfirmDeleteAccount: Bool = false
     var errMsg: String?
     
     var modelContext: ModelContext?
@@ -72,10 +73,36 @@ class LoginViewModel {
         }
     }
     
+    func deleteAccount() {
+        do {
+            // Get current user from database
+            let username = UserDefaults.standard.string(forKey: CacheKey.username.rawValue)
+            let user = try User.fetchUser(byUsername: username, context: modelContext)
+            if user != nil {
+                // Delete the user
+                try User.deleteUser(user: user!, context: modelContext)
+                // Logout
+                logout()
+            } else {
+                DispatchQueue.main.async {
+                    self.errMsg = "User not found"
+                }
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.errMsg = error.localizedDescription
+            }
+        }
+    }
+    
     func logout() {
         UserDefaults.standard.removeObject(forKey: CacheKey.username.rawValue)
         UserDefaults.standard.removeObject(forKey: CacheKey.authInfo.rawValue)
         UserDefaults.standard.removeObject(forKey: CacheKey.registerAuthInfo.rawValue)
+        
+        DispatchQueue.main.async {
+            self.isLoggedIn = .none
+        }
     }
 
     func clearCredentials() {
