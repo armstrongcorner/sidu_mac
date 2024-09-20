@@ -11,7 +11,7 @@ enum Route: Hashable {
     case splashScreen
     case loginScreen
     case emailRegisterScreen
-    case completeRegisterScreen
+    case completeRegisterScreen(email: String)
     case chatScreen
     case liveChatScreen
 }
@@ -35,8 +35,9 @@ var getViewByRoute: (Route) -> AnyView = { route in
         return AnyView(LoginScreen())
     case .emailRegisterScreen:
         return AnyView(EmailRegisterScreen())
-    case .completeRegisterScreen:
-        return AnyView(CompleteRegisterScreen())
+//    case .completeRegisterScreen:
+    case .completeRegisterScreen(let email):
+        return AnyView(CompleteRegisterScreen(email: email))
     case .chatScreen:
         return AnyView(ChatScreen())
     case .liveChatScreen:

@@ -11,9 +11,11 @@ struct CompleteRegisterScreen: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.myRoute) private var path
     @Environment(ToastViewObserver.self) var toastViewObserver
+    @Environment(\.modelContext) private var modelContext
 
-    @State private var password: String = ""
-    @State private var confirm: String = ""
+    @State private var registerVM = RegisterViewModel()
+    
+    var email: String
     
     var body: some View {
         VStack {
@@ -26,7 +28,7 @@ struct CompleteRegisterScreen: View {
             HStack {
                 Spacer(minLength: 100)
                 Image(systemName: "lock.fill")
-                SecureField("Password", text: $password)
+                SecureField("Password", text: $registerVM.password)
                     .textFieldStyle(PlainTextFieldStyle())
                 Spacer(minLength: 100)
             }
@@ -35,7 +37,7 @@ struct CompleteRegisterScreen: View {
             HStack {
                 Spacer(minLength: 100)
                 Image(systemName: "checkmark.seal.fill")
-                SecureField("Input again to confirm password", text: $confirm)
+                SecureField("Input again to confirm password", text: $registerVM.confirm)
                     .textFieldStyle(PlainTextFieldStyle())
                 Spacer(minLength: 100)
             }
@@ -44,7 +46,8 @@ struct CompleteRegisterScreen: View {
             Button {
                 Task {
                     toastViewObserver.showLoading()
-                    await registerVM.goVerifyRegistration()
+                    registerVM.email = email
+                    await registerVM.completeRegistration()
                     toastViewObserver.dismissLoading()
                 }
             } label: {
@@ -57,6 +60,18 @@ struct CompleteRegisterScreen: View {
             }
             .buttonStyle(PlainButtonStyle())
         }
+        .onAppear() {
+            self.registerVM.modelContext = modelContext
+        }
+        .onChange(of: registerVM.isVerified, { oldValue, newValue in
+            if newValue == .success {
+                toastViewObserver.dismissLoading()
+                path.wrappedValue.append(.chatScreen)
+            } else if newValue == .failed {
+                toastViewObserver.showToast(message: registerVM.errMsg)
+            }
+            registerVM.isVerified = .none
+        })
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 Button {
@@ -79,7 +94,7 @@ struct CompleteRegisterScreen: View {
 
 #Preview {
     return Group {
-        CompleteRegisterScreen()
+        CompleteRegisterScreen(email: "")
             .environment(ToastViewObserver())
             .environment(\.locale, .init(identifier: "en"))
 //        CompleteRegisterScreen().environment(\.locale, .init(identifier: "zh-Hans"))

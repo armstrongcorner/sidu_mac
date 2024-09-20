@@ -32,9 +32,7 @@ struct EmailRegisterScreen: View {
                     print("Send verification email button clicked")
                     registerVM.startCountDown()
                     Task {
-                        toastViewObserver.showLoading()
                         await registerVM.requestVerificationEmail()
-                        toastViewObserver.dismissLoading()
                     }
                 } label: {
                     Text(registerVM.resendCountDown > 0 ? "(\(registerVM.resendCountDown)) retry" : "send code")
@@ -100,7 +98,7 @@ struct EmailRegisterScreen: View {
         .onChange(of: registerVM.isVerified, { oldValue, newValue in
             if newValue == .success {
                 toastViewObserver.dismissLoading()
-                path.wrappedValue.append(.completeRegisterScreen)
+                path.wrappedValue.append(.completeRegisterScreen(email: registerVM.email))
             } else if newValue == .failed {
                 toastViewObserver.showToast(message: registerVM.errMsg)
             }

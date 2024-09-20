@@ -69,18 +69,33 @@ struct ChatScreen: View {
                 }
             }
         }
-        .navigationTitle("Chat")
+        .navigationTitle("")
         .navigationBarBackButtonHidden()
         .toolbar {
-            Button {
-                path.wrappedValue.append(.liveChatScreen)
-            } label: {
-                HStack {
-                    Image(systemName: "headphones.circle.fill")
-                    Text("Live Chat")
+            ToolbarItem(placement: .navigation) {
+                Button {
+                    path.wrappedValue.append(.liveChatScreen)
+                } label: {
+                    HStack {
+                        Image(systemName: "headphones.circle.fill")
+                        Text("Live Chat")
+                    }
+                    .padding(.horizontal, 6)
                 }
-                .padding(.horizontal, 6)
             }
+            
+//            ToolbarItem(placement: .primaryAction) {
+//                Button {
+//                    path.wrappedValue.append(.liveChatScreen)
+//                } label: {
+//                    Image(systemName: "gearshape.fill")
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 17)
+//                        .padding(.horizontal, 6)
+//                }
+//                .buttonStyle(PlainButtonStyle())
+//            }
         }
         .toastView(toastViewObserver: toastViewObserver)
     }
