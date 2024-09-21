@@ -15,7 +15,6 @@ struct ChatScreen: View {
     @Environment(ToastViewObserver.self) var toastViewObserver
     
     @State var chatVM: ChatViewModel = ChatViewModel()
-    @State private var isShowingSetting = false
     
     var body: some View {
         ZStack(alignment: .trailing) {
@@ -90,7 +89,7 @@ struct ChatScreen: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
                         withAnimation {
-                            isShowingSetting.toggle()
+                            chatVM.isShowingSetting.toggle()
                         }
                     } label: {
                         Image(systemName: "gearshape.fill")
@@ -104,10 +103,8 @@ struct ChatScreen: View {
             }
             .toastView(toastViewObserver: toastViewObserver)
             
-            if isShowingSetting {
+            if chatVM.isShowingSetting {
                 SettingScreen(chatVM: $chatVM)
-                    .frame(width: 200, height: appSize.getScreenHeight())
-                    .transition(.move(edge: .trailing))
                     .zIndex(1)
             }
         }

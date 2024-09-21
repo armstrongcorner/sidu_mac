@@ -12,6 +12,7 @@ import SwiftData
 class ChatViewModel {
     var userMessage: String = ""
     var isShowingConfirmDeleteAllTopic: Bool = false
+    var isShowingSetting: Bool = false
     var errMsg: String?
     
     var topicList: [TopicMessage] = []
