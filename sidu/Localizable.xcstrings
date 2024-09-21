@@ -256,6 +256,24 @@
         }
       }
     },
+    "Confirm to restart the app to apply the new language?" : {
+      "comment" : "confirm restart dialog content",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm to restart the app to apply the new language?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更改应用程序语言需要重启应用，现在就重启吗?"
+          }
+        }
+      }
+    },
     "Current Language:" : {
       "comment" : "current selected language title",
       "extractionState" : "manual",
@@ -651,9 +669,6 @@
           }
         }
       }
-    },
-    "中文" : {
-
     }
   },
   "version" : "1.0"

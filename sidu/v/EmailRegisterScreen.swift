@@ -129,6 +129,6 @@ struct EmailRegisterScreen: View {
         EmailRegisterScreen()
             .environment(ToastViewObserver())
             .environment(\.locale, .init(identifier: "en"))
-//        EmailRegisterScreen().environment(\.locale, .init(identifier: "zh-Hans"))
+//        EmailRegisterScreen().environment(\.locale, .init(identifier: "zh"))
     }
 }

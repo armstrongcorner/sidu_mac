@@ -11,6 +11,7 @@ enum CacheKey: String {
     case authInfo = "authInfo"
     case registerAuthInfo = "registerAuthInfo"
     case username = "username"
+    case currentLanguage = "currentLanguage"
 }
 
 class CacheUtil {

@@ -97,6 +97,6 @@ struct CompleteRegisterScreen: View {
         CompleteRegisterScreen(email: "")
             .environment(ToastViewObserver())
             .environment(\.locale, .init(identifier: "en"))
-//        CompleteRegisterScreen().environment(\.locale, .init(identifier: "zh-Hans"))
+//        CompleteRegisterScreen().environment(\.locale, .init(identifier: "zh"))
     }
 }

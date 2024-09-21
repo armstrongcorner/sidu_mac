@@ -15,6 +15,11 @@ struct SettingScreen: View {
     
     @Binding var chatVM: ChatViewModel
     @State private var loginVM = LoginViewModel()
+    @State private var miscVM = MiscViewModel()
+    
+    @State private var selectedLanguage = ""
+    
+    @Environment(\.locale) private var locale
     
     var versionInfo: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -52,14 +57,21 @@ struct SettingScreen: View {
             HStack {
                 Text("Current Language:")
                 Spacer()
-                Text("中文")
+                Text(supportedLanguageMap[selectedLanguage] ?? "Unknown")
             }
             .padding(.horizontal, 10)
             .padding(.top, 10)
             // Switch language btn
             HStack {
-                Button {
-                    print("switch language...")
+                Menu {
+                    Picker(selection: $selectedLanguage) {
+                        ForEach(supportedLanguageMap.keys.sorted(), id: \.self) { key in
+                            Text(supportedLanguageMap[key] ?? "Unknown").tag(key)
+                        }
+                    } label: {
+                        EmptyView()
+                    }
+                    .pickerStyle(.inline)
                 } label: {
                     Text("Switch Language")
                         .frame(width: 120, height: 20)
@@ -68,6 +80,26 @@ struct SettingScreen: View {
                         .cornerRadius(5)
                 }
                 .buttonStyle(PlainButtonStyle())
+                .onChange(of: selectedLanguage, { oldValue, newValue in
+                    print("oldValue: \(oldValue), newValue: \(newValue)")
+                    print("selectedLanguage: \(selectedLanguage)")
+                    if selectedLanguage != "" && oldValue != "" {
+                        UserDefaults.standard.set(selectedLanguage, forKey: CacheKey.currentLanguage.rawValue)
+                        miscVM.isShowingConfirmRestart = true
+                    }
+                })
+                .alert("Confirm to restart the app to apply the new language?", isPresented: Binding<Bool>(
+                    get: { miscVM.isShowingConfirmRestart },
+                    set: { _ in miscVM.isShowingConfirmRestart = false }
+                )) {
+                    Button("Cancel") {
+                        miscVM.isShowingConfirmRestart = false
+                    }
+                    Button("Confirm") {
+                        miscVM.isShowingConfirmRestart = false
+                        miscVM.restartApp()
+                    }
+                }
                 .padding(.leading, 10)
                 Spacer()
             }
@@ -118,7 +150,6 @@ struct SettingScreen: View {
                         .foregroundStyle(.red)
                 }
                 .buttonStyle(PlainButtonStyle())
-                .padding(.top, 50)
                 .alert(
                     "Warning",
                     isPresented: Binding<Bool>(
@@ -139,10 +170,7 @@ struct SettingScreen: View {
 
                 Spacer()
             }
-            
-            Text("Current Locale: \(Locale.current.identifier)")
-            Text("Language Code: \(Locale.current.language.languageCode?.identifier ?? "Unknown")")
-            Text("Region Code: \(Locale.current.region?.identifier ?? "Unknown")")
+            .padding(.top, 50)
             
             Spacer()
             
@@ -180,6 +208,7 @@ struct SettingScreen: View {
         .shadowAndRoundedCorner(color: .secondaryBg, radius: 0)
         .onAppear() {
             self.loginVM.modelContext = modelContext
+            self.selectedLanguage = locale.language.languageCode?.identifier ?? "en"
         }
         .navigationBarBackButtonHidden()
         .toastView(toastViewObserver: toastViewObserver)
@@ -190,8 +219,8 @@ struct SettingScreen: View {
     return Group {
         SettingScreen(chatVM: .constant(ChatViewModel()))
             .frame(width: 200, height: 500)
-            .environment(\.locale, .init(identifier: "en"))
-//            .environment(\.locale, .init(identifier: "zh-Hans"))
+//            .environment(\.locale, .init(identifier: "en"))
+            .environment(\.locale, .init(identifier: "zh"))
             .environment(ToastViewObserver())
             
     }

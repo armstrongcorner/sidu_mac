@@ -101,7 +101,7 @@ struct LoginScreen: View {
     return Group {
         LoginScreen()
 //            .environment(\.locale, .init(identifier: "en"))
-            .environment(\.locale, .init(identifier: "zh-Hans"))
+            .environment(\.locale, .init(identifier: "zh"))
             .environment(ToastViewObserver())
             .environment(AppSize(CGSize(width: 1024, height: 768)))
     }
