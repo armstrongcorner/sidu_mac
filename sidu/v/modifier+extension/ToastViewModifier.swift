@@ -70,6 +70,7 @@ struct ToastContentView: View {
                     .edgesIgnoringSafeArea(.all)
                     .transition(.opacity).transition(.opacity)
                     .zIndex(0)
+                
                 if toastViewObserver.toastType == .loading {
                     // Show loading indicator
                     ProgressView()

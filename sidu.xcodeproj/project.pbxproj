@@ -20,6 +20,7 @@
 		227F18262C872940006E2FD5 /* ChatRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227F18252C872940006E2FD5 /* ChatRow.swift */; };
 		229FB5FF2C9D36F200312837 /* SettingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229FB5FE2C9D36F200312837 /* SettingScreen.swift */; };
 		229FB6012C9E6E6000312837 /* MiscViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229FB6002C9E6E6000312837 /* MiscViewModel.swift */; };
+		229FB6032C9ED90400312837 /* ClearButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229FB6022C9ED90400312837 /* ClearButtonModifier.swift */; };
 		22A071E02C9974E00012625D /* RegisterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A071DF2C9974E00012625D /* RegisterService.swift */; };
 		22B2B6982C969537007F9DA8 /* TopicMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B2B6972C969537007F9DA8 /* TopicMessage.swift */; };
 		22BC45102C881BF7001FF0A3 /* DateUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BC450F2C881BF7001FF0A3 /* DateUtil.swift */; };
@@ -67,6 +68,7 @@
 		227F18252C872940006E2FD5 /* ChatRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRow.swift; sourceTree = "<group>"; };
 		229FB5FE2C9D36F200312837 /* SettingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingScreen.swift; sourceTree = "<group>"; };
 		229FB6002C9E6E6000312837 /* MiscViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscViewModel.swift; sourceTree = "<group>"; };
+		229FB6022C9ED90400312837 /* ClearButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearButtonModifier.swift; sourceTree = "<group>"; };
 		22A071DF2C9974E00012625D /* RegisterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterService.swift; sourceTree = "<group>"; };
 		22B2B6972C969537007F9DA8 /* TopicMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicMessage.swift; sourceTree = "<group>"; };
 		22BC450F2C881BF7001FF0A3 /* DateUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtil.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 			children = (
 				22D26E812C82CE7100C4D4FD /* ShadowAndRoundedCornerModifier.swift */,
 				22D26E832C83001900C4D4FD /* ToastViewModifier.swift */,
+				229FB6022C9ED90400312837 /* ClearButtonModifier.swift */,
 			);
 			path = "modifier+extension";
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				22FE37E52C7F40B300F9B992 /* RegisterViewModel.swift in Sources */,
 				22D26E792C81C2DE00C4D4FD /* LoginService.swift in Sources */,
 				2214C8FA2C840B2D008D1FAE /* AppSize.swift in Sources */,
+				229FB6032C9ED90400312837 /* ClearButtonModifier.swift in Sources */,
 				22BC45142C88747E001FF0A3 /* ChatService.swift in Sources */,
 				22D26E842C83001900C4D4FD /* ToastViewModifier.swift in Sources */,
 				22E796212C8D63C600A9623A /* User.swift in Sources */,
@@ -538,7 +542,7 @@
 				CODE_SIGN_ENTITLEMENTS = sidu/sidu.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"sidu/Preview Content\"";
 				DEVELOPMENT_TEAM = DXL5PNKGFP;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -566,7 +570,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"sidu/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = DXL5PNKGFP;

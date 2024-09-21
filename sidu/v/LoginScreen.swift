@@ -27,6 +27,7 @@ struct LoginScreen: View {
                 Spacer(minLength: 100)
                 Image(systemName: "person.fill")
                 TextField("Username/Email/Mobile", text: $loginVM.username)
+                    .clearButton(text: $loginVM.username)
                     .textFieldStyle(.plain)
                 Spacer(minLength: 100)
             }
@@ -36,7 +37,8 @@ struct LoginScreen: View {
                 Spacer(minLength: 100)
                 Image(systemName: "lock.fill")
                 SecureField("Password", text: $loginVM.password)
-                    .textFieldStyle(PlainTextFieldStyle())
+                    .clearButton(text: $loginVM.password)
+                    .textFieldStyle(.plain)
                 Spacer(minLength: 100)
             }
             .padding(.bottom, 50.0)

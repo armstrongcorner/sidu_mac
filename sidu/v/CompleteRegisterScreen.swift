@@ -29,7 +29,8 @@ struct CompleteRegisterScreen: View {
                 Spacer(minLength: 100)
                 Image(systemName: "lock.fill")
                 SecureField("Password", text: $registerVM.password)
-                    .textFieldStyle(PlainTextFieldStyle())
+                    .textFieldStyle(.plain)
+                    .clearButton(text: $registerVM.password)
                 Spacer(minLength: 100)
             }
             .padding(.bottom, 15.0)
@@ -38,7 +39,8 @@ struct CompleteRegisterScreen: View {
                 Spacer(minLength: 100)
                 Image(systemName: "checkmark.seal.fill")
                 SecureField("Input again to confirm password", text: $registerVM.confirm)
-                    .textFieldStyle(PlainTextFieldStyle())
+                    .textFieldStyle(.plain)
+                    .clearButton(text: $registerVM.confirm)
                 Spacer(minLength: 100)
             }
             .padding(.bottom, 50.0)

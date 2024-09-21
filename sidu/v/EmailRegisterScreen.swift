@@ -26,7 +26,8 @@ struct EmailRegisterScreen: View {
                 Spacer(minLength: 100)
                 Image(systemName: "envelope.fill")
                 TextField("Email for username to login", text: $registerVM.email)
-                    .textFieldStyle(PlainTextFieldStyle())
+                    .clearButton(text: $registerVM.email)
+                    .textFieldStyle(.plain)
                 // Send veri code button
                 Button {
                     print("Send verification email button clicked")
@@ -75,6 +76,7 @@ struct EmailRegisterScreen: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color("primaryBgColor"), lineWidth: 1)
                     }
+                    .clearButton(text: $registerVM.vericode)
                 Spacer(minLength: 100)
             }
             .padding(.bottom, 50.0)
