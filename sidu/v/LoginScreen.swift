@@ -58,6 +58,7 @@ struct LoginScreen: View {
             Button {
                 Task {
                     toastViewObserver.showLoading()
+                    print("thread 1: \(Thread.current)")
                     await loginVM.login()
                 }
             } label: {

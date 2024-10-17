@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 import SwiftData
 
-@Observable
-class LoginViewModel {
+@Observable @MainActor
+final class LoginViewModel: Sendable {
     var username: String = "armstrong.liu@matrixthoughts.com.au"
     var password: String = "1"
     var isLoggedIn: CommonResult = .none
@@ -30,12 +30,11 @@ class LoginViewModel {
     
     func login() async {
         do {
+            let _ = print("thread 2: \(Thread.current)")
             // Login
             guard let authResponse = try await loginService.login(username: username, password: password) else {
-                DispatchQueue.main.async {
-                    self.isLoggedIn = .failed
-                    self.errMsg = "Login failed with unknown reason"
-                }
+                isLoggedIn = .failed
+                errMsg = "Login failed with unknown reason"
                 return
             }
             
@@ -46,10 +45,8 @@ class LoginViewModel {
 
             // Get user info
             guard let userInfoResponse = try await userServic.getUserInfo(username: username) else {
-                DispatchQueue.main.async {
-                    self.isLoggedIn = .failed
-                    self.errMsg = "Get user info failed with unknown reason"
-                }
+                self.isLoggedIn = .failed
+                self.errMsg = "Get user info failed with unknown reason"
                 return
             }
             
@@ -57,19 +54,15 @@ class LoginViewModel {
             let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
             try User.addUser(user: user, context: modelContext)
 
-            DispatchQueue.main.async {
-                if authResponse.isSuccess ?? false {
-                    self.isLoggedIn = .success
-                } else {
-                    self.isLoggedIn = .failed
-                    self.errMsg = authResponse.failureReason
-                }
+            if authResponse.isSuccess ?? false {
+                self.isLoggedIn = .success
+            } else {
+                self.isLoggedIn = .failed
+                self.errMsg = authResponse.failureReason
             }
         } catch {
-            DispatchQueue.main.async {
-                self.isLoggedIn = .failed
-                self.errMsg = error.localizedDescription
-            }
+            self.isLoggedIn = .failed
+            self.errMsg = error.localizedDescription
         }
     }
     
@@ -84,14 +77,10 @@ class LoginViewModel {
                 // Logout
                 logout()
             } else {
-                DispatchQueue.main.async {
-                    self.errMsg = "User not found"
-                }
+                self.errMsg = "User not found"
             }
         } catch {
-            DispatchQueue.main.async {
-                self.errMsg = error.localizedDescription
-            }
+            self.errMsg = error.localizedDescription
         }
     }
     
@@ -100,17 +89,13 @@ class LoginViewModel {
         UserDefaults.standard.removeObject(forKey: CacheKey.authInfo.rawValue)
         UserDefaults.standard.removeObject(forKey: CacheKey.registerAuthInfo.rawValue)
         
-        DispatchQueue.main.async {
-            self.isLoggedIn = .none
-        }
+        self.isLoggedIn = .none
     }
 
     func clearCredentials() {
-        DispatchQueue.main.async {
-            self.username = ""
-            self.password = ""
-            self.isLoggedIn = .none
-            self.errMsg = nil
-        }
+        self.username = ""
+        self.password = ""
+        self.isLoggedIn = .none
+        self.errMsg = nil
     }
 }
