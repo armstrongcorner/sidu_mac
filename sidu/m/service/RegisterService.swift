@@ -42,7 +42,7 @@ class RegisterService: RegisterServiceProtocol {
         ))
         // Use the temp token to send verification email
         var newHeaders = [:] as [String: String]
-        if let tmpToken = CacheUtil.shared.getRegisterAuthInfo()?.token {
+        if let tmpToken = await CacheUtil.shared.getRegisterAuthInfo()?.token {
             newHeaders["Authorization"] = "Bearer \(tmpToken)"
         }
         
@@ -60,7 +60,7 @@ class RegisterService: RegisterServiceProtocol {
         let httpBody = try JSONEncoder().encode(["authenticationCode": vericode])
         // Use the temp token to send verification email
         var newHeaders = [:] as [String: String]
-        if let tmpToken = CacheUtil.shared.getRegisterAuthInfo()?.token {
+        if let tmpToken = await CacheUtil.shared.getRegisterAuthInfo()?.token {
             newHeaders["Authorization"] = "Bearer \(tmpToken)"
         }
         
@@ -82,7 +82,7 @@ class RegisterService: RegisterServiceProtocol {
         ))
         // Use the temp token to send verification email
         var newHeaders = [:] as [String: String]
-        if let tmpToken = CacheUtil.shared.getRegisterAuthInfo()?.token {
+        if let tmpToken = await CacheUtil.shared.getRegisterAuthInfo()?.token {
             newHeaders["Authorization"] = "Bearer \(tmpToken)"
         }
         

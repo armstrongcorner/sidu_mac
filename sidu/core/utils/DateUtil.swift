@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DateUtil {
+actor DateUtil {
     static let shared = DateUtil()
     
     private init() {}

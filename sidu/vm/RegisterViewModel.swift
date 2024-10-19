@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Observable
-class RegisterViewModel {
+final class RegisterViewModel: Sendable {
     var email: String = ""
     var vericode: String = ""
     var password: String = ""
@@ -119,7 +119,7 @@ class RegisterViewModel {
             }
             if tempAuthResponse.isSuccess ?? false {
                 // Cache the temp token for sending verification email
-                CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: tempAuthResponse.value)
+                await CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: tempAuthResponse.value)
                 
                 // Use the temp token to request verification email
                 guard let requestVerificationResponse = try await registerServic.requestVerificationEmail(email: email) else {
@@ -131,7 +131,7 @@ class RegisterViewModel {
                 }
                 if requestVerificationResponse.isSuccess ?? false {
                     // Request verification email success, cache the auth token for verification
-                    CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: requestVerificationResponse.value)
+                    await CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: requestVerificationResponse.value)
                 } else {
                     DispatchQueue.main.async {
                         self.isVerified = .failed
@@ -204,7 +204,7 @@ class RegisterViewModel {
             }
             if completeRegistrationResponse.isSuccess ?? false {
                 // Complete registration success, cache the auth info for future use
-                CacheUtil.shared.cacheAuthInfo(authInfo: completeRegistrationResponse.value)
+                await CacheUtil.shared.cacheAuthInfo(authInfo: completeRegistrationResponse.value)
                 // Cache the email as username for future use
                 UserDefaults.standard.setValue(email, forKey: CacheKey.username.rawValue)
 

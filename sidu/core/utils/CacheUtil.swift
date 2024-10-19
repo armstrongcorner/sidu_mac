@@ -14,7 +14,7 @@ enum CacheKey: String {
     case currentLanguage = "currentLanguage"
 }
 
-class CacheUtil {
+actor CacheUtil {
     static let shared = CacheUtil()
     
     private init() {}

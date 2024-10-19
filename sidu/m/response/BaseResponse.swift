@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BaseResponse<T: Codable>: Codable {
+struct BaseResponse<T: Codable & Sendable>: Codable, Sendable {
     let value: T?
     let failureReason: String?
     let isSuccess: Bool?

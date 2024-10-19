@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 @Observable @MainActor
-final class LoginViewModel: Sendable {
+final class LoginViewModel {
     var username: String = "armstrong.liu@matrixthoughts.com.au"
     var password: String = "1"
     var isLoggedIn: CommonResult = .none
@@ -20,8 +20,8 @@ final class LoginViewModel: Sendable {
     
     var modelContext: ModelContext?
     
-    private let loginService: LoginServiceProtocol
-    private let userServic: UserServiceProtocol
+    @ObservationIgnored nonisolated private let loginService: LoginServiceProtocol
+    @ObservationIgnored nonisolated private let userServic: UserServiceProtocol
     
     init(loginService: LoginServiceProtocol = LoginService(), userService: UserServiceProtocol = UserService()) {
         self.loginService = loginService
@@ -30,19 +30,18 @@ final class LoginViewModel: Sendable {
     
     func login() async {
         do {
-            let _ = print("thread 2: \(Thread.current)")
             // Login
             guard let authResponse = try await loginService.login(username: username, password: password) else {
-                isLoggedIn = .failed
-                errMsg = "Login failed with unknown reason"
+                self.isLoggedIn = .failed
+                self.errMsg = "Login failed with unknown reason"
                 return
             }
             
             // Cache the auth info for future use
-            CacheUtil.shared.cacheAuthInfo(authInfo: authResponse.value)
+            await CacheUtil.shared.cacheAuthInfo(authInfo: authResponse.value)
             // Cache the username for future use
             UserDefaults.standard.setValue(username, forKey: CacheKey.username.rawValue)
-
+            
             // Get user info
             guard let userInfoResponse = try await userServic.getUserInfo(username: username) else {
                 self.isLoggedIn = .failed
@@ -53,7 +52,7 @@ final class LoginViewModel: Sendable {
             // Cache the user info for future use
             let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
             try User.addUser(user: user, context: modelContext)
-
+            
             if authResponse.isSuccess ?? false {
                 self.isLoggedIn = .success
             } else {
@@ -91,7 +90,7 @@ final class LoginViewModel: Sendable {
         
         self.isLoggedIn = .none
     }
-
+    
     func clearCredentials() {
         self.username = ""
         self.password = ""

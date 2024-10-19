@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CommonResult: Equatable {
+enum CommonResult: Equatable, Sendable {
     case none
     case success
     case failed

@@ -7,11 +7,11 @@
 
 import Foundation
 
-protocol UserServiceProtocol {
+protocol UserServiceProtocol: Sendable {
     func getUserInfo(username: String) async throws -> UserInfoResponse?
 }
 
-class UserService: UserServiceProtocol {
+final class UserService: UserServiceProtocol {
     func getUserInfo(username: String) async throws -> UserInfoResponse? {
         let userInfoResponse = try await ApiClient.shared.get(url: URL(string: "\(Endpoint.userInfo.url.absoluteString)\(username)")!, responseType: UserInfoResponse.self)
         

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SplashScreen: View {
     @State private var path: [Route] = []
-    @State private var userVM = UserViewModel()
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -28,10 +27,12 @@ struct SplashScreen: View {
             }
         }
         .onAppear() {
-            if userVM.isLoggedIn {
-                path.append(.chatScreen)
-            } else {
-                path.append(.loginScreen)
+            Task {
+                if await CacheUtil.shared.getAuthInfo() != nil {
+                    path.append(.chatScreen)
+                } else {
+                    path.append(.loginScreen)
+                }
             }
         }
         .environment(\.myRoute, $path)

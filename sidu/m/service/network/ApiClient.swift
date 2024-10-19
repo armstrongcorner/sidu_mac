@@ -7,13 +7,13 @@
 
 import Foundation
 
-class ApiClient {
+struct ApiClient: Sendable {
     static let shared = ApiClient()
     
     private init() {}
     
     // Get default headers
-    func getHeaders() -> [String: String] {
+    func getHeaders() async -> [String: String] {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
         
         var headers = [
@@ -22,7 +22,7 @@ class ApiClient {
             "x-app-os": "macos",
             "x-app-version": appVersion,
         ]
-        if let token = CacheUtil.shared.getAuthInfo()?.token {
+        if let token = await CacheUtil.shared.getAuthInfo()?.token {
             headers["Authorization"] = "Bearer \(token)"
         }
         
@@ -39,7 +39,7 @@ class ApiClient {
         request.httpMethod = method
         request.httpBody = body
         // Set default headers
-        getHeaders().forEach { key, value in
+        await getHeaders().forEach { key, value in
             request.setValue(value, forHTTPHeaderField: key)
         }
         // Set custom headers
@@ -70,6 +70,7 @@ class ApiClient {
                             headers: [String: String] = [:],
                             body: Data? = nil,
                             responseType: T.Type) async throws -> T {
+        print("11111111111: ", Thread.current)
         return try await sendRequest(url: url, method: "POST", headers: headers, body: body, responseType: responseType)
     }
     
@@ -119,7 +120,7 @@ class ApiClient {
         request.httpBody = body
 
         // Set default headers
-        getHeaders().forEach { key, value in
+        await getHeaders().forEach { key, value in
             request.setValue(value, forHTTPHeaderField: key)
         }
         // Set custom headers
