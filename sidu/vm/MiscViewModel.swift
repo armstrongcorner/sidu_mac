@@ -8,7 +8,7 @@
 import Foundation
 import AppKit
 
-@Observable
+@Observable @MainActor
 class MiscViewModel {
     var isShowingConfirmRestart: Bool = false
     

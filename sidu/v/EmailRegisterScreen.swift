@@ -97,6 +97,9 @@ struct EmailRegisterScreen: View {
             }
             .buttonStyle(PlainButtonStyle())
         }
+        .onDisappear {
+            registerVM.stopCountDown()
+        }
         .onChange(of: registerVM.isVerified, { oldValue, newValue in
             if newValue == .success {
                 toastViewObserver.dismissLoading()

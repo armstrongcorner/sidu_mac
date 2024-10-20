@@ -8,8 +8,8 @@
 import Foundation
 import SwiftData
 
-@Observable
-final class RegisterViewModel: Sendable {
+@Observable @MainActor
+final class RegisterViewModel {
     var email: String = ""
     var vericode: String = ""
     var password: String = ""
@@ -22,18 +22,17 @@ final class RegisterViewModel: Sendable {
     var resendCountDown: Int = 0    // in seconds
     private var countDownTimer: Timer?
     
+    @ObservationIgnored
     private let loginService: LoginServiceProtocol
+    @ObservationIgnored
     private let registerServic: RegisterServiceProtocol
+    @ObservationIgnored
     private let userServic: UserServiceProtocol
     
     init(loginService: LoginServiceProtocol = LoginService(), registerServic: RegisterServiceProtocol = RegisterService(), userServic: UserServiceProtocol = UserService()) {
         self.loginService = loginService
         self.registerServic = registerServic
         self.userServic = userServic
-    }
-    
-    deinit {
-        countDownTimer?.invalidate()
     }
     
     func startCountDown() {
@@ -43,11 +42,13 @@ final class RegisterViewModel: Sendable {
         
         resendCountDown = RESEND_VERI_CODE_COUNTDOWN_IN_SEC
         countDownTimer?.invalidate()
-        countDownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
+        countDownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            self.resendCountDown -= 1
-            if self.resendCountDown == 0 {
-                timer.invalidate()
+            Task { @MainActor in
+                self.resendCountDown -= 1
+                if self.resendCountDown == 0 {
+                    self.countDownTimer?.invalidate()
+                }
             }
         }
     }
@@ -60,10 +61,8 @@ final class RegisterViewModel: Sendable {
     
     func isEmailValid() -> Bool {
         if email.isEmpty {
-            DispatchQueue.main.async {
-                self.isVerified = .failed
-                self.errMsg = "Email is required"
-            }
+            self.isVerified = .failed
+            self.errMsg = "Email is required"
             return false
         }
         
@@ -72,10 +71,8 @@ final class RegisterViewModel: Sendable {
     
     func isVericodeValid() -> Bool {
         if vericode.isEmpty {
-            DispatchQueue.main.async {
-                self.isVerified = .failed
-                self.errMsg = "Verification code is required"
-            }
+            self.isVerified = .failed
+            self.errMsg = "Verification code is required"
             return false
         }
         
@@ -84,18 +81,14 @@ final class RegisterViewModel: Sendable {
     
     func isPasswordMatched() -> Bool {
         if password.isEmpty || confirm.isEmpty {
-            DispatchQueue.main.async {
-                self.isVerified = .failed
-                self.errMsg = "Password and confirm password are required"
-            }
+            self.isVerified = .failed
+            self.errMsg = "Password and confirm password are required"
             return false
         }
         
         if password != confirm {
-            DispatchQueue.main.async {
-                self.isVerified = .failed
-                self.errMsg = "Password and confirm password are not matched"
-            }
+            self.isVerified = .failed
+            self.errMsg = "Password and confirm password are not matched"
             return false
         }
         
@@ -111,10 +104,8 @@ final class RegisterViewModel: Sendable {
             
             // Request temp token (by super admin) for request verification email
             guard let tempAuthResponse = try await loginService.login(username: "matrixthoughtsadmin", password: "Nbq4dcz123") else {
-                DispatchQueue.main.async {
-                    self.isVerified = .failed
-                    self.errMsg = "Request temp token failed with unknown reason"
-                }
+                self.isVerified = .failed
+                self.errMsg = "Request temp token failed with unknown reason"
                 return
             }
             if tempAuthResponse.isSuccess ?? false {
@@ -123,33 +114,25 @@ final class RegisterViewModel: Sendable {
                 
                 // Use the temp token to request verification email
                 guard let requestVerificationResponse = try await registerServic.requestVerificationEmail(email: email) else {
-                    DispatchQueue.main.async {
-                        self.isVerified = .failed
-                        self.errMsg = "Request verification email failed with unknown reason"
-                    }
+                    self.isVerified = .failed
+                    self.errMsg = "Request verification email failed with unknown reason"
                     return
                 }
                 if requestVerificationResponse.isSuccess ?? false {
                     // Request verification email success, cache the auth token for verification
                     await CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: requestVerificationResponse.value)
                 } else {
-                    DispatchQueue.main.async {
-                        self.isVerified = .failed
-                        self.errMsg = "Request verification email failed with error: \(requestVerificationResponse.failureReason ?? "unknown reason")"
-                    }
+                    self.isVerified = .failed
+                    self.errMsg = "Request verification email failed with error: \(requestVerificationResponse.failureReason ?? "unknown reason")"
                 }
             } else {
-                DispatchQueue.main.async {
-                    self.isVerified = .failed
-                    self.errMsg = "Request temp token failed with error: \(tempAuthResponse.failureReason ?? "unknown reason")"
-                }
+                self.isVerified = .failed
+                self.errMsg = "Request temp token failed with error: \(tempAuthResponse.failureReason ?? "unknown reason")"
                 return
             }
         } catch {
-            DispatchQueue.main.async {
-                self.isVerified = .failed
-                self.errMsg = "Request verification email failed with error: \(error.localizedDescription)"
-            }
+            self.isVerified = .failed
+            self.errMsg = "Request verification email failed with error: \(error.localizedDescription)"
         }
     }
     
@@ -162,28 +145,20 @@ final class RegisterViewModel: Sendable {
             
             // Verify the registration
             guard let verifyRegistrationResponse = try await registerServic.goVerifyRegistration(vericode: vericode) else {
-                DispatchQueue.main.async {
-                    self.isVerified = .failed
-                    self.errMsg = "Verify registration failed with unknown reason"
-                }
+                self.isVerified = .failed
+                self.errMsg = "Verify registration failed with unknown reason"
                 return
             }
             if verifyRegistrationResponse.isSuccess ?? false {
                 // Verify registration success
-                DispatchQueue.main.async {
-                    self.isVerified = .success
-                }
+                self.isVerified = .success
             } else {
-                DispatchQueue.main.async {
-                    self.isVerified = .failed
-                    self.errMsg = "Verify registration failed with error: \(verifyRegistrationResponse.failureReason ?? "unknown reason")"
-                }
+                self.isVerified = .failed
+                self.errMsg = "Verify registration failed with error: \(verifyRegistrationResponse.failureReason ?? "unknown reason")"
             }
         } catch {
-            DispatchQueue.main.async {
-                self.isVerified = .failed
-                self.errMsg = "Verify registration failed with error: \(error.localizedDescription)"
-            }
+            self.isVerified = .failed
+            self.errMsg = "Verify registration failed with error: \(error.localizedDescription)"
         }
     }
     
@@ -196,10 +171,8 @@ final class RegisterViewModel: Sendable {
             
             // Complete the registration
             guard let completeRegistrationResponse = try await registerServic.completeRegistration(username: email, password: password) else {
-                DispatchQueue.main.async {
-                    self.isVerified = .failed
-                    self.errMsg = "Complete registration failed with unknown reason"
-                }
+                self.isVerified = .failed
+                self.errMsg = "Complete registration failed with unknown reason"
                 return
             }
             if completeRegistrationResponse.isSuccess ?? false {
@@ -210,36 +183,26 @@ final class RegisterViewModel: Sendable {
 
                 // Get user info
                 guard let userInfoResponse = try await userServic.getUserInfo(username: email) else {
-                    DispatchQueue.main.async {
-                        self.isVerified = .failed
-                        self.errMsg = "Get user info failed with unknown reason"
-                    }
+                    self.isVerified = .failed
+                    self.errMsg = "Get user info failed with unknown reason"
                     return
                 }
                 if userInfoResponse.isSuccess ?? false {
                     // Cache the user info for future use
                     let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
                     try User.addUser(user: user, context: modelContext)
-                    DispatchQueue.main.async {
-                        self.isVerified = .success
-                    }
+                    self.isVerified = .success
                 } else {
-                    DispatchQueue.main.async {
-                        self.isVerified = .failed
-                        self.errMsg = "Get user info failed with error: \(userInfoResponse.failureReason ?? "unknown reason")"
-                    }
+                    self.isVerified = .failed
+                    self.errMsg = "Get user info failed with error: \(userInfoResponse.failureReason ?? "unknown reason")"
                 }
             } else {
-                DispatchQueue.main.async {
-                    self.isVerified = .failed
-                    self.errMsg = "Complete registration failed with error: \(completeRegistrationResponse.failureReason ?? "unknown reason")"
-                }
+                self.isVerified = .failed
+                self.errMsg = "Complete registration failed with error: \(completeRegistrationResponse.failureReason ?? "unknown reason")"
             }
         } catch {
-            DispatchQueue.main.async {
-                self.isVerified = .failed
-                self.errMsg = "Complete registration failed with error: \(error.localizedDescription)"
-            }
+            self.isVerified = .failed
+            self.errMsg = "Complete registration failed with error: \(error.localizedDescription)"
         }
     }
 }

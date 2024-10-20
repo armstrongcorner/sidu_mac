@@ -16,7 +16,7 @@ protocol LoginServiceProtocol: Sendable {
     func login(username: String, password: String) async throws -> AuthResponse?
 }
 
-final class LoginService: LoginServiceProtocol {
+actor LoginService: LoginServiceProtocol {
     func login(username: String, password: String) async throws -> AuthResponse? {
         let httpBody = try JSONEncoder().encode(LoginRequest(username: username, password: password))
         let authResponse = try await ApiClient.shared.post(url: Endpoint.login.url, body: httpBody, responseType: AuthResponse.self)

@@ -18,11 +18,11 @@ struct ChatRequestMessage: Codable {
     let content: String
 }
 
-protocol ChatServiceProtocol {
+protocol ChatServiceProtocol: Sendable {
     func sendChat(_ messageList: [ChatMessage]) async throws -> ChatResponse?
 }
 
-class ChatService: ChatServiceProtocol {
+actor ChatService: ChatServiceProtocol {
     func sendChat(_ messageList: [ChatMessage]) async throws -> ChatResponse? {
         let httpBody = try JSONEncoder().encode(ChatRequest(
             model: DEFAULT_AI_MODEL,

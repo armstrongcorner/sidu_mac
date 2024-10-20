@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-@Observable
+@Observable @MainActor
 class ChatViewModel {
     var userMessage: String = ""
     var isShowingConfirmDeleteAllTopic: Bool = false
@@ -31,6 +31,7 @@ class ChatViewModel {
     
     var modelContext: ModelContext?
     
+    @ObservationIgnored
     private let chatService: ChatServiceProtocol
     
     init(chatService: ChatServiceProtocol = ChatService(), selectedTopicIndex: Int? = nil, topicList: [TopicMessage] = []) {
@@ -65,7 +66,7 @@ class ChatViewModel {
             
             // Load chat list for all topics
             for i in 0..<topicList.count {
-                let topicMessage = topicList[i]
+                var topicMessage = topicList[i]
                 let topic = try Topic.fetchTopicById(topicId: topicMessage.id ?? "", context: modelContext)
                 let chatList = (topic?.chats ?? []).map({ chat in
                     ChatMessage(
@@ -99,7 +100,7 @@ class ChatViewModel {
         let isFirstChat = chatList.isEmpty || selectedTopicIndex == nil || topicList[selectedTopicIndex ?? 0].isComplete ?? false
         
         if !userMessage.isEmpty && !userMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            let userChatMessage = ChatMessage(
+            var userChatMessage = ChatMessage(
                 id: UUID().uuidString,
                 role: .user,
                 content: userMessage,
@@ -118,7 +119,7 @@ class ChatViewModel {
             
             // Make UI update first
             if isFirstChat {
-                let firstTopicMessage = TopicMessage(
+                var firstTopicMessage = TopicMessage(
                     id: UUID().uuidString,
                     title: userMessage,
                     createTime: Date().timeIntervalSince1970,
@@ -146,15 +147,11 @@ class ChatViewModel {
             }
             
             do {
-                DispatchQueue.main.async {
-                    self.userMessage = ""
-                }
+                self.userMessage = ""
                 // Reverse back the newChatContexts to positive order, then send chat message
                 guard let assistantChatResponse = try await chatService.sendChat(newChatList.reversed()) else {
-                    DispatchQueue.main.async {
-                        self.errMsg = "Sending chat message failed with unknown reason"
-                        self.userMessage = tmpCacheUserMessage
-                    }
+                    self.errMsg = "Sending chat message failed with unknown reason"
+                    self.userMessage = tmpCacheUserMessage
                     return
                 }
                 
@@ -172,25 +169,19 @@ class ChatViewModel {
                         status: .done
                     )
                     // 2) Replace 'waiting' message with the reponse Message
-                    DispatchQueue.main.async {
-                        self.chatList.replaceSubrange(self.chatList.count - 1..<self.chatList.count, with: [assistantChatMessage])
-                        self.topicList[self.selectedTopicIndex ?? 0].chatMessages = self.chatList
-                    }
+                    self.chatList.replaceSubrange(self.chatList.count - 1..<self.chatList.count, with: [assistantChatMessage])
+                    self.topicList[self.selectedTopicIndex ?? 0].chatMessages = self.chatList
                     // 3) Save chat message to database
                     if isFirstChat {
                         // 3-1) If first chat, we need to add an initial topic in database. The topic subject is the first user message. And add the related chat messages.
                         guard let currentUser = try getCurrentUser() else {
-                            DispatchQueue.main.async {
-                                self.errMsg = "Current user not found"
-                                self.userMessage = tmpCacheUserMessage
-                            }
+                            self.errMsg = "Current user not found"
+                            self.userMessage = tmpCacheUserMessage
                             return
                         }
                         guard let firstTopicMessage = topicList.first else {
-                            DispatchQueue.main.async {
-                                self.errMsg = "Error in getting first topic"
-                                self.userMessage = tmpCacheUserMessage
-                            }
+                            self.errMsg = "Error in getting first topic"
+                            self.userMessage = tmpCacheUserMessage
                             return
                         }
                         let firstTopic = Topic(fromContextModel: firstTopicMessage, user: currentUser)
@@ -203,10 +194,8 @@ class ChatViewModel {
                     } else {
                         // 3-2) If chat in existing topic, retrieve the topic from database and add the chat messages
                         guard let currentTopic = try Topic.fetchTopicById(topicId: topicList[selectedTopicIndex ?? 0].id ?? "", context: modelContext) else {
-                            DispatchQueue.main.async {
-                                self.errMsg = "Current topic not found"
-                                self.userMessage = tmpCacheUserMessage
-                            }
+                            self.errMsg = "Current topic not found"
+                            self.userMessage = tmpCacheUserMessage
                             return
                         }
                         print("BEFORE currentTopic chats count: \(currentTopic.chats.count)")
@@ -226,16 +215,12 @@ class ChatViewModel {
                         
                     }
                 } else {
-                    DispatchQueue.main.async {
-                        self.errMsg = assistantChatResponse.failureReason
-                        self.userMessage = tmpCacheUserMessage
-                    }
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.errMsg = error.localizedDescription
+                    self.errMsg = assistantChatResponse.failureReason
                     self.userMessage = tmpCacheUserMessage
                 }
+            } catch {
+                self.errMsg = error.localizedDescription
+                self.userMessage = tmpCacheUserMessage
             }
         }
     }
@@ -247,7 +232,7 @@ class ChatViewModel {
             let topic = try Topic.fetchTopicById(topicId: topicId, context: modelContext)
             topic?.isComplete = true
             let topicMessageIndex = topicList.firstIndex(where: { $0.id == topicId }) ?? 0
-            let topicMessage = topicList[topicMessageIndex]
+            var topicMessage = topicList[topicMessageIndex]
             topicMessage.isComplete = true
             topicList.replaceSubrange(topicMessageIndex..<topicMessageIndex + 1, with: [topicMessage])
         } catch {
@@ -260,9 +245,7 @@ class ChatViewModel {
         do {
             // Delete the topic from database
             guard let currentUser = try getCurrentUser() else {
-                DispatchQueue.main.async {
-                    self.errMsg = "Current user not found"
-                }
+                self.errMsg = "Current user not found"
                 return
             }
             currentUser.topics.removeAll(where: { $0.id == topicId })
@@ -289,9 +272,7 @@ class ChatViewModel {
         do {
             // Delete all topics from database
             guard let currentUser = try getCurrentUser() else {
-                DispatchQueue.main.async {
-                    self.errMsg = "Current user not found"
-                }
+                self.errMsg = "Current user not found"
                 return
             }
             currentUser.topics.removeAll()

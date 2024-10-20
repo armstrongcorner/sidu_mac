@@ -23,13 +23,13 @@ struct CompleteRegistrationRequest: Codable {
     let activateUser: Bool
 }
 
-protocol RegisterServiceProtocol {
+protocol RegisterServiceProtocol: Sendable {
     func requestVerificationEmail(email: String) async throws -> AuthResponse?
     func goVerifyRegistration(vericode: String) async throws -> UserInfoResponse?
     func completeRegistration(username: String, password: String) async throws -> AuthResponse?
 }
 
-class RegisterService: RegisterServiceProtocol {
+actor RegisterService: RegisterServiceProtocol {
     func requestVerificationEmail(email: String) async throws -> AuthResponse? {
         let httpBody = try JSONEncoder().encode(VerificationEmailRequest(
             username: email,

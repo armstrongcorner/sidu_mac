@@ -20,8 +20,10 @@ final class LoginViewModel {
     
     var modelContext: ModelContext?
     
-    @ObservationIgnored nonisolated private let loginService: LoginServiceProtocol
-    @ObservationIgnored nonisolated private let userServic: UserServiceProtocol
+    @ObservationIgnored
+    private let loginService: LoginServiceProtocol
+    @ObservationIgnored
+    private let userServic: UserServiceProtocol
     
     init(loginService: LoginServiceProtocol = LoginService(), userService: UserServiceProtocol = UserService()) {
         self.loginService = loginService

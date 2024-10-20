@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ApiClient: Sendable {
+final class ApiClient: Sendable {
     static let shared = ApiClient()
     
     private init() {}
@@ -70,7 +70,6 @@ struct ApiClient: Sendable {
                             headers: [String: String] = [:],
                             body: Data? = nil,
                             responseType: T.Type) async throws -> T {
-        print("11111111111: ", Thread.current)
         return try await sendRequest(url: url, method: "POST", headers: headers, body: body, responseType: responseType)
     }
     
