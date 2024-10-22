@@ -22,7 +22,7 @@ protocol ChatServiceProtocol: Sendable {
     func sendChat(_ messageList: [ChatMessage]) async throws -> ChatResponse?
 }
 
-actor ChatService: ChatServiceProtocol {
+final class ChatService: ChatServiceProtocol {
     func sendChat(_ messageList: [ChatMessage]) async throws -> ChatResponse? {
         let httpBody = try JSONEncoder().encode(ChatRequest(
             model: DEFAULT_AI_MODEL,

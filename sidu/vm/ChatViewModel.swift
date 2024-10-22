@@ -66,7 +66,7 @@ class ChatViewModel {
             
             // Load chat list for all topics
             for i in 0..<topicList.count {
-                var topicMessage = topicList[i]
+                let topicMessage = topicList[i]
                 let topic = try Topic.fetchTopicById(topicId: topicMessage.id ?? "", context: modelContext)
                 let chatList = (topic?.chats ?? []).map({ chat in
                     ChatMessage(
@@ -100,7 +100,7 @@ class ChatViewModel {
         let isFirstChat = chatList.isEmpty || selectedTopicIndex == nil || topicList[selectedTopicIndex ?? 0].isComplete ?? false
         
         if !userMessage.isEmpty && !userMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            var userChatMessage = ChatMessage(
+            let userChatMessage = ChatMessage(
                 id: UUID().uuidString,
                 role: .user,
                 content: userMessage,
@@ -119,7 +119,7 @@ class ChatViewModel {
             
             // Make UI update first
             if isFirstChat {
-                var firstTopicMessage = TopicMessage(
+                let firstTopicMessage = TopicMessage(
                     id: UUID().uuidString,
                     title: userMessage,
                     createTime: Date().timeIntervalSince1970,
@@ -232,7 +232,7 @@ class ChatViewModel {
             let topic = try Topic.fetchTopicById(topicId: topicId, context: modelContext)
             topic?.isComplete = true
             let topicMessageIndex = topicList.firstIndex(where: { $0.id == topicId }) ?? 0
-            var topicMessage = topicList[topicMessageIndex]
+            let topicMessage = topicList[topicMessageIndex]
             topicMessage.isComplete = true
             topicList.replaceSubrange(topicMessageIndex..<topicMessageIndex + 1, with: [topicMessage])
         } catch {

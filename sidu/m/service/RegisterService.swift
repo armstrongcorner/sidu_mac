@@ -29,7 +29,7 @@ protocol RegisterServiceProtocol: Sendable {
     func completeRegistration(username: String, password: String) async throws -> AuthResponse?
 }
 
-actor RegisterService: RegisterServiceProtocol {
+final class RegisterService: RegisterServiceProtocol {
     func requestVerificationEmail(email: String) async throws -> AuthResponse? {
         let httpBody = try JSONEncoder().encode(VerificationEmailRequest(
             username: email,
