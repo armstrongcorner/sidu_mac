@@ -40,7 +40,7 @@
 		22E796212C8D63C600A9623A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E796202C8D63C600A9623A /* User.swift */; };
 		22E796232C8D681B00A9623A /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E796222C8D681B00A9623A /* Topic.swift */; };
 		22E796252C8D682B00A9623A /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E796242C8D682B00A9623A /* Chat.swift */; };
-		22EA09672CB28A3900BB0652 /* BackgroundSerialPersistenceActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA09662CB28A3900BB0652 /* BackgroundSerialPersistenceActor.swift */; };
+		22EA09672CB28A3900BB0652 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA09662CB28A3900BB0652 /* DatabaseManager.swift */; };
 		22EF507A2C03F8FD00B2CED9 /* siduApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EF50792C03F8FD00B2CED9 /* siduApp.swift */; };
 		22EF507C2C03F8FD00B2CED9 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EF507B2C03F8FD00B2CED9 /* LoginScreen.swift */; };
 		22EF507E2C03F8FE00B2CED9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22EF507D2C03F8FE00B2CED9 /* Assets.xcassets */; };
@@ -88,7 +88,7 @@
 		22E796202C8D63C600A9623A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		22E796222C8D681B00A9623A /* Topic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
 		22E796242C8D682B00A9623A /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
-		22EA09662CB28A3900BB0652 /* BackgroundSerialPersistenceActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSerialPersistenceActor.swift; sourceTree = "<group>"; };
+		22EA09662CB28A3900BB0652 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		22EF50762C03F8FD00B2CED9 /* sidu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sidu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22EF50792C03F8FD00B2CED9 /* siduApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = siduApp.swift; sourceTree = "<group>"; };
 		22EF507B2C03F8FD00B2CED9 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
@@ -188,7 +188,7 @@
 		22E7961F2C8D63B500A9623A /* database */ = {
 			isa = PBXGroup;
 			children = (
-				22EA09662CB28A3900BB0652 /* BackgroundSerialPersistenceActor.swift */,
+				22EA09662CB28A3900BB0652 /* DatabaseManager.swift */,
 				22E796202C8D63C600A9623A /* User.swift */,
 				22E796222C8D681B00A9623A /* Topic.swift */,
 				22E796242C8D682B00A9623A /* Chat.swift */,
@@ -398,7 +398,7 @@
 				22E796172C8C5EDA00A9623A /* Constant.swift in Sources */,
 				22FE37E12C7F408A00F9B992 /* Route.swift in Sources */,
 				227AFC092C85D50B006A0AFC /* ChatView.swift in Sources */,
-				22EA09672CB28A3900BB0652 /* BackgroundSerialPersistenceActor.swift in Sources */,
+				22EA09672CB28A3900BB0652 /* DatabaseManager.swift in Sources */,
 				22FE37DF2C7F400B00F9B992 /* CompleteRegisterScreen.swift in Sources */,
 				22EF507A2C03F8FD00B2CED9 /* siduApp.swift in Sources */,
 				22FE37E32C7F40A400F9B992 /* LoginViewModel.swift in Sources */,

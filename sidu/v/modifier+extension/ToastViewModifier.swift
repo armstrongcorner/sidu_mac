@@ -12,7 +12,7 @@ enum ToastType {
     case toast
 }
 
-@Observable
+@Observable @MainActor
 class ToastViewObserver {
     // Show toast
     var isShowing: Bool = false
@@ -53,8 +53,10 @@ class ToastViewObserver {
         self.imageName = imageName
         self.duration = duration
         
-        Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { _ in
-            self.isShowing = false
+        Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
+            Task { @MainActor in
+                self?.isShowing = false
+            }
         }
     }
 }

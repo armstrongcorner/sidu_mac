@@ -27,7 +27,7 @@ extension EnvironmentValues {
     }
 }
 
-var getViewByRoute: (Route) -> AnyView = { route in
+@MainActor var getViewByRoute: (Route) -> AnyView = { route in
     switch route {
     case .splashScreen:
         return AnyView(SplashScreen())

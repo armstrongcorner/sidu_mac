@@ -12,15 +12,14 @@ import SwiftData
 ///  // It is important that this actor works as a mutex,
 ///  // so you must have one instance of the Actor for one container
 //   // for it to work correctly.
-///  let actor = BackgroundSerialPersistenceActor(container: modelContainer)
+///  let actor = DatabaseManager(container: modelContainer)
 ///
 ///  Task {
 ///      let data: [MyModel] = try? await actor.fetchData()
 ///  }
 ///  ```
 @available(iOS 17, *)
-public actor BackgroundSerialPersistenceActor: ModelActor {
-
+actor DatabaseManager: ModelActor {
     public let modelContainer: ModelContainer
     public let modelExecutor: any ModelExecutor
     private var context: ModelContext { modelExecutor.modelContext }

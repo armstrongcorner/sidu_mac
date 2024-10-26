@@ -66,7 +66,7 @@ class ChatViewModel {
             
             // Load chat list for all topics
             for i in 0..<topicList.count {
-                let topicMessage = topicList[i]
+                var topicMessage = topicList[i]
                 let topic = try Topic.fetchTopicById(topicId: topicMessage.id ?? "", context: modelContext)
                 let chatList = (topic?.chats ?? []).map({ chat in
                     ChatMessage(
@@ -81,6 +81,7 @@ class ChatViewModel {
                     chatMessage1.createAt ?? 0 < chatMessage2.createAt ?? 0
                 })
                 topicMessage.chatMessages = chatList
+                topicList[i] = topicMessage
             }
             
             print("topicList count: \(self.topicList.count)");
@@ -96,11 +97,11 @@ class ChatViewModel {
     // Main chat logic
     func sendChat() async {
         let tmpCacheUserMessage: String = userMessage
-        // No chat history, or the topic is completed, then it's the first chat in the topic
+        // No chat history, or the selected topic is completed, which means it's the first chat in the topic
         let isFirstChat = chatList.isEmpty || selectedTopicIndex == nil || topicList[selectedTopicIndex ?? 0].isComplete ?? false
         
         if !userMessage.isEmpty && !userMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            let userChatMessage = ChatMessage(
+            var userChatMessage = ChatMessage(
                 id: UUID().uuidString,
                 role: .user,
                 content: userMessage,
@@ -119,7 +120,7 @@ class ChatViewModel {
             
             // Make UI update first
             if isFirstChat {
-                let firstTopicMessage = TopicMessage(
+                var firstTopicMessage = TopicMessage(
                     id: UUID().uuidString,
                     title: userMessage,
                     createTime: Date().timeIntervalSince1970,
@@ -168,8 +169,8 @@ class ChatViewModel {
                         createAt: Date().timeIntervalSince1970,
                         status: .done
                     )
-                    // 2) Replace 'waiting' message with the reponse Message
-                    self.chatList.replaceSubrange(self.chatList.count - 1..<self.chatList.count, with: [assistantChatMessage])
+                    // 2) Replace 'waiting'and user sending message with the reponse message and marked 'done' user message
+                    self.chatList.replaceSubrange(self.chatList.count - 2..<self.chatList.count, with: [userChatMessage, assistantChatMessage])
                     self.topicList[self.selectedTopicIndex ?? 0].chatMessages = self.chatList
                     // 3) Save chat message to database
                     if isFirstChat {
@@ -232,7 +233,7 @@ class ChatViewModel {
             let topic = try Topic.fetchTopicById(topicId: topicId, context: modelContext)
             topic?.isComplete = true
             let topicMessageIndex = topicList.firstIndex(where: { $0.id == topicId }) ?? 0
-            let topicMessage = topicList[topicMessageIndex]
+            var topicMessage = topicList[topicMessageIndex]
             topicMessage.isComplete = true
             topicList.replaceSubrange(topicMessageIndex..<topicMessageIndex + 1, with: [topicMessage])
         } catch {
