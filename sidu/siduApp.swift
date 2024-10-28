@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct siduApp: App {
+    let databaseProvider = DatabaseProvider.shared
     var languageCode: String = ""
     
     init() {
@@ -28,8 +29,12 @@ struct siduApp: App {
                     .environment(ToastViewObserver())
                     .environment(AppSize(geometry.size))
                     .environment(\.locale, .init(identifier: languageCode))
+//                    .environment(\.createDatabaseManager, databaseProvider.databaseManagerCreator())
+                    .environment(\.createUserHandler, databaseProvider.userHandlerCreator())
+                    .environment(\.createTopicHandler, databaseProvider.topicHandlerCreator())
+                    .environment(\.createChatHandler, databaseProvider.chatHandlerCreator())
             }
         }
-        .modelContainer(for: [User.self, Topic.self, Chat.self])
+        .modelContainer(databaseProvider.sharedModelContainer)
     }
 }

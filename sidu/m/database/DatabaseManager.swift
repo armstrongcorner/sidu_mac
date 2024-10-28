@@ -29,6 +29,7 @@ actor DatabaseManager {
     }
     
     // C
+    @discardableResult
     func insert<T: PersistentModel>(data: T) throws -> PersistentIdentifier {
         let context = data.modelContext ?? context
         context.insert(data)
@@ -39,6 +40,7 @@ actor DatabaseManager {
         return data.persistentModelID
     }
     
+    @discardableResult
     func insertIfNeeded<T: PersistentModel>(
         data: T,
         predicate: Predicate<T>

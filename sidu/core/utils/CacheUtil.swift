@@ -34,6 +34,14 @@ actor CacheUtil {
         return nil
     }
     
+    func cacheUsername(username: String) {
+        UserDefaults.standard.setValue(username, forKey: CacheKey.username.rawValue)
+    }
+    
+    func getUsername() -> String? {
+        return UserDefaults.standard.string(forKey: CacheKey.username.rawValue)
+    }
+    
     func cacheRegisterAuthInfo(registerAuthInfo: AuthModel?) {
         // cache registerAuthInfo
         if registerAuthInfo != nil, let encodedRegisterAuthInfo = try? JSONEncoder().encode(registerAuthInfo) {

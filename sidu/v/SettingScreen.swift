@@ -221,7 +221,7 @@ struct SettingScreen: View {
             .transition(.move(edge: .trailing))
         }
         .onAppear() {
-            self.loginVM.modelContext = modelContext
+//            self.loginVM.modelContext = modelContext
             self.selectedLanguage = locale.language.languageCode?.identifier ?? "en"
         }
         .navigationBarBackButtonHidden()

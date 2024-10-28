@@ -68,27 +68,27 @@ extension SchemaV1 {
             self.topics = topics
         }
         
-        static func addUser(user: User, context: ModelContext?) throws {
-            let existedUser = try fetchUser(byUsername: user.userName, context: context)
-            if existedUser == nil {
-                context?.insert(user)
-                if context?.hasChanges ?? false {
-                    try context?.save()
-                }
-            }
-        }
-        
-        static func deleteUser(user: User, context: ModelContext?) throws {
-            context?.delete(user)
-            if context?.hasChanges ?? false {
-                try context?.save()
-            }
-        }
-        
-        static func fetchUser(byUsername username: String?, context: ModelContext?) throws -> User? {
-            let fetchDescriptor = FetchDescriptor<User>(predicate: #Predicate { $0.userName == username })
-            let users = try? context?.fetch(fetchDescriptor)
-            return users?.first
-        }
+//        static func addUser(user: User, context: ModelContext?) throws {
+//            let existedUser = try fetchUser(byUsername: user.userName, context: context)
+//            if existedUser == nil {
+//                context?.insert(user)
+//                if context?.hasChanges ?? false {
+//                    try context?.save()
+//                }
+//            }
+//        }
+//        
+//        static func deleteUser(user: User, context: ModelContext?) throws {
+//            context?.delete(user)
+//            if context?.hasChanges ?? false {
+//                try context?.save()
+//            }
+//        }
+//        
+//        static func fetchUser(byUsername username: String?, context: ModelContext?) throws -> User? {
+//            let fetchDescriptor = FetchDescriptor<User>(predicate: #Predicate { $0.userName == username })
+//            let users = try? context?.fetch(fetchDescriptor)
+//            return users?.first
+//        }
     }
 }

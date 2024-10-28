@@ -41,5 +41,7 @@ struct SplashScreen: View {
 
 #Preview {
     SplashScreen()
+        .environment(\.locale, .init(identifier: "zh"))
         .environment(ToastViewObserver())
+        .environment(AppSize(CGSize(width: 1024, height: 768)))
 }

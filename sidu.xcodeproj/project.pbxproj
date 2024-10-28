@@ -12,6 +12,9 @@
 		2214C9042C85723C008D1FAE /* ChatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2214C9032C85723C008D1FAE /* ChatScreen.swift */; };
 		224C74672CCCC38800F60ADC /* SchemaV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224C74662CCCC38800F60ADC /* SchemaV1.swift */; };
 		224C74692CCCCAC400F60ADC /* DatabaseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224C74682CCCCAC400F60ADC /* DatabaseProvider.swift */; };
+		224C746B2CCEDF8800F60ADC /* UserHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224C746A2CCEDF8800F60ADC /* UserHandler.swift */; };
+		224C746D2CCEE52F00F60ADC /* TopicHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224C746C2CCEE52F00F60ADC /* TopicHandler.swift */; };
+		224C746F2CCEED0A00F60ADC /* ChatHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224C746E2CCEED0A00F60ADC /* ChatHandler.swift */; };
 		225B17092C8AC98400DE3AEE /* TokenExpireInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225B17082C8AC98400DE3AEE /* TokenExpireInterceptor.swift */; };
 		225B170C2C8B0E9000DE3AEE /* RouteCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225B170B2C8B0E9000DE3AEE /* RouteCoordinator.swift */; };
 		227AFC052C85CD6E006A0AFC /* SelectedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227AFC042C85CD6E006A0AFC /* SelectedImageView.swift */; };
@@ -62,6 +65,9 @@
 		2214C9032C85723C008D1FAE /* ChatScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatScreen.swift; sourceTree = "<group>"; };
 		224C74662CCCC38800F60ADC /* SchemaV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaV1.swift; sourceTree = "<group>"; };
 		224C74682CCCCAC400F60ADC /* DatabaseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseProvider.swift; sourceTree = "<group>"; };
+		224C746A2CCEDF8800F60ADC /* UserHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandler.swift; sourceTree = "<group>"; };
+		224C746C2CCEE52F00F60ADC /* TopicHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicHandler.swift; sourceTree = "<group>"; };
+		224C746E2CCEED0A00F60ADC /* ChatHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatHandler.swift; sourceTree = "<group>"; };
 		225B17082C8AC98400DE3AEE /* TokenExpireInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenExpireInterceptor.swift; sourceTree = "<group>"; };
 		225B170B2C8B0E9000DE3AEE /* RouteCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteCoordinator.swift; sourceTree = "<group>"; };
 		227AFC042C85CD6E006A0AFC /* SelectedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedImageView.swift; sourceTree = "<group>"; };
@@ -204,6 +210,9 @@
 			isa = PBXGroup;
 			children = (
 				224C74642CCCC2A600F60ADC /* v1 */,
+				224C746A2CCEDF8800F60ADC /* UserHandler.swift */,
+				224C746C2CCEE52F00F60ADC /* TopicHandler.swift */,
+				224C746E2CCEED0A00F60ADC /* ChatHandler.swift */,
 				22EA09662CB28A3900BB0652 /* DatabaseManager.swift */,
 				224C74682CCCCAC400F60ADC /* DatabaseProvider.swift */,
 			);
@@ -385,6 +394,7 @@
 				229FB6012C9E6E6000312837 /* MiscViewModel.swift in Sources */,
 				22C3A8FB2C89ACF20030A2F8 /* CacheUtil.swift in Sources */,
 				22E796232C8D681B00A9623A /* Topic.swift in Sources */,
+				224C746D2CCEE52F00F60ADC /* TopicHandler.swift in Sources */,
 				227F18262C872940006E2FD5 /* ChatRow.swift in Sources */,
 				227AFC072C85D212006A0AFC /* UserInputView.swift in Sources */,
 				22FE37DB2C7F3FA800F9B992 /* SplashScreen.swift in Sources */,
@@ -404,6 +414,7 @@
 				22E796252C8D682B00A9623A /* Chat.swift in Sources */,
 				22C3A8F92C899C6D0030A2F8 /* ApiClient.swift in Sources */,
 				22BC45162C887639001FF0A3 /* ChatModel.swift in Sources */,
+				224C746B2CCEDF8800F60ADC /* UserHandler.swift in Sources */,
 				22BC45122C885F45001FF0A3 /* ChatViewModel.swift in Sources */,
 				229FB5FF2C9D36F200312837 /* SettingScreen.swift in Sources */,
 				227AFC052C85CD6E006A0AFC /* SelectedImageView.swift in Sources */,
@@ -424,6 +435,7 @@
 				22D26E7F2C81C75D00C4D4FD /* Endpoint.swift in Sources */,
 				22D26E7D2C81C60400C4D4FD /* AuthModel.swift in Sources */,
 				225B170C2C8B0E9000DE3AEE /* RouteCoordinator.swift in Sources */,
+				224C746F2CCEED0A00F60ADC /* ChatHandler.swift in Sources */,
 				22BC45102C881BF7001FF0A3 /* DateUtil.swift in Sources */,
 				22B2B6982C969537007F9DA8 /* TopicMessage.swift in Sources */,
 			);
