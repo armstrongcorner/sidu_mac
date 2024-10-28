@@ -16,12 +16,14 @@ final class RegisterViewModel {
     var confirm: String = ""
     var isVerified: CommonResult = .none
     var errMsg: String?
-    
-    var modelContext: ModelContext?
-    
+
     var resendCountDown: Int = 0    // in seconds
     private var countDownTimer: Timer?
     
+//    var modelContext: ModelContext?
+    @ObservationIgnored
+    var createUserHandler: @Sendable () async -> UserHandler?
+
     @ObservationIgnored
     private let loginService: LoginServiceProtocol
     @ObservationIgnored
@@ -29,10 +31,16 @@ final class RegisterViewModel {
     @ObservationIgnored
     private let userServic: UserServiceProtocol
     
-    init(loginService: LoginServiceProtocol = LoginService(), registerServic: RegisterServiceProtocol = RegisterService(), userServic: UserServiceProtocol = UserService()) {
+    init(
+        loginService: LoginServiceProtocol = LoginService(),
+        registerServic: RegisterServiceProtocol = RegisterService(),
+        userServic: UserServiceProtocol = UserService(),
+        createUserHandler: @Sendable @escaping () async -> UserHandler? = { UserHandler(container: DatabaseProvider.shared.sharedModelContainer) }
+    ) {
         self.loginService = loginService
         self.registerServic = registerServic
         self.userServic = userServic
+        self.createUserHandler = createUserHandler
     }
     
     func startCountDown() {
@@ -189,9 +197,17 @@ final class RegisterViewModel {
                 }
                 if userInfoResponse.isSuccess ?? false {
                     // Cache the user info for future use
-                    let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
-                    try User.addUser(user: user, context: modelContext)
-                    self.isVerified = .success
+//                    let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
+//                    try User.addUser(user: user, context: modelContext)
+                    Task.detached {
+                        if let userHandler = await self.createUserHandler(), let userInfoModel = userInfoResponse.value {
+                            try await userHandler.addUser(data: userInfoModel)
+                            
+                            await MainActor.run {
+                                self.isVerified = .success
+                            }
+                        }
+                    }
                 } else {
                     self.isVerified = .failed
                     self.errMsg = "Get user info failed with error: \(userInfoResponse.failureReason ?? "unknown reason")"

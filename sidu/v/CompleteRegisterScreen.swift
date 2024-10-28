@@ -11,7 +11,8 @@ struct CompleteRegisterScreen: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.myRoute) private var path
     @Environment(ToastViewObserver.self) var toastViewObserver
-    @Environment(\.modelContext) private var modelContext
+//    @Environment(\.modelContext) private var modelContext
+    @Environment(\.createUserHandler) private var createUserHandler
 
     @State private var registerVM = RegisterViewModel()
     
@@ -63,7 +64,8 @@ struct CompleteRegisterScreen: View {
             .buttonStyle(PlainButtonStyle())
         }
         .onAppear() {
-            self.registerVM.modelContext = modelContext
+//            self.registerVM.modelContext = modelContext
+            self.registerVM.createUserHandler = createUserHandler
         }
         .onChange(of: registerVM.isVerified, { oldValue, newValue in
             if newValue == .success {

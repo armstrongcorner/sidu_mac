@@ -11,7 +11,7 @@ import SwiftData
 struct LoginScreen: View {
     @Environment(\.myRoute) private var path
     @Environment(ToastViewObserver.self) var toastViewObserver
-    @Environment(\.modelContext) private var modelContext
+//    @Environment(\.modelContext) private var modelContext
     @Environment(\.createUserHandler) private var createUserHandler
     
     @State private var loginVM = LoginViewModel()

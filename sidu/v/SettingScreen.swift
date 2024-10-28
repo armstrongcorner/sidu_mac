@@ -12,7 +12,8 @@ struct SettingScreen: View {
     @Environment(AppSize.self) var appSize
     @Environment(\.myRoute) private var path
     @Environment(ToastViewObserver.self) var toastViewObserver
-    @Environment(\.modelContext) private var modelContext
+//    @Environment(\.modelContext) private var modelContext
+    @Environment(\.createUserHandler) private var createUserHandler
     
     @Binding var chatVM: ChatViewModel
     @State private var loginVM = LoginViewModel()
@@ -222,6 +223,7 @@ struct SettingScreen: View {
         }
         .onAppear() {
 //            self.loginVM.modelContext = modelContext
+            self.loginVM.createUserHandler = createUserHandler
             self.selectedLanguage = locale.language.languageCode?.identifier ?? "en"
         }
         .navigationBarBackButtonHidden()

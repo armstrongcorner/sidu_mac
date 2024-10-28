@@ -21,7 +21,6 @@ final class LoginViewModel {
 //    var modelContext: ModelContext?
     @ObservationIgnored
     var createUserHandler: @Sendable () async -> UserHandler?
-    var userId: PersistentIdentifier?
     
     @ObservationIgnored
     private let loginService: LoginServiceProtocol
@@ -65,10 +64,7 @@ final class LoginViewModel {
             Task.detached {
                 if let userHandler = await self.createUserHandler(), let userInfoModel = userInfoResponse.value {
 //                    try await dbManager.insert(data: user)
-                    let newUserId = try await userHandler.addUser(data: userInfoModel)
-                    await MainActor.run {
-                        self.userId = newUserId
-                    }
+                    try await userHandler.addUser(data: userInfoModel)
                 }
             }
             
