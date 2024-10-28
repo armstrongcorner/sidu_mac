@@ -18,16 +18,24 @@ final class LoginViewModel {
     var isShowingConfirmDeleteAccount: Bool = false
     var errMsg: String?
     
-    var modelContext: ModelContext?
+//    var modelContext: ModelContext?
+    @ObservationIgnored
+    var createUserHandler: @Sendable () async -> UserHandler?
+    var userId: PersistentIdentifier?
     
     @ObservationIgnored
     private let loginService: LoginServiceProtocol
     @ObservationIgnored
     private let userServic: UserServiceProtocol
     
-    init(loginService: LoginServiceProtocol = LoginService(), userService: UserServiceProtocol = UserService()) {
+    init(
+        loginService: LoginServiceProtocol = LoginService(),
+        userService: UserServiceProtocol = UserService(),
+        createUserHandler: @Sendable @escaping () async -> UserHandler? = { UserHandler(container: DatabaseProvider.shared.sharedModelContainer) }
+    ) {
         self.loginService = loginService
         self.userServic = userService
+        self.createUserHandler = createUserHandler
     }
     
     func login() async {
@@ -42,7 +50,7 @@ final class LoginViewModel {
             // Cache the auth info for future use
             await CacheUtil.shared.cacheAuthInfo(authInfo: authResponse.value)
             // Cache the username for future use
-            UserDefaults.standard.setValue(username, forKey: CacheKey.username.rawValue)
+            await CacheUtil.shared.cacheUsername(username: username)
             
             // Get user info
             guard let userInfoResponse = try await userServic.getUserInfo(username: username) else {
@@ -52,8 +60,17 @@ final class LoginViewModel {
             }
             
             // Cache the user info for future use
-            let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
-            try User.addUser(user: user, context: modelContext)
+//            let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
+//            try User.addUser(user: user, context: modelContext)
+            Task.detached {
+                if let userHandler = await self.createUserHandler(), let userInfoModel = userInfoResponse.value {
+//                    try await dbManager.insert(data: user)
+                    let newUserId = try await userHandler.addUser(data: userInfoModel)
+                    await MainActor.run {
+                        self.userId = newUserId
+                    }
+                }
+            }
             
             if authResponse.isSuccess ?? false {
                 self.isLoggedIn = .success
@@ -68,20 +85,25 @@ final class LoginViewModel {
     }
     
     func deleteAccount() {
-        do {
-            // Get current user from database
-            let username = UserDefaults.standard.string(forKey: CacheKey.username.rawValue)
-            let user = try User.fetchUser(byUsername: username, context: modelContext)
-            if user != nil {
-                // Delete the user
-                try User.deleteUser(user: user!, context: modelContext)
-                // Logout
-                logout()
-            } else {
-                self.errMsg = "User not found"
+        // Get current user from database
+        let username = UserDefaults.standard.string(forKey: CacheKey.username.rawValue)
+//        let user = try User.fetchUser(byUsername: username, context: modelContext)
+        // Delete the user
+//        try User.deleteUser(user: user!, context: modelContext)
+        Task.detached {
+            do {
+                if let userHandler = await self.createUserHandler(), let username = username {
+                    try await userHandler.deleteUser(byUsername: username)
+                }
+                await MainActor.run {
+                    // Logout
+                    self.logout()
+                }
+            } catch {
+                await MainActor.run {
+                    self.errMsg = error.localizedDescription
+                }
             }
-        } catch {
-            self.errMsg = error.localizedDescription
         }
     }
     
