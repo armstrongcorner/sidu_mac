@@ -46,51 +46,5 @@ extension SchemaV1 {
             
             self.topic = topic
         }
-        
-        static func addChat(chat: Chat, context: ModelContext?) throws {
-            context?.insert(chat)
-            if context?.hasChanges ?? false {
-                try context?.save()
-            }
-        }
-        
-        static func fetchChat(for topic: Topic, context: ModelContext?) throws -> [Chat]? {
-            // Using topic id to fetch the chat
-            let topicId = topic.id
-            let predicate = #Predicate<Chat> { $0.topic?.id == topicId }
-            // Forward order
-            let sortDescriptor = SortDescriptor(\Chat.createAt, order: .forward)
-            
-            let fetchDescriptor = FetchDescriptor<Chat>(predicate: predicate, sortBy: [sortDescriptor])
-            
-            return try? context?.fetch(fetchDescriptor)
-        }
-        
-        static func updateChat(chat: Chat, context: ModelContext?) throws {
-            // Fetch the chat by id
-            let chatId = chat.id
-            let fetchDescriptor = FetchDescriptor<Chat>(predicate: #Predicate<Chat> { $0.id == chatId })
-            // Update the chat
-            if let chatToUpdate = try context?.fetch(fetchDescriptor) {
-                chatToUpdate.first?.role = chat.role
-                chatToUpdate.first?.content = chat.content
-                chatToUpdate.first?.type = chat.type
-                chatToUpdate.first?.fileAccessUrl = chat.fileAccessUrl
-                chatToUpdate.first?.createAt = chat.createAt
-                chatToUpdate.first?.status = chat.status
-                if context?.hasChanges ?? false {
-                    try context?.save()
-                }
-            }
-        }
-        
-        static func deleteChat(chat: Chat, context: ModelContext?) throws {
-            let chatId = chat.id
-            // Delete the chat
-            try context?.delete(model: Chat.self, where: #Predicate<Chat> { $0.id == chatId })
-            if context?.hasChanges ?? false {
-                try context?.save()
-            }
-        }
     }
 }

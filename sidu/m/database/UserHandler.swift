@@ -45,10 +45,34 @@ actor UserHandler {
         return user.persistentModelID
     }
 
-    func fetchUser(byUsername username: String) throws -> User? {
+    func fetchUserPersistentId(byUsername username: String) throws -> PersistentIdentifier? {
         let fetchDescriptor = FetchDescriptor<User>(predicate: #Predicate { $0.userName == username })
         let users = try context.fetch(fetchDescriptor)
-        return users.first
+        return users.first?.persistentModelID
+    }
+    
+    func fetchUser(byUsername username: String) throws -> UserInfoModel? {
+        let fetchDescriptor = FetchDescriptor<User>(predicate: #Predicate { $0.userName == username })
+        let users = try context.fetch(fetchDescriptor)
+        if let user = users.first {
+            return UserInfoModel(
+                id: user.id,
+                userName: user.userName,
+                password: user.password,
+                photo: user.photo,
+                role: user.role,
+                mobile: user.mobile,
+                email: user.email,
+                serviceLevel: user.serviceLevel,
+                tokenDurationInMin: user.tokenDurationInMin,
+                isActive: user.isActive,
+                createdDateTime: user.createdDateTime,
+                updatedDateTime: user.updatedDateTime,
+                createdBy: user.createdBy,
+                updatedBy: user.updatedBy
+            )
+        }
+        return nil
     }
 
     func updateUser(id: PersistentIdentifier, data: UserInfoModel) throws {

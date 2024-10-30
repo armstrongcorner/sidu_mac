@@ -10,9 +10,11 @@ import SwiftData
 
 struct ChatScreen: View {
     @Environment(AppSize.self) var appSize
-    @Environment(\.modelContext) var modelContext
     @Environment(\.myRoute) var path
     @Environment(ToastViewObserver.self) var toastViewObserver
+//    @Environment(\.modelContext) var modelContext
+    @Environment(\.createTopicHandler) private var createTopicHandler
+    @Environment(\.createChatHandler) private var createChatHandler
     
     @State var chatVM: ChatViewModel = ChatViewModel()
     
@@ -63,8 +65,10 @@ struct ChatScreen: View {
             }
             .onAppear() {
                 Task {
-                    self.chatVM.modelContext = modelContext
-                    self.chatVM.getTopicAndChat()
+//                    self.chatVM.modelContext = modelContext
+                    self.chatVM.createTopicHandler = createTopicHandler
+                    self.chatVM.createChatHandler = createChatHandler
+                    await self.chatVM.getTopicAndChat()
                     // Select the first topic by default if topic list is not empty
                     if chatVM.topicList.count > 0 {
                         chatVM.selectedTopicIndex = 0
