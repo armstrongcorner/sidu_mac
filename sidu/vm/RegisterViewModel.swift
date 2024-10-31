@@ -20,7 +20,6 @@ final class RegisterViewModel {
     var resendCountDown: Int = 0    // in seconds
     private var countDownTimer: Timer?
     
-//    var modelContext: ModelContext?
     @ObservationIgnored
     var createUserHandler: @Sendable () async -> UserHandler?
 
@@ -197,8 +196,6 @@ final class RegisterViewModel {
                 }
                 if userInfoResponse.isSuccess ?? false {
                     // Cache the user info for future use
-//                    let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
-//                    try User.addUser(user: user, context: modelContext)
                     Task.detached {
                         if let userHandler = await self.createUserHandler(), let userInfoModel = userInfoResponse.value {
                             try await userHandler.addUser(data: userInfoModel)

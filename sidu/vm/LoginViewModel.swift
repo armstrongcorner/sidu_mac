@@ -11,14 +11,15 @@ import SwiftData
 
 @Observable @MainActor
 final class LoginViewModel {
-    var username: String = "armstrong.liu@matrixthoughts.com.au"
-    var password: String = "1"
+//    var username: String = "armstrong.liu@matrixthoughts.com.au"
+//    var password: String = "1"
+    var username: String = ""
+    var password: String = ""
     var isLoggedIn: CommonResult = .none
     var isShowingConfirmLogout: Bool = false
     var isShowingConfirmDeleteAccount: Bool = false
     var errMsg: String?
     
-//    var modelContext: ModelContext?
     @ObservationIgnored
     var createUserHandler: @Sendable () async -> UserHandler?
     
@@ -59,11 +60,8 @@ final class LoginViewModel {
             }
             
             // Cache the user info for future use
-//            let user = User(row: userInfoResponse.value?.toDictionary() ?? [:])
-//            try User.addUser(user: user, context: modelContext)
             Task.detached {
                 if let userHandler = await self.createUserHandler(), let userInfoModel = userInfoResponse.value {
-//                    try await dbManager.insert(data: user)
                     try await userHandler.addUser(data: userInfoModel)
                 }
             }
@@ -81,14 +79,10 @@ final class LoginViewModel {
     }
     
     func deleteAccount() {
-        // Get current user from database
-        let username = UserDefaults.standard.string(forKey: CacheKey.username.rawValue)
-//        let user = try User.fetchUser(byUsername: username, context: modelContext)
         // Delete the user
-//        try User.deleteUser(user: user!, context: modelContext)
         Task.detached {
             do {
-                if let userHandler = await self.createUserHandler(), let username = username {
+                if let userHandler = await self.createUserHandler(), let username = UserDefaults.standard.string(forKey: CacheKey.username.rawValue) {
                     try await userHandler.deleteUser(byUsername: username)
                 }
                 await MainActor.run {

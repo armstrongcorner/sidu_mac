@@ -12,7 +12,6 @@ struct ChatScreen: View {
     @Environment(AppSize.self) var appSize
     @Environment(\.myRoute) var path
     @Environment(ToastViewObserver.self) var toastViewObserver
-//    @Environment(\.modelContext) var modelContext
     @Environment(\.createTopicHandler) private var createTopicHandler
     @Environment(\.createChatHandler) private var createChatHandler
     
@@ -65,7 +64,6 @@ struct ChatScreen: View {
             }
             .onAppear() {
                 Task {
-//                    self.chatVM.modelContext = modelContext
                     self.chatVM.createTopicHandler = createTopicHandler
                     self.chatVM.createChatHandler = createChatHandler
                     await self.chatVM.getTopicAndChat()

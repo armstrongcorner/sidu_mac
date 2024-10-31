@@ -12,12 +12,10 @@ struct SettingScreen: View {
     @Environment(AppSize.self) var appSize
     @Environment(\.myRoute) private var path
     @Environment(ToastViewObserver.self) var toastViewObserver
-//    @Environment(\.modelContext) private var modelContext
     @Environment(\.createUserHandler) private var createUserHandler
     
     @Binding var chatVM: ChatViewModel
     @State private var loginVM = LoginViewModel()
-    @State private var miscVM = MiscViewModel()
     
     @State private var selectedLanguage = ""
     
@@ -97,21 +95,8 @@ struct SettingScreen: View {
                         print("selectedLanguage: \(selectedLanguage)")
                         if selectedLanguage != "" && oldValue != "" {
                             UserDefaults.standard.set(selectedLanguage, forKey: CacheKey.currentLanguage.rawValue)
-//                            miscVM.isShowingConfirmRestart = true
                         }
                     })
-                    .alert("Confirm to restart the app to apply the new language?", isPresented: Binding<Bool>(
-                        get: { miscVM.isShowingConfirmRestart },
-                        set: { _ in miscVM.isShowingConfirmRestart = false }
-                    )) {
-                        Button("Cancel") {
-                            miscVM.isShowingConfirmRestart = false
-                        }
-                        Button("Confirm") {
-                            miscVM.isShowingConfirmRestart = false
-                            miscVM.restartApp()
-                        }
-                    }
                     .padding(.leading, 10)
                     Spacer()
                 }

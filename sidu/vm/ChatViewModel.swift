@@ -29,7 +29,6 @@ class ChatViewModel {
         }
     }
     
-//    var modelContext: ModelContext?
     @ObservationIgnored
     var createTopicHandler: @Sendable () async -> TopicHandler?
     @ObservationIgnored
