@@ -32,7 +32,7 @@ struct SettingScreen: View {
     var body: some View {
         ZStack(alignment: .trailing) {
             // Half-transparent background to detect tap and dismiss the sheet
-            Color.black.opacity(0.1)
+            Color.black.opacity(0.2)
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
                     withAnimation {
@@ -97,7 +97,7 @@ struct SettingScreen: View {
                         print("selectedLanguage: \(selectedLanguage)")
                         if selectedLanguage != "" && oldValue != "" {
                             UserDefaults.standard.set(selectedLanguage, forKey: CacheKey.currentLanguage.rawValue)
-                            miscVM.isShowingConfirmRestart = true
+//                            miscVM.isShowingConfirmRestart = true
                         }
                     })
                     .alert("Confirm to restart the app to apply the new language?", isPresented: Binding<Bool>(
@@ -238,6 +238,5 @@ struct SettingScreen: View {
 //            .environment(\.locale, .init(identifier: "en"))
             .environment(\.locale, .init(identifier: "zh"))
             .environment(ToastViewObserver())
-            
     }
 }

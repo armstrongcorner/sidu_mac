@@ -11,16 +11,8 @@ import SwiftData
 @main
 struct siduApp: App {
     let databaseProvider = DatabaseProvider.shared
-    var languageCode: String = ""
     
-    init() {
-        if let currentLanguage = UserDefaults.standard.string(forKey: CacheKey.currentLanguage.rawValue) {
-            self.languageCode = currentLanguage
-        } else {
-            let systemLanguage = Locale.current.language.languageCode?.identifier ?? "en"
-            self.languageCode = systemLanguage
-        }
-    }
+    @AppStorage(CacheKey.currentLanguage.rawValue) var selectedLanguageCode = "en"
     
     var body: some Scene {
         WindowGroup {
@@ -28,8 +20,7 @@ struct siduApp: App {
                 SplashScreen()
                     .environment(ToastViewObserver())
                     .environment(AppSize(geometry.size))
-                    .environment(\.locale, .init(identifier: languageCode))
-//                    .environment(\.createDatabaseManager, databaseProvider.databaseManagerCreator())
+                    .environment(\.locale, .init(identifier: selectedLanguageCode))
                     .environment(\.createUserHandler, databaseProvider.userHandlerCreator())
                     .environment(\.createTopicHandler, databaseProvider.topicHandlerCreator())
                     .environment(\.createChatHandler, databaseProvider.chatHandlerCreator())
