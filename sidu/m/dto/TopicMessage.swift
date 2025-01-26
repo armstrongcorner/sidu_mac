@@ -15,10 +15,17 @@ struct TopicMessage {
     
     var chatMessages: [ChatMessage] = []
     
-    init(id: String? = nil, title: String? = nil, createTime: TimeInterval? = nil, isComplete: Bool? = nil) {
+    init(
+        id: String? = nil,
+        title: String? = nil,
+        createTime: TimeInterval? = nil,
+        isComplete: Bool? = nil,
+        chatMessages: [ChatMessage] = []
+    ) {
         self.id = id
         self.title = title
         self.createTime = createTime
         self.isComplete = isComplete
+        self.chatMessages = chatMessages
     }
 }

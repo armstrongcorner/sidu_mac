@@ -37,7 +37,18 @@ struct ChatMessage {
     var createAt: TimeInterval?
     var status: ChatStatus?
     
-    init(id: String? = nil, role: ChatRole? = nil, content: String? = nil, type: ChatContentType? = nil, fileAccessUrl: String? = nil, sentSize: Int? = nil, receivedSize: Int? = nil, totalSize: Int? = nil, createAt: TimeInterval? = nil, status: ChatStatus? = nil) {
+    init(
+        id: String? = nil,
+        role: ChatRole? = nil,
+        content: String? = nil,
+        type: ChatContentType? = nil,
+        fileAccessUrl: String? = nil,
+        sentSize: Int? = nil,
+        receivedSize: Int? = nil,
+        totalSize: Int? = nil,
+        createAt: TimeInterval? = nil,
+        status: ChatStatus? = nil
+    ) {
         self.id = id
         self.role = role
         self.content = content

@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2210B6AC2D40F83700210874 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2210B6AB2D40F83700210874 /* MockData.swift */; };
 		2214C8FA2C840B2D008D1FAE /* AppSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2214C8F92C840B2D008D1FAE /* AppSize.swift */; };
 		2214C9002C856EA5008D1FAE /* LiveChatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2214C8FF2C856EA5008D1FAE /* LiveChatScreen.swift */; };
 		2214C9042C85723C008D1FAE /* ChatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2214C9032C85723C008D1FAE /* ChatScreen.swift */; };
@@ -59,7 +60,27 @@
 		22FE37E52C7F40B300F9B992 /* RegisterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FE37E42C7F40B300F9B992 /* RegisterViewModel.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2210B6922D3FA1B100210874 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22EF506E2C03F8FD00B2CED9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 22EF50752C03F8FD00B2CED9;
+			remoteInfo = sidu;
+		};
+		2210B6A12D3FA1DF00210874 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22EF506E2C03F8FD00B2CED9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 22EF50752C03F8FD00B2CED9;
+			remoteInfo = sidu;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		2210B68E2D3FA1B100210874 /* siduTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = siduTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2210B69B2D3FA1DF00210874 /* siduUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = siduUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2210B6AB2D40F83700210874 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		2214C8F92C840B2D008D1FAE /* AppSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSize.swift; sourceTree = "<group>"; };
 		2214C8FF2C856EA5008D1FAE /* LiveChatScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChatScreen.swift; sourceTree = "<group>"; };
 		2214C9032C85723C008D1FAE /* ChatScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatScreen.swift; sourceTree = "<group>"; };
@@ -114,7 +135,26 @@
 		22FE37E42C7F40B300F9B992 /* RegisterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2210B68F2D3FA1B100210874 /* siduTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = siduTests; sourceTree = "<group>"; };
+		2210B69C2D3FA1DF00210874 /* siduUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = siduUITests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		2210B68B2D3FA1B100210874 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2210B6982D3FA1DF00210874 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22EF50732C03F8FD00B2CED9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -125,6 +165,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2210B6AA2D40F82200210874 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				2210B6AB2D40F83700210874 /* MockData.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		224C74642CCCC2A600F60ADC /* v1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -199,6 +247,7 @@
 		22E796152C8C5EBB00A9623A /* core */ = {
 			isa = PBXGroup;
 			children = (
+				2210B6AA2D40F82200210874 /* Mock */,
 				22FE37D92C7F3F7300F9B992 /* utils */,
 				22E796162C8C5EDA00A9623A /* Constant.swift */,
 				2214C8F92C840B2D008D1FAE /* AppSize.swift */,
@@ -223,6 +272,8 @@
 			isa = PBXGroup;
 			children = (
 				22EF50782C03F8FD00B2CED9 /* sidu */,
+				2210B68F2D3FA1B100210874 /* siduTests */,
+				2210B69C2D3FA1DF00210874 /* siduUITests */,
 				22EF50772C03F8FD00B2CED9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -231,6 +282,8 @@
 			isa = PBXGroup;
 			children = (
 				22EF50762C03F8FD00B2CED9 /* sidu.app */,
+				2210B68E2D3FA1B100210874 /* siduTests.xctest */,
+				2210B69B2D3FA1DF00210874 /* siduUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -322,6 +375,52 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2210B68D2D3FA1B100210874 /* siduTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2210B6962D3FA1B200210874 /* Build configuration list for PBXNativeTarget "siduTests" */;
+			buildPhases = (
+				2210B68A2D3FA1B100210874 /* Sources */,
+				2210B68B2D3FA1B100210874 /* Frameworks */,
+				2210B68C2D3FA1B100210874 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2210B6932D3FA1B100210874 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2210B68F2D3FA1B100210874 /* siduTests */,
+			);
+			name = siduTests;
+			packageProductDependencies = (
+			);
+			productName = siduTests;
+			productReference = 2210B68E2D3FA1B100210874 /* siduTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2210B69A2D3FA1DF00210874 /* siduUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2210B6A32D3FA1DF00210874 /* Build configuration list for PBXNativeTarget "siduUITests" */;
+			buildPhases = (
+				2210B6972D3FA1DF00210874 /* Sources */,
+				2210B6982D3FA1DF00210874 /* Frameworks */,
+				2210B6992D3FA1DF00210874 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2210B6A22D3FA1DF00210874 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2210B69C2D3FA1DF00210874 /* siduUITests */,
+			);
+			name = siduUITests;
+			packageProductDependencies = (
+			);
+			productName = siduUITests;
+			productReference = 2210B69B2D3FA1DF00210874 /* siduUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		22EF50752C03F8FD00B2CED9 /* sidu */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 22EF50852C03F8FE00B2CED9 /* Build configuration list for PBXNativeTarget "sidu" */;
@@ -346,9 +445,17 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1530;
+				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
+					2210B68D2D3FA1B100210874 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 22EF50752C03F8FD00B2CED9;
+					};
+					2210B69A2D3FA1DF00210874 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 22EF50752C03F8FD00B2CED9;
+					};
 					22EF50752C03F8FD00B2CED9 = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -369,11 +476,27 @@
 			projectRoot = "";
 			targets = (
 				22EF50752C03F8FD00B2CED9 /* sidu */,
+				2210B68D2D3FA1B100210874 /* siduTests */,
+				2210B69A2D3FA1DF00210874 /* siduUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2210B68C2D3FA1B100210874 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2210B6992D3FA1DF00210874 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22EF50742C03F8FD00B2CED9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -387,6 +510,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2210B68A2D3FA1B100210874 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2210B6972D3FA1DF00210874 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22EF50722C03F8FD00B2CED9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -404,6 +541,7 @@
 				22EF507C2C03F8FD00B2CED9 /* LoginScreen.swift in Sources */,
 				22FE37E52C7F40B300F9B992 /* RegisterViewModel.swift in Sources */,
 				22D26E792C81C2DE00C4D4FD /* LoginService.swift in Sources */,
+				2210B6AC2D40F83700210874 /* MockData.swift in Sources */,
 				2214C8FA2C840B2D008D1FAE /* AppSize.swift in Sources */,
 				229FB6032C9ED90400312837 /* ClearButtonModifier.swift in Sources */,
 				22BC45142C88747E001FF0A3 /* ChatService.swift in Sources */,
@@ -443,7 +581,90 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		2210B6932D3FA1B100210874 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 22EF50752C03F8FD00B2CED9 /* sidu */;
+			targetProxy = 2210B6922D3FA1B100210874 /* PBXContainerItemProxy */;
+		};
+		2210B6A22D3FA1DF00210874 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 22EF50752C03F8FD00B2CED9 /* sidu */;
+			targetProxy = 2210B6A12D3FA1DF00210874 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		2210B6942D3FA1B200210874 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DXL5PNKGFP;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.matrixthoughts.siduTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/sidu.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/sidu";
+			};
+			name = Debug;
+		};
+		2210B6952D3FA1B200210874 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DXL5PNKGFP;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.matrixthoughts.siduTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/sidu.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/sidu";
+			};
+			name = Release;
+		};
+		2210B6A42D3FA1DF00210874 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DXL5PNKGFP;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.matrixthoughts.siduUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = sidu;
+			};
+			name = Debug;
+		};
+		2210B6A52D3FA1DF00210874 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DXL5PNKGFP;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.matrixthoughts.siduUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = sidu;
+			};
+			name = Release;
+		};
 		22EF50832C03F8FE00B2CED9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -633,6 +854,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2210B6962D3FA1B200210874 /* Build configuration list for PBXNativeTarget "siduTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2210B6942D3FA1B200210874 /* Debug */,
+				2210B6952D3FA1B200210874 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2210B6A32D3FA1DF00210874 /* Build configuration list for PBXNativeTarget "siduUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2210B6A42D3FA1DF00210874 /* Debug */,
+				2210B6A52D3FA1DF00210874 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		22EF50712C03F8FD00B2CED9 /* Build configuration list for PBXProject "sidu" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
