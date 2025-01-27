@@ -137,7 +137,7 @@ final class DatabaseProviderTests: XCTestCase {
         XCTAssertEqual(topicsLeft.count, 0, "There should be no topics left for account \(mockUserInfoModel1.userName ?? "") after deleting all")
     }
     
-    func testDeleteTopicFromDeleteUser() async throws {
+    func testDeleteTopicsFromDeleteUser() async throws {
         // given
         try await sutUserHandler.addUser(data: mockUserInfoModel1)
         try await sutTopicHandler.addTopic(data: mockTopicMessage1, username: mockUserInfoModel1.userName ?? "")
@@ -169,5 +169,89 @@ final class DatabaseProviderTests: XCTestCase {
         let topics: [TopicMessage] = try await sutTopicHandler.fetchTopics(byUsername: mockUserInfoModel1.userName ?? "")
         XCTAssertEqual(topics.count, 1, "There should be 1 topic only")
         XCTAssertEqual(topics.first?.title, updateTopicMessage.title, "The first topic name should be updated")
+    }
+    
+    func testAddChat() async throws {
+        // given
+        try await sutUserHandler.addUser(data: mockUserInfoModel1)
+        try await sutTopicHandler.addTopic(data: mockTopicMessage1, username: mockUserInfoModel1.userName ?? "")
+        
+        // when
+        try await sutChatHandler.addChat(data: mockChatMessage1, topicId: mockTopicMessage1.id ?? "")
+        try await sutChatHandler.addChat(data: mockChatMessage2, topicId: mockTopicMessage1.id ?? "")
+        try await sutChatHandler.addChat(data: mockChatMessage3, topicId: mockTopicMessage1.id ?? "")
+        try await sutChatHandler.addChat(data: mockChatMessage4, topicId: mockTopicMessage1.id ?? "")
+        
+        // then
+        let chats: [ChatMessage] = try await sutChatHandler.fetchChats(byTopicId: mockTopicMessage1.id ?? "")
+        XCTAssertEqual(chats.count, 4, "There should be 4 chat messages")
+        
+        if let firstChat = chats.first {
+            XCTAssertEqual(firstChat.content, mockChatMessage1.content, "The first chat message should be \(mockChatMessage1.content ?? "")")
+        }
+    }
+    
+    func testBatchAddChat() async throws {
+        // given
+        try await sutUserHandler.addUser(data: mockUserInfoModel1)
+        try await sutTopicHandler.addTopic(data: mockTopicMessage1, username: mockUserInfoModel1.userName ?? "")
+        let chatList: [ChatMessage] = [mockChatMessage1, mockChatMessage2, mockChatMessage3, mockChatMessage4]
+        
+        // when
+        try await sutChatHandler.batchAddChat(data: chatList, topicId: mockTopicMessage1.id)
+        
+        // then
+        let chats: [ChatMessage] = try await sutChatHandler.fetchChats(byTopicId: mockTopicMessage1.id ?? "")
+        XCTAssertEqual(chats.count, 4, "There should be 4 chat messages")
+    }
+    
+    func testDeleteChat() async throws {
+        // given
+        try await sutUserHandler.addUser(data: mockUserInfoModel1)
+        try await sutTopicHandler.addTopic(data: mockTopicMessage1, username: mockUserInfoModel1.userName ?? "")
+        let newAddedId = try await sutChatHandler.addChat(data: mockChatMessage1, topicId: mockTopicMessage1.id ?? "")
+        
+        // when
+        try await sutChatHandler.deleteChat(id: newAddedId)
+        
+        // then
+        let chats = try await sutChatHandler.fetchChats(byTopicId: mockTopicMessage1.id ?? "")
+        XCTAssertEqual(chats.count, 0, "New added chat should be deleted")
+    }
+    
+    func testDeleteChatsFromDeleteTopic() async throws {
+        // given
+        try await sutUserHandler.addUser(data: mockUserInfoModel1)
+        try await sutTopicHandler.addTopic(data: mockTopicMessage1, username: mockUserInfoModel1.userName ?? "")
+        try await sutChatHandler.batchAddChat(data: [mockChatMessage1, mockChatMessage2, mockChatMessage3, mockChatMessage4], topicId: mockTopicMessage1.id)
+        
+        // when
+        try await sutTopicHandler.deleteTopic(topicId: mockTopicMessage1.id ?? "")
+        
+        // then
+        let chats = try await sutChatHandler.fetchChats(byTopicId: mockTopicMessage1.id ?? "")
+        XCTAssertEqual(chats.count, 0, "All chats should be deleted after deleting the topic")
+    }
+    
+    func testUpdateChat() async throws {
+        // given
+        let updateChatMessage = ChatMessage(
+            id: mockChatMessage1.id,
+            role: mockChatMessage1.role,
+            content: "Updated Answer",
+            createAt: mockChatMessage1.createAt,
+            status: mockChatMessage1.status
+        )
+        try await sutUserHandler.addUser(data: mockUserInfoModel1)
+        try await sutTopicHandler.addTopic(data: mockTopicMessage1, username: mockUserInfoModel1.userName ?? "")
+        let newAddedId = try await sutChatHandler.addChat(data: mockChatMessage1, topicId: mockTopicMessage1.id ?? "")
+        
+        // when
+        try await sutChatHandler.updateChat(id: newAddedId, data: updateChatMessage)
+        
+        // then
+        let chats = try await sutChatHandler.fetchChats(byTopicId: mockTopicMessage1.id ?? "")
+        XCTAssertEqual(chats.count, 1, "There should be 1 chat message")
+        XCTAssertEqual(chats.first?.content, updateChatMessage.content, "The chat message content should be updated")
     }
 }
