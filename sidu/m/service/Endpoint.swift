@@ -21,22 +21,22 @@ enum Endpoint {
     case userInfo
     case chat
     
-    var url: URL {
+    var urlString: String {
         switch self {
         case .login:
-            return URL(string: "\(Endpoint.userURL)/identity/token")!
+            return "\(Endpoint.userURL)/identity/token"
         case .checkUserExist:
-            return URL(string: "\(Endpoint.userURL)/identity/user/exist")!
+            return "\(Endpoint.userURL)/identity/user/exist"
         case .sendVerificationEmail:
-            return URL(string: "\(Endpoint.userURL)/identity/user/create")!
+            return "\(Endpoint.userURL)/identity/user/create"
         case .verifyRegistration:
-            return URL(string: "\(Endpoint.userURL)/identity/user/authenticate")!
+            return "\(Endpoint.userURL)/identity/user/authenticate"
         case .completeRegistration:
-            return URL(string: "\(Endpoint.userURL)/identity/user/password")!
+            return "\(Endpoint.userURL)/identity/user/password"
         case .userInfo:
-            return URL(string: "\(Endpoint.userURL)/identity/user?username=")!
+            return "\(Endpoint.userURL)/identity/user?username="
         case .chat:
-            return URL(string: "\(Endpoint.chatURL)/chat/balance/complete")!
+            return "\(Endpoint.chatURL)/chat/balance/complete"
         }
     }
 }

@@ -8,8 +8,9 @@
 import Foundation
 import SwiftData
 
-@Observable @MainActor
-class ChatViewModel {
+@MainActor
+@Observable
+final class ChatViewModel: BaseViewModel {
     var userMessage: String = ""
     var isShowingConfirmDeleteAllTopic: Bool = false
     var isShowingSetting: Bool = false

@@ -13,13 +13,26 @@ struct LoginRequest: Codable {
 }
 
 protocol LoginServiceProtocol: Sendable {
-    func login(username: String, password: String) async throws -> AuthResponse?
+    func login(username: String, password: String) async throws -> AuthResponse
 }
 
-actor LoginService: LoginServiceProtocol {
-    func login(username: String, password: String) async throws -> AuthResponse? {
-        let httpBody = try JSONEncoder().encode(LoginRequest(username: username, password: password))
-        let authResponse = try await ApiClient.shared.post(url: Endpoint.login.url, body: httpBody, responseType: AuthResponse.self)
+actor LoginService: LoginServiceProtocol, BaseServiceProtocol {
+    func login(username: String, password: String) async throws -> AuthResponse {
+        let loginRequest = LoginRequest(username: username, password: password)
+        
+        let authResponse = try await ApiClient().post(
+            urlString: Endpoint.login.urlString,
+            body: loginRequest,
+            responseType: AuthResponse.self
+        )
+        
+        guard let authResponse = authResponse else {
+            throw ApiError.invalidResponse
+        }
+        
+        guard let isSuccess = authResponse.isSuccess, isSuccess == true else {
+            throw CommError.serverReturnedError(authResponse.failureReason ?? "")
+        }
         
         return authResponse
     }

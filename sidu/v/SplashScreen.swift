@@ -28,7 +28,7 @@ struct SplashScreen: View {
         }
         .onAppear() {
             Task {
-                if await CacheUtil.shared.getAuthInfo() != nil {
+                if CacheUtil.shared.getAuthInfo() != nil {
                     path.append(.chatScreen)
                 } else {
                     path.append(.loginScreen)

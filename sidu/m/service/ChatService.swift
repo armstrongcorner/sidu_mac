@@ -22,14 +22,21 @@ protocol ChatServiceProtocol: Sendable {
     func sendChat(_ messageList: [ChatMessage]) async throws -> ChatResponse?
 }
 
-actor ChatService: ChatServiceProtocol {
+actor ChatService: ChatServiceProtocol, BaseServiceProtocol {
     func sendChat(_ messageList: [ChatMessage]) async throws -> ChatResponse? {
-        let httpBody = try JSONEncoder().encode(ChatRequest(
+        let chatRequest = ChatRequest(
             model: DEFAULT_AI_MODEL,
             max_tokens:DEFAULT_MAX_TOKENS,
             messages: buildUplinkMessage(messageList)
-        ))
-        let chatResponse = try await ApiClient.shared.post(url: Endpoint.chat.url, body: httpBody, responseType: ChatResponse.self)
+        )
+        let defaultHeaders = await getDefaultHeaders()
+        
+        let chatResponse = try await ApiClient().post(
+            urlString: Endpoint.chat.urlString,
+            headers: defaultHeaders,
+            body: chatRequest,
+            responseType: ChatResponse.self
+        )
         
         return chatResponse
     }

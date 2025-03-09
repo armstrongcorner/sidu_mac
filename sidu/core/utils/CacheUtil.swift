@@ -14,15 +14,17 @@ enum CacheKey: String {
     case currentLanguage = "currentLanguage"
 }
 
-actor CacheUtil {
+@MainActor
+final class CacheUtil {
     static let shared = CacheUtil()
     
     private init() {}
     
-    func cacheAuthInfo(authInfo: AuthModel?) {
+    func cacheAuthInfo(authInfo: AuthModel?) throws {
         // cache authInfo
-        if authInfo != nil, let encodedAuthInfo = try? JSONEncoder().encode(authInfo) {
-            UserDefaults.standard.setValue(encodedAuthInfo, forKey: CacheKey.authInfo.rawValue)
+        if let authInfo = authInfo {
+            let encodedAuthInfo = try JSONEncoder().encode(authInfo)
+            UserDefaults.standard.set(encodedAuthInfo, forKey: CacheKey.authInfo.rawValue)
         }
     }
     
@@ -35,7 +37,7 @@ actor CacheUtil {
     }
     
     func cacheUsername(username: String) {
-        UserDefaults.standard.setValue(username, forKey: CacheKey.username.rawValue)
+        UserDefaults.standard.set(username, forKey: CacheKey.username.rawValue)
     }
     
     func getUsername() -> String? {
@@ -45,7 +47,7 @@ actor CacheUtil {
     func cacheRegisterAuthInfo(registerAuthInfo: AuthModel?) {
         // cache registerAuthInfo
         if registerAuthInfo != nil, let encodedRegisterAuthInfo = try? JSONEncoder().encode(registerAuthInfo) {
-            UserDefaults.standard.setValue(encodedRegisterAuthInfo, forKey: CacheKey.registerAuthInfo.rawValue)
+            UserDefaults.standard.set(encodedRegisterAuthInfo, forKey: CacheKey.registerAuthInfo.rawValue)
         }
     }
     

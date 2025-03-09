@@ -8,8 +8,9 @@
 import Foundation
 import SwiftData
 
-@Observable @MainActor
-final class RegisterViewModel {
+@MainActor
+@Observable
+final class RegisterViewModel: BaseViewModel {
     var email: String = ""
     var vericode: String = ""
     var password: String = ""
@@ -110,36 +111,17 @@ final class RegisterViewModel {
             }
             
             // Request temp token (by super admin) for request verification email
-            guard let tempAuthResponse = try await loginService.login(username: "matrixthoughtsadmin", password: "Nbq4dcz123") else {
-                self.isVerified = .failed
-                self.errMsg = "Request temp token failed with unknown reason"
-                return
-            }
-            if tempAuthResponse.isSuccess ?? false {
-                // Cache the temp token for sending verification email
-                await CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: tempAuthResponse.value)
-                
-                // Use the temp token to request verification email
-                guard let requestVerificationResponse = try await registerServic.requestVerificationEmail(email: email) else {
-                    self.isVerified = .failed
-                    self.errMsg = "Request verification email failed with unknown reason"
-                    return
-                }
-                if requestVerificationResponse.isSuccess ?? false {
-                    // Request verification email success, cache the auth token for verification
-                    await CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: requestVerificationResponse.value)
-                } else {
-                    self.isVerified = .failed
-                    self.errMsg = "Request verification email failed with error: \(requestVerificationResponse.failureReason ?? "unknown reason")"
-                }
-            } else {
-                self.isVerified = .failed
-                self.errMsg = "Request temp token failed with error: \(tempAuthResponse.failureReason ?? "unknown reason")"
-                return
-            }
+            let tempAuthResponse = try await loginService.login(username: "matrixthoughtsadmin", password: "Nbq4dcz123")
+            // Cache the temp token for sending verification email
+            CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: tempAuthResponse.value)
+            
+            // Use the temp token to request verification email
+            let requestVerificationResponse = try await registerServic.requestVerificationEmail(email: email)
+            // Request verification email success, cache the auth token for verification
+            CacheUtil.shared.cacheRegisterAuthInfo(registerAuthInfo: requestVerificationResponse.value)
         } catch {
             self.isVerified = .failed
-            self.errMsg = "Request verification email failed with error: \(error.localizedDescription)"
+            self.errMsg = "Request verification email failed with error: \(handelError(error, #function))"
         }
     }
     
@@ -151,21 +133,11 @@ final class RegisterViewModel {
             }
             
             // Verify the registration
-            guard let verifyRegistrationResponse = try await registerServic.goVerifyRegistration(vericode: vericode) else {
-                self.isVerified = .failed
-                self.errMsg = "Verify registration failed with unknown reason"
-                return
-            }
-            if verifyRegistrationResponse.isSuccess ?? false {
-                // Verify registration success
-                self.isVerified = .success
-            } else {
-                self.isVerified = .failed
-                self.errMsg = "Verify registration failed with error: \(verifyRegistrationResponse.failureReason ?? "unknown reason")"
-            }
+            let _ = try await registerServic.goVerifyRegistration(vericode: vericode)
+            self.isVerified = .success
         } catch {
             self.isVerified = .failed
-            self.errMsg = "Verify registration failed with error: \(error.localizedDescription)"
+            self.errMsg = "Verify registration failed with error: \(handelError(error, #function))"
         }
     }
     
@@ -177,45 +149,27 @@ final class RegisterViewModel {
             }
             
             // Complete the registration
-            guard let completeRegistrationResponse = try await registerServic.completeRegistration(username: email, password: password) else {
-                self.isVerified = .failed
-                self.errMsg = "Complete registration failed with unknown reason"
-                return
-            }
-            if completeRegistrationResponse.isSuccess ?? false {
-                // Complete registration success, cache the auth info for future use
-                await CacheUtil.shared.cacheAuthInfo(authInfo: completeRegistrationResponse.value)
-                // Cache the email as username for future use
-                UserDefaults.standard.setValue(email, forKey: CacheKey.username.rawValue)
-
-                // Get user info
-                guard let userInfoResponse = try await userServic.getUserInfo(username: email) else {
-                    self.isVerified = .failed
-                    self.errMsg = "Get user info failed with unknown reason"
-                    return
-                }
-                if userInfoResponse.isSuccess ?? false {
-                    // Cache the user info for future use
-                    Task.detached {
-                        if let userHandler = await self.createUserHandler(), let userInfoModel = userInfoResponse.value {
-                            try await userHandler.addUser(data: userInfoModel)
-                            
-                            await MainActor.run {
-                                self.isVerified = .success
-                            }
-                        }
+            let completeRegistrationResponse = try await registerServic.completeRegistration(username: email, password: password)
+            // Complete registration success, cache the auth info for future use
+            try CacheUtil.shared.cacheAuthInfo(authInfo: completeRegistrationResponse.value)
+            // Cache the email as username for future use
+            UserDefaults.standard.set(email, forKey: CacheKey.username.rawValue)
+            
+            // Get user info
+            let userInfoResponse = try await userServic.getUserInfo(username: email)
+            // Cache the user info for future use
+            Task.detached {
+                if let userHandler = await self.createUserHandler(), let userInfoModel = userInfoResponse.value {
+                    try await userHandler.addUser(data: userInfoModel)
+                    
+                    await MainActor.run {
+                        self.isVerified = .success
                     }
-                } else {
-                    self.isVerified = .failed
-                    self.errMsg = "Get user info failed with error: \(userInfoResponse.failureReason ?? "unknown reason")"
                 }
-            } else {
-                self.isVerified = .failed
-                self.errMsg = "Complete registration failed with error: \(completeRegistrationResponse.failureReason ?? "unknown reason")"
             }
         } catch {
             self.isVerified = .failed
-            self.errMsg = "Complete registration failed with error: \(error.localizedDescription)"
+            self.errMsg = "Complete registration failed with error: \(handelError(error, #function))"
         }
     }
 }

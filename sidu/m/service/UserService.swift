@@ -8,12 +8,32 @@
 import Foundation
 
 protocol UserServiceProtocol: Sendable {
-    func getUserInfo(username: String) async throws -> UserInfoResponse?
+    func getUserInfo(username: String) async throws -> UserInfoResponse
 }
 
-actor UserService: UserServiceProtocol {
-    func getUserInfo(username: String) async throws -> UserInfoResponse? {
-        let userInfoResponse = try await ApiClient.shared.get(url: URL(string: "\(Endpoint.userInfo.url.absoluteString)\(username)")!, responseType: UserInfoResponse.self)
+actor UserService: UserServiceProtocol, BaseServiceProtocol {
+    let apiClient: ApiClientProtocol
+    
+    init(apiClient: ApiClientProtocol = ApiClient()) {
+        self.apiClient = apiClient
+    }
+    
+    func getUserInfo(username: String) async throws -> UserInfoResponse {
+        let defaultHeaders = await getDefaultHeaders()
+        
+        let userInfoResponse = try await apiClient.get(
+            urlString: "\(Endpoint.userInfo.urlString)/\(username)",
+            headers: defaultHeaders,
+            responseType: UserInfoResponse.self
+        )
+        
+        guard let userInfoResponse = userInfoResponse else {
+            throw ApiError.invalidResponse
+        }
+        
+        guard let isSuccess = userInfoResponse.isSuccess, isSuccess == true else {
+            throw CommError.serverReturnedError(userInfoResponse.failureReason ?? "")
+        }
         
         return userInfoResponse
     }

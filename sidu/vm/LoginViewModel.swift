@@ -8,9 +8,13 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import OSLog
 
-@Observable @MainActor
-final class LoginViewModel {
+let logger = Logger(subsystem: "au.com.matrixthoughts.desktop.sidu", category: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0")
+
+@MainActor
+@Observable
+final class LoginViewModel: BaseViewModel {
 //    var username: String = "armstrong.liu@matrixthoughts.com.au"
 //    var password: String = "1"
     var username: String = ""
@@ -26,7 +30,7 @@ final class LoginViewModel {
     @ObservationIgnored
     private let loginService: LoginServiceProtocol
     @ObservationIgnored
-    private let userServic: UserServiceProtocol
+    private let userService: UserServiceProtocol
     
     init(
         loginService: LoginServiceProtocol = LoginService(),
@@ -34,31 +38,21 @@ final class LoginViewModel {
         createUserHandler: @Sendable @escaping () async -> UserHandler? = { UserHandler(container: DatabaseProvider.shared.sharedModelContainer) }
     ) {
         self.loginService = loginService
-        self.userServic = userService
+        self.userService = userService
         self.createUserHandler = createUserHandler
     }
     
     func login() async {
         do {
             // Login
-            guard let authResponse = try await loginService.login(username: username, password: password) else {
-                self.isLoggedIn = .failed
-                self.errMsg = "Login failed with unknown reason"
-                return
-            }
-            
+            let authResponse = try await loginService.login(username: username, password: password)
             // Cache the auth info for future use
-            await CacheUtil.shared.cacheAuthInfo(authInfo: authResponse.value)
+            try CacheUtil.shared.cacheAuthInfo(authInfo: authResponse.value)
             // Cache the username for future use
-            await CacheUtil.shared.cacheUsername(username: username)
+            CacheUtil.shared.cacheUsername(username: username)
             
             // Get user info
-            guard let userInfoResponse = try await userServic.getUserInfo(username: username) else {
-                self.isLoggedIn = .failed
-                self.errMsg = "Get user info failed with unknown reason"
-                return
-            }
-            
+            let userInfoResponse = try await userService.getUserInfo(username: username)
             // Cache the user info for future use
             Task.detached {
                 if let userHandler = await self.createUserHandler(), let userInfoModel = userInfoResponse.value {
@@ -66,15 +60,10 @@ final class LoginViewModel {
                 }
             }
             
-            if authResponse.isSuccess ?? false {
-                self.isLoggedIn = .success
-            } else {
-                self.isLoggedIn = .failed
-                self.errMsg = authResponse.failureReason
-            }
+            self.isLoggedIn = .success
         } catch {
             self.isLoggedIn = .failed
-            self.errMsg = error.localizedDescription
+            self.errMsg = handelError(error, #function)
         }
     }
     

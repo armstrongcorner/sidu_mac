@@ -24,14 +24,20 @@ struct CompleteRegistrationRequest: Codable {
 }
 
 protocol RegisterServiceProtocol: Sendable {
-    func requestVerificationEmail(email: String) async throws -> AuthResponse?
-    func goVerifyRegistration(vericode: String) async throws -> UserInfoResponse?
-    func completeRegistration(username: String, password: String) async throws -> AuthResponse?
+    func requestVerificationEmail(email: String) async throws -> AuthResponse
+    func goVerifyRegistration(vericode: String) async throws -> UserInfoResponse
+    func completeRegistration(username: String, password: String) async throws -> AuthResponse
 }
 
-actor RegisterService: RegisterServiceProtocol {
-    func requestVerificationEmail(email: String) async throws -> AuthResponse? {
-        let httpBody = try JSONEncoder().encode(VerificationEmailRequest(
+actor RegisterService: RegisterServiceProtocol, BaseServiceProtocol {
+    let apiClient: ApiClientProtocol
+    
+    init(apiClient: ApiClientProtocol = ApiClient()) {
+        self.apiClient = apiClient
+    }
+    
+    func requestVerificationEmail(email: String) async throws -> AuthResponse {
+        let verificationEmailRequest = VerificationEmailRequest(
             username: email,
             role: "User",
             mobile: "",
@@ -39,59 +45,71 @@ actor RegisterService: RegisterServiceProtocol {
             language: "Chinese",
             tokenDurationInMin: USER_DEFAULT_TOKEN_DURATION_IN_MIN,
             isActive: false
-        ))
+        )
         // Use the temp token to send verification email
-        var newHeaders = [:] as [String: String]
-        if let tmpToken = await CacheUtil.shared.getRegisterAuthInfo()?.token {
-            newHeaders["Authorization"] = "Bearer \(tmpToken)"
-        }
+        let defaultHeaders = await getDefaultHeaders()
         
-        let requestVerificationResponse = try await ApiClient.shared.post(
-            url: Endpoint.sendVerificationEmail.url,
-            headers: newHeaders,
-            body: httpBody,
+        let requestVerificationResponse = try await apiClient.post(
+            urlString: Endpoint.sendVerificationEmail.urlString,
+            headers: defaultHeaders,
+            body: verificationEmailRequest,
             responseType: AuthResponse.self
         )
         
+        guard let requestVerificationResponse = requestVerificationResponse else {
+            throw ApiError.invalidResponse
+        }
+        guard let isSuccess = requestVerificationResponse.isSuccess, isSuccess == true else {
+            throw CommError.serverReturnedError(requestVerificationResponse.failureReason ?? "")
+        }
+
         return requestVerificationResponse
     }
     
-    func goVerifyRegistration(vericode: String) async throws -> UserInfoResponse? {
-        let httpBody = try JSONEncoder().encode(["authenticationCode": vericode])
+    func goVerifyRegistration(vericode: String) async throws -> UserInfoResponse {
+        let body = ["authenticationCode": vericode]
         // Use the temp token to send verification email
-        var newHeaders = [:] as [String: String]
-        if let tmpToken = await CacheUtil.shared.getRegisterAuthInfo()?.token {
-            newHeaders["Authorization"] = "Bearer \(tmpToken)"
-        }
+        let defaultHeaders = await getDefaultHeaders()
         
-        let verifyRegistrationResponse = try await ApiClient.shared.post(
-            url: Endpoint.verifyRegistration.url,
-            headers: newHeaders,
-            body: httpBody,
+        let verifyRegistrationResponse = try await apiClient.post(
+            urlString: Endpoint.verifyRegistration.urlString,
+            headers: defaultHeaders,
+            body: body,
             responseType: UserInfoResponse.self
         )
+        
+        guard let verifyRegistrationResponse = verifyRegistrationResponse else {
+            throw ApiError.invalidResponse
+        }
+        guard let isSuccess = verifyRegistrationResponse.isSuccess, isSuccess == true else {
+            throw CommError.serverReturnedError(verifyRegistrationResponse.failureReason ?? "")
+        }
         
         return verifyRegistrationResponse
     }
     
-    func completeRegistration(username: String, password: String) async throws -> AuthResponse? {
-        let httpBody = try JSONEncoder().encode(CompleteRegistrationRequest(
+    func completeRegistration(username: String, password: String) async throws -> AuthResponse {
+        let completeRegistrationRequest = CompleteRegistrationRequest(
             username: username,
             password: password,
             activateUser: true
-        ))
+        )
         // Use the temp token to send verification email
-        var newHeaders = [:] as [String: String]
-        if let tmpToken = await CacheUtil.shared.getRegisterAuthInfo()?.token {
-            newHeaders["Authorization"] = "Bearer \(tmpToken)"
-        }
+        let defaultHeaders = await getDefaultHeaders()
         
-        let completeRegistrationResponse = try await ApiClient.shared.post(
-            url: Endpoint.completeRegistration.url,
-            headers: newHeaders,
-            body: httpBody,
+        let completeRegistrationResponse = try await apiClient.post(
+            urlString: Endpoint.completeRegistration.urlString,
+            headers: defaultHeaders,
+            body: completeRegistrationRequest,
             responseType: AuthResponse.self
         )
+        
+        guard let completeRegistrationResponse = completeRegistrationResponse else {
+            throw ApiError.invalidResponse
+        }
+        guard let isSuccess = completeRegistrationResponse.isSuccess, isSuccess == true else {
+            throw CommError.serverReturnedError(completeRegistrationResponse.failureReason ?? "")
+        }
         
         return completeRegistrationResponse
     }
